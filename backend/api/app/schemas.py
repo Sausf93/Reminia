@@ -146,6 +146,20 @@ class CheckoutOut(BaseModel):
     url: str
 
 
+class EstadoSuscripcionOut(BaseModel):
+    """Estado de suscripción del centro para el panel (tarjeta 'Cumplimiento').
+    Accesible aunque la prueba esté caducada, para que el admin pueda decidir
+    pagar. Precios en céntimos (base 125 €/mes incluye 30 personas; +3 €/extra)."""
+    estado: str
+    fecha_fin_prueba: datetime | None = None
+    dias_prueba_restantes: int | None = None
+    personas_activas: int
+    incluidas: int = 30
+    base_cent: int = 12500
+    extra_por_persona_cent: int = 300
+    precio_estimado_cent: int
+
+
 class SignupIn(BaseModel):
     """Alta self-service (sin login): datos mínimos para arrancar el checkout de
     suscripción de un centro NUEVO. La cuenta y el centro NO se crean aquí; se

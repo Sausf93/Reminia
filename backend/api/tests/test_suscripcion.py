@@ -64,3 +64,27 @@ async def test_checkout_sin_stripe_devuelve_503(client):
     h = await _login(client, "admin@trazo.local", "trazo1234")
     r = await client.post("/facturacion/checkout", headers=h)
     assert r.status_code == 503
+
+
+@pytest.mark.asyncio
+async def test_estado_suscripcion_visible_para_admin(client):
+    h = await _login(client, "admin@trazo.local", "trazo1234")
+    r = await client.get("/facturacion/estado", headers=h)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["estado"] in ("prueba", "activa", "cortesia", "suspendido", "cancelada")
+    assert body["precio_estimado_cent"] >= 12500
+    assert "personas_activas" in body
+
+
+@pytest.mark.asyncio
+async def test_estado_suscripcion_accesible_con_prueba_caducada(client, Session):
+    # Con la prueba caducada un endpoint operativo da 403, pero el estado de
+    # suscripción SÍ se ve (para poder decidir pagar).
+    h = await _login(client, "admin@trazo.local", "trazo1234")
+    ayer = datetime.now(timezone.utc) - timedelta(days=1)
+    await _fijar_estado(Session, estado="prueba", fin=ayer)
+    assert (await client.get("/pendientes", headers=h)).status_code == 403
+    r = await client.get("/facturacion/estado", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.json()["dias_prueba_restantes"] == 0

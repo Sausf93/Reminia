@@ -12,6 +12,8 @@ en vez de fallar: en dev/tests el cobro queda desactivado.
 """
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 import stripe
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import func, select
@@ -22,7 +24,7 @@ from app.config import settings
 from app.database import get_db
 from app.deps import auditar, require_roles_para_pago
 from app.models import Centro, UsuarioFinal, UsuarioStaff
-from app.schemas import CheckoutOut, SignupIn
+from app.schemas import CheckoutOut, EstadoSuscripcionOut, SignupIn
 from app.security import generar_password
 from app.services.email import enviar_credenciales_admin
 
@@ -130,6 +132,34 @@ async def signup_checkout(body: SignupIn, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status.HTTP_502_BAD_GATEWAY,
                             f"No se pudo iniciar el alta: {e}")
     return CheckoutOut(url=sesion.url)
+
+
+@router.get("/facturacion/estado", response_model=EstadoSuscripcionOut)
+async def estado_suscripcion(
+    db: AsyncSession = Depends(get_db),
+    staff: UsuarioStaff = Depends(require_roles_para_pago("admin_centro")),
+):
+    """Estado de la suscripción de ESTE centro (tarjeta de Cumplimiento). Usa
+    require_roles_para_pago: accesible aunque la prueba esté caducada, para que
+    el admin vea su situación y decida pagar. Precio estimado en céntimos."""
+    centro = await db.get(Centro, staff.centro_id)
+    if centro is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Centro no encontrado")
+    personas = await _personas_activas(db, centro.id)
+    dias = None
+    if centro.estado_suscripcion == "prueba" and centro.fecha_fin_prueba is not None:
+        fin = centro.fecha_fin_prueba
+        if fin.tzinfo is None:
+            fin = fin.replace(tzinfo=timezone.utc)
+        dias = max(0, (fin - datetime.now(timezone.utc)).days)
+    extra = max(0, personas - 30)
+    return EstadoSuscripcionOut(
+        estado=centro.estado_suscripcion or "prueba",
+        fecha_fin_prueba=centro.fecha_fin_prueba,
+        dias_prueba_restantes=dias,
+        personas_activas=personas,
+        precio_estimado_cent=12500 + extra * 300,
+    )
 
 
 def _mapear_estado(status_stripe: str) -> str | None:
