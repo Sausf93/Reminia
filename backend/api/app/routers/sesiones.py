@@ -575,6 +575,11 @@ async def abrir_sesion(
         .where(SesionParticipante.sesion_id == ses.id)
     )).scalars().all()
     await _rechazar_si_en_otra_sala(db, ses.centro_id, list(parts), excepto_id=ses.id)
+    # Compuerta legal (RGPD), defensa en profundidad: re-evaluar DPA +
+    # consentimiento contra los participantes ACTUALES antes de poner la sala en
+    # vivo (pudo cambiar desde que se programó, o crearse por un camino que no
+    # pasó la puerta). Sin base legal, no se abre.
+    await _exigir_consentimiento_y_dpa(db, ses.centro_id, list(parts))
     ses.abierta = True
     ses.fecha = datetime.now(timezone.utc)
     await db.commit()
@@ -603,6 +608,11 @@ async def editar_sesion_programada(
         )
     participantes = list(dict.fromkeys(body.participantes))
     await _validar_participantes(db, participantes, staff)
+    # Compuerta legal (RGPD): editar los participantes de una sesión programada
+    # TAMBIÉN exige DPA + consentimiento. Sin esto se colaba a alguien sin
+    # consentimiento (crear con participantes=[] pasa la puerta, y este PUT la
+    # añadía sin base legal; el kiosco luego registraba datos de salud).
+    await _exigir_consentimiento_y_dpa(db, staff.centro_id, participantes)
     if body.nombre is not None:
         ses.nombre = body.nombre
     if body.modo is not None:
