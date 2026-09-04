@@ -1,10 +1,15 @@
 """Utilidades de seguridad: hashing de contraseñas y JWT."""
+import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
 
 from app.config import settings
+
+# Alfabeto sin caracteres ambiguos (O/0, I/l/1) para contraseñas temporales
+# fáciles de teclear si hiciera falta copiarlas del correo.
+_ALFABETO_PASS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789"
 
 
 # ---- Contraseñas (bcrypt directo, sin passlib para evitar problemas de compat) ----
@@ -19,6 +24,12 @@ def verify_password(plain: str, hashed: str) -> bool:
         return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
     except (ValueError, TypeError):
         return False
+
+
+def generar_password(longitud: int = 12) -> str:
+    """Contraseña temporal fuerte para el alta automática (se envía por correo y
+    el admin la cambia al entrar). Usa un alfabeto sin caracteres ambiguos."""
+    return "".join(secrets.choice(_ALFABETO_PASS) for _ in range(longitud))
 
 
 # ---- JWT ----

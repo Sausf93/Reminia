@@ -48,6 +48,17 @@ class Settings(BaseSettings):
     # URL del panel del centro, para las redirecciones de Stripe Checkout.
     panel_url: str = "https://trazo-panel.pages.dev"
 
+    # --- Correo transaccional (Resend). Si resend_api_key está vacío, el envío
+    # queda DESACTIVADO (se registra en log y NO rompe el alta). ---
+    resend_api_key: str = ""
+    resend_from: str = "Reminia <onboarding@resend.dev>"
+    # URL pública de la landing (para enlaces en los correos de alta).
+    landing_url: str = "https://trazo-web-af2.pages.dev"
+
+    @property
+    def correo_activo(self) -> bool:
+        return bool(self.resend_api_key)
+
     @property
     def stripe_activo(self) -> bool:
         return bool(self.stripe_secret_key and self.stripe_price_id)
