@@ -37,8 +37,13 @@ async def _exigir_centro_activo(db: AsyncSession, centro_id: str) -> None:
     estado = getattr(centro, "estado_suscripcion", "cortesia") or "cortesia"
     if estado in ("suspendido", "cancelada"):
         raise HTTPException(status.HTTP_403_FORBIDDEN, SUSCRIPCION_SUSPENDIDA)
-    if estado == "prueba" and centro.fecha_fin_prueba is not None:
+    if estado == "prueba":
         fin = centro.fecha_fin_prueba
+        # 'prueba' sin fecha de fin = anomalía (el alta siempre fija 30 días): se
+        # trata como CADUCADA para no dar acceso gratis indefinido por un dato que
+        # quedó a NULL. El camino de pago sigue abierto (require_roles_para_pago).
+        if fin is None:
+            raise HTTPException(status.HTTP_403_FORBIDDEN, PRUEBA_TERMINADA)
         if fin.tzinfo is None:  # sqlite guarda naive; normaliza a UTC
             fin = fin.replace(tzinfo=timezone.utc)
         if fin < datetime.now(timezone.utc):

@@ -100,7 +100,8 @@ def _mapear_estado(status_stripe: str) -> str | None:
     """Traduce el estado de la suscripción de Stripe al del centro."""
     if status_stripe in ("active", "trialing"):
         return "activa"
-    if status_stripe in ("past_due", "unpaid", "incomplete_expired"):
+    # 'paused' (pause_collection): sin cobro -> cortar acceso, no dejarlo 'activa'.
+    if status_stripe in ("past_due", "unpaid", "incomplete_expired", "paused"):
         return "suspendido"
     if status_stripe in ("canceled",):
         return "cancelada"
