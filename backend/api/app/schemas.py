@@ -146,6 +146,18 @@ class CheckoutOut(BaseModel):
     url: str
 
 
+class SignupIn(BaseModel):
+    """Alta self-service (sin login): datos mínimos para arrancar el checkout de
+    suscripción de un centro NUEVO. La cuenta y el centro NO se crean aquí; se
+    provisionan en el webhook al confirmarse el pago (no se crean centros sin
+    pagar). Tras el pago, al admin le llega su acceso por correo."""
+    centro: str = Field(min_length=1, max_length=200)
+    email: str
+    nombre: str = Field(default="Administración del centro", max_length=200)
+
+    _norm_email = field_validator("email")(_email_basico)
+
+
 class PuestaEnMarchaOut(BaseModel):
     """Estado de implantación del centro para el asistente de puesta en marcha."""
     equipo_ok: bool

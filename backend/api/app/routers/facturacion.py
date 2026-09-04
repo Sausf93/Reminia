@@ -17,11 +17,14 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.bootstrap import alta_centro_admin
 from app.config import settings
 from app.database import get_db
 from app.deps import auditar, require_roles_para_pago
 from app.models import Centro, UsuarioFinal, UsuarioStaff
-from app.schemas import CheckoutOut
+from app.schemas import CheckoutOut, SignupIn
+from app.security import generar_password
+from app.services.email import enviar_credenciales_admin
 
 router = APIRouter(tags=["facturacion"])
 
@@ -96,6 +99,39 @@ async def crear_checkout(
     return CheckoutOut(url=sesion.url)
 
 
+@router.post("/facturacion/signup", response_model=CheckoutOut)
+async def signup_checkout(body: SignupIn, db: AsyncSession = Depends(get_db)):
+    """Alta SELF-SERVICE (sin login): inicia el checkout de suscripción para un
+    centro NUEVO. La cuenta se crea en el webhook al confirmarse el pago (no se
+    crean centros sin pagar). Devuelve la URL de Stripe a la que redirigir."""
+    if not settings.stripe_activo:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
+                            "El alta con pago no está disponible todavía.")
+    email = body.email.strip().lower()
+    existe = (await db.execute(
+        select(UsuarioStaff).where(UsuarioStaff.email == email)
+    )).scalars().first()
+    if existe is not None:
+        raise HTTPException(status.HTTP_409_CONFLICT,
+                            "Ya existe una cuenta con ese correo. Inicia sesión.")
+    stripe.api_key = settings.stripe_secret_key
+    meta = {"signup": "1", "centro": body.centro, "email": email, "nombre": body.nombre}
+    try:
+        sesion = stripe.checkout.Session.create(
+            mode="subscription",
+            line_items=[{"price": settings.stripe_price_id, "quantity": 1}],
+            customer_email=email,
+            metadata=meta,
+            subscription_data={"metadata": meta},
+            success_url=f"{settings.panel_url}/?alta=ok",
+            cancel_url=f"{settings.landing_url}/?alta=cancelada",
+        )
+    except Exception as e:  # noqa: BLE001 — error de Stripe -> mensaje limpio
+        raise HTTPException(status.HTTP_502_BAD_GATEWAY,
+                            f"No se pudo iniciar el alta: {e}")
+    return CheckoutOut(url=sesion.url)
+
+
 def _mapear_estado(status_stripe: str) -> str | None:
     """Traduce el estado de la suscripción de Stripe al del centro."""
     if status_stripe in ("active", "trialing"):
@@ -123,6 +159,36 @@ async def _centro_por(db: AsyncSession, *, sub_id=None, cust_id=None, centro_id=
     return (await db.execute(stmt)).scalars().first()
 
 
+async def _provisionar_signup(db, meta, customer_id, subscription_id) -> None:
+    """Alta self-service: tras el pago, crea el centro + su cuenta admin y le
+    envía las credenciales por correo. Idempotente: si el email ya existe no
+    re-crea ni reenvía (alta_centro_admin devuelve creado=False)."""
+    email = (meta.get("email") or "").strip().lower()
+    nombre_centro = meta.get("centro") or "Centro"
+    nombre = meta.get("nombre") or "Administración del centro"
+    if not email:
+        return
+    password = generar_password()
+    _msg, creado = await alta_centro_admin(db, nombre_centro, email, password, nombre)
+    # Fija los ids de Stripe y deja el centro ACTIVO (ya ha pagado).
+    staff = (await db.execute(
+        select(UsuarioStaff).where(UsuarioStaff.email == email)
+    )).scalars().first()
+    if staff is not None:
+        centro = await db.get(Centro, staff.centro_id)
+        if centro is not None:
+            centro.stripe_customer_id = customer_id or centro.stripe_customer_id
+            centro.stripe_subscription_id = subscription_id or centro.stripe_subscription_id
+            centro.estado_suscripcion = "activa"
+            await db.commit()
+    # El correo solo se envía si la cuenta se creó AHORA (evita reenviar una
+    # contraseña ya entregada si el webhook se reprocesa).
+    if creado:
+        await enviar_credenciales_admin(
+            destino=email, nombre_centro=nombre_centro,
+            email_login=email, password=password, panel_url=settings.panel_url)
+
+
 @router.post("/facturacion/webhook", include_in_schema=False)
 async def webhook_stripe(request: Request, db: AsyncSession = Depends(get_db)):
     """Recibe los eventos de Stripe. Verifica la firma y actualiza el estado de
@@ -141,14 +207,19 @@ async def webhook_stripe(request: Request, db: AsyncSession = Depends(get_db)):
     obj = evento["data"]["object"]
 
     if tipo == "checkout.session.completed":
-        centro = await _centro_por(
-            db, centro_id=obj.get("client_reference_id")
-            or (obj.get("metadata") or {}).get("centro_id"))
-        if centro is not None:
-            centro.stripe_customer_id = obj.get("customer") or centro.stripe_customer_id
-            centro.stripe_subscription_id = obj.get("subscription") or centro.stripe_subscription_id
-            centro.estado_suscripcion = "activa"
-            await db.commit()
+        meta = obj.get("metadata") or {}
+        if meta.get("signup") == "1":
+            # Alta self-service: crear el centro + admin y enviar credenciales.
+            await _provisionar_signup(
+                db, meta, obj.get("customer"), obj.get("subscription"))
+        else:
+            centro = await _centro_por(
+                db, centro_id=obj.get("client_reference_id") or meta.get("centro_id"))
+            if centro is not None:
+                centro.stripe_customer_id = obj.get("customer") or centro.stripe_customer_id
+                centro.stripe_subscription_id = obj.get("subscription") or centro.stripe_subscription_id
+                centro.estado_suscripcion = "activa"
+                await db.commit()
 
     elif tipo in ("customer.subscription.updated", "customer.subscription.deleted"):
         centro = await _centro_por(
