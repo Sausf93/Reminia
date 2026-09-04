@@ -303,9 +303,12 @@ class _TrazoPainter extends CustomPainter {
       _puntitos(guia),
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 9
+        ..strokeWidth = 10
         ..strokeCap = StrokeCap.round
-        ..color = TrazoColors.sand,
+        // Guía a repasar en verde oscuro (contraste >=3:1 sobre el lienzo casi
+        // blanco): con `sand` era 1,25:1 y una persona con baja visión no veía
+        // la línea que tiene que seguir. La estela coral del dedo sigue encima.
+        ..color = TrazoColors.sageDark,
     );
 
     // GUÍA DINÁMICA PASO A PASO: se anima UN sub-trazo cada vez (paso 1 entero,

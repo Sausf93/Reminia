@@ -70,6 +70,22 @@ def _seleccion_multiple(v, o):
     return "logrado" if eleccion == correcta else "no_logrado"
 
 
+def _num_gradual(respuesta, objetivo):
+    """Contar/sumar: acierto exacto = logrado; fallo por UNA unidad = parcial (el
+    casi-acierto del mayor, "perdí la cuenta", clínicamente ≠ responder a bulto);
+    el resto = no_logrado. Coherente con la banda parcial que ya tiene el dinero.
+    Si no hay número interpretable, sin_valorar (que lo revise la integradora)."""
+    r = _num(respuesta)
+    t = _num(objetivo)
+    if r is None or t is None:
+        return "sin_valorar"
+    if r == t:
+        return "logrado"
+    if abs(r - t) == 1:
+        return "parcial"
+    return "no_logrado"
+
+
 def _conteo_comparacion(v, o):
     respuesta = v.get("respuesta")
     # En las comparaciones (cual_tiene_mas/menos) el widget manda {grupo, objeto};
@@ -87,9 +103,9 @@ def _conteo_comparacion(v, o):
     if modo == "cual_tiene_menos":
         return "logrado" if respuesta == sol.get("objeto_menor") else "no_logrado"
     if modo == "sumar":
-        return "logrado" if _num(respuesta) == _num(sol.get("total")) else "no_logrado"
+        return _num_gradual(respuesta, sol.get("total"))
     # contar (uno concreto)
-    return "logrado" if _num(respuesta) == _num(sol.get("cantidad")) else "no_logrado"
+    return _num_gradual(respuesta, sol.get("cantidad"))
 
 
 def _por_aciertos_fallos(v, o, clave_objetivos):

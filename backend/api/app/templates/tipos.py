@@ -296,6 +296,14 @@ class PlantillaSecuenciaOrdenar(PlantillaBase):
 
         barajados = list(enumerate(pasos_ordenados))  # (indice_correcto, paso)
         rng.shuffle(barajados)
+        # Evita presentar la lista YA ordenada (pasaba ~18% de las veces con n=3,
+        # justo el nivel del mayor más frágil): si el barajado coincide con la
+        # solución, rebaraja (con tope para no bloquear en casos degenerados).
+        if n > 1:
+            for _ in range(20):
+                if [idx for idx, _ in barajados] != list(range(n)):
+                    break
+                rng.shuffle(barajados)
 
         return InstanciaEjercicio(
             plantilla=self.tipo,

@@ -45,10 +45,9 @@ async def _exigir_centro_activo(db: AsyncSession, centro_id: str) -> None:
             raise HTTPException(status.HTTP_403_FORBIDDEN, PRUEBA_TERMINADA)
 
 
-async def get_current_staff(
-    token: str = Depends(oauth2_scheme),
-    db: AsyncSession = Depends(get_db),
-) -> UsuarioStaff:
+async def _staff_desde_token(token: str, db: AsyncSession) -> UsuarioStaff:
+    """Decodifica el JWT y carga el staff activo. NO comprueba el centro: quien
+    llama decide qué compuerta de centro aplicar (activo / suscripción)."""
     cred_exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Credenciales inválidas",
@@ -65,8 +64,35 @@ async def get_current_staff(
     staff = await db.get(UsuarioStaff, staff_id)
     if staff is None or not staff.activo:
         raise cred_exc
-    # El centro debe seguir activo (no suspendido por la plataforma).
+    return staff
+
+
+async def get_current_staff(
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db),
+) -> UsuarioStaff:
+    staff = await _staff_desde_token(token, db)
+    # El centro debe seguir activo (no suspendido por la plataforma) Y con la
+    # suscripción al día (corta si la prueba caducó, suspendido, etc.).
     await _exigir_centro_activo(db, staff.centro_id)
+    return staff
+
+
+async def get_current_staff_para_pago(
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db),
+) -> UsuarioStaff:
+    """Como `get_current_staff` pero SIN la compuerta de suscripción: exige solo
+    que el centro no esté suspendido por la plataforma (`centro.activo`).
+
+    El camino de PAGO debe seguir accesible aunque la prueba haya caducado o la
+    suscripción esté suspendida/cancelada; si no, el admin quedaría atrapado —
+    el sistema le pide "activa la suscripción" pero la única vía de activación
+    (el checkout) estaría bloqueada por esa misma compuerta. Círculo cerrado."""
+    staff = await _staff_desde_token(token, db)
+    centro = await db.get(Centro, staff.centro_id)
+    if centro is None or not centro.activo:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, CENTRO_SUSPENDIDO)
     return staff
 
 
@@ -74,6 +100,24 @@ def require_roles(*roles: str):
     """Dependencia factory: exige que el staff tenga uno de los roles dados."""
 
     async def _checker(staff: UsuarioStaff = Depends(get_current_staff)) -> UsuarioStaff:
+        if staff.rol not in roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Requiere rol: {', '.join(roles)}",
+            )
+        return staff
+
+    return _checker
+
+
+def require_roles_para_pago(*roles: str):
+    """Como `require_roles` pero sobre `get_current_staff_para_pago`: exige rol
+    SIN cortar por suscripción, para los endpoints del propio flujo de pago (así
+    un admin con la prueba caducada todavía puede iniciar el checkout)."""
+
+    async def _checker(
+        staff: UsuarioStaff = Depends(get_current_staff_para_pago),
+    ) -> UsuarioStaff:
         if staff.rol not in roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -201,7 +245,9 @@ async def auditar(
 
 __all__ = [
     "get_current_staff",
+    "get_current_staff_para_pago",
     "require_roles",
+    "require_roles_para_pago",
     "auditar",
     "usuario_del_centro",
     "usuario_del_centro_id",

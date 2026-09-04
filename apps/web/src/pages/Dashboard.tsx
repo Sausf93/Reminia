@@ -41,7 +41,10 @@ export function DashboardPage() {
   const hayPersonas = (usuarios.data?.length ?? 0) > 0;
   const hayTablets = (dispositivos.data?.length ?? 0) > 0;
   const listasCargadas = usuarios.data != null && dispositivos.data != null && equipo.data != null;
-  const mostrarOnboarding = listasCargadas && (!hayEquipo || !hayPersonas || !hayTablets);
+  // Solo el admin ve "Primeros pasos": es quien da de alta equipo/personas/tablets.
+  // Para una integradora no-admin, `equipo` se omite (queda []) y el paso 1 la
+  // llevaría a /equipo, que la redirige a "/": veía una guía falsa y perpetua.
+  const mostrarOnboarding = esAdmin && listasCargadas && (!hayEquipo || !hayPersonas || !hayTablets);
 
   const aliasPorId = new Map((usuarios.data ?? []).map((u) => [u.id, u.alias_interno]));
 

@@ -487,7 +487,7 @@
       "figuras": [
         {
           "id": "casa_sencilla",
-          "path": "M60,160 L60,95 L150,45 L240,95 L240,160 Z"
+          "path": "M60,135 L60,80 L150,35 L240,80 L240,135 Z"
         },
         {
           "id": "escalera",

@@ -19,7 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.database import get_db
-from app.deps import auditar, require_roles
+from app.deps import auditar, require_roles_para_pago
 from app.models import Centro, UsuarioFinal, UsuarioStaff
 from app.schemas import CheckoutOut
 
@@ -60,10 +60,14 @@ async def sincronizar_cantidad_stripe(db: AsyncSession, centro: Centro | None) -
 @router.post("/facturacion/checkout", response_model=CheckoutOut)
 async def crear_checkout(
     db: AsyncSession = Depends(get_db),
-    staff: UsuarioStaff = Depends(require_roles("admin_centro")),
+    staff: UsuarioStaff = Depends(require_roles_para_pago("admin_centro")),
 ):
     """Crea una sesión de Stripe Checkout para suscribir a ESTE centro. Devuelve
-    la URL a la que redirigir al admin para pagar. La cantidad = personas activas."""
+    la URL a la que redirigir al admin para pagar. La cantidad = personas activas.
+
+    Usa `require_roles_para_pago` (sin compuerta de suscripción): el admin debe
+    poder pagar aunque la prueba haya caducado o la suscripción esté suspendida,
+    que es justo cuando necesita (re)activarla."""
     if not settings.stripe_activo:
         raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
                             "El cobro no está configurado todavía.")

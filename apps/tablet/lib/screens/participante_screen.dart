@@ -1377,7 +1377,17 @@ class _VistaEjercicio extends StatelessWidget {
                       fontSize: 28, fontWeight: FontWeight.w800),
                 ),
                 icon: const Icon(Icons.check_circle, size: 32),
-                label: Text(indice + 1 >= total ? 'Terminar' : 'Siguiente'),
+                // FittedBox: en pantalla estrecha/vertical el texto grande (28)
+                // no cabía y "Siguiente" se partía a media palabra ("Siguient"/
+                // "e"). Escala a una sola línea en vez de romper la palabra.
+                label: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    indice + 1 >= total ? 'Terminar' : 'Siguiente',
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ),
               ),
             ),
           ),
