@@ -58,6 +58,18 @@ La auditoría de seguridad salió **"casi"**: el aislamiento entre centros (IDOR
 - [ ] **Documentos legales (DPA, consentimientos con DNI/NIE): ¿quién los descarga/borra?** Hoy **cualquier integradora** del centro puede (el test actual lo da por intencionado). El auditor recomienda restringirlo a **admin_centro** por ser PII sensible. Dime si lo restrinjo.
 - [ ] **El token de la tablet (kiosco) escala a una sesión de staff completa.** `POST /auth/tablet` con el token del dispositivo + elegir un nombre acuña un JWT de profesional (no admin) **sin contraseña** (el PIN es opcional y por defecto nadie lo tiene). Ese JWT abre todos los endpoints de staff (datos de salud del centro, export CSV, documentos). Es inherente a que la tablet en modo "maestra" necesita acceso de staff. Fix robusto (a diseñar con cuidado para no romper el kiosco): token de **alcance reducido** + exigir contraseña/PIN para lo sensible. Lo vemos juntos.
 
+## 8. Auto-alta self-service: backend LISTO, falta frontend + 1 decisión
+El **backend del alta self-service está construido, seguro y probado** (todo en la rama, con tests):
+- `POST /facturacion/signup` (público) → checkout de Stripe.
+- Webhook crea centro + admin y envía un **enlace de "crea tu contraseña"** (token de un solo uso, **no** se manda la contraseña en claro).
+- `POST /auth/set-password` (crea la contraseña desde el enlace + auto-login) y `POST /auth/forgot-password` (recuperación, sin revelar qué correos existen).
+- `GET /facturacion/estado` (estado de suscripción + precio para la conversión).
+
+**Falta para que funcione de cara al cliente:**
+- [ ] **DECISIÓN de producto:** ¿enlazar el "pagar y empezar" en la **landing**? Hoy la landing vende *piloto sin coste → contacto por correo*. El self-service (pagar ya) es otro embudo. Si lo quieres, añado un botón "Empezar ahora" → mini-form (centro, nombre, email) → `POST <API>/facturacion/signup` → redirige a Stripe. Dime si va, y si conviven con el "piloto".
+- [ ] **Panel:** falta la página `/crear-password?token=…` (llama a `POST /auth/set-password`) y una de `/recuperar` (forgot). Y que el login interprete `?alta=ok` mostrando "pago confirmado, revisa tu correo". Es frontend del panel (React); lo hago cuando retomemos (o en la próxima sesión).
+- [ ] **Resend imprescindible:** sin `RESEND_API_KEY` + dominio verificado, el correo con el enlace **no sale** (el alta no se rompe, pero el admin no recibe el acceso). Ver §3.
+
 ---
 ### Estado de lo que Claude va avanzando solo (rama `rebrand/reminia`, sin push)
 - Arreglados los 4 bloqueantes de la ronda 13 + pulidos + fix del bypass RGPD de la compuerta legal + 2 fixes de Stripe. (Commits en la rama.)

@@ -1,16 +1,26 @@
 """Autenticación: login por email/contraseña -> JWT."""
 from __future__ import annotations
 
+import jwt
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import settings
 from app.database import get_db
 from app.deps import Acceso, acceso_centro
 from app.models import Centro, UsuarioStaff
-from app.schemas import TabletLoginIn, TokenOut
-from app.security import create_access_token, verify_password
+from app.schemas import ForgotPasswordIn, SetPasswordIn, TabletLoginIn, TokenOut
+from app.security import (
+    create_access_token,
+    crear_token_password,
+    hash_password,
+    leer_token_password,
+    nonce_de_hash,
+    verify_password,
+)
+from app.services.email import enviar_enlace_recuperacion
 from app.services.rate_limit import limitador_login
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -148,3 +158,47 @@ async def login_tablet(
         access_token=token, id=staff.id, rol=staff.rol, nombre=staff.nombre,
         centro_id=staff.centro_id, centro_nombre=centro.nombre,
     )
+
+
+@router.post("/set-password", response_model=TokenOut)
+async def set_password(body: SetPasswordIn, db: AsyncSession = Depends(get_db)):
+    """Fija la contraseña desde un enlace de alta/recuperación (token de un solo
+    uso) y devuelve un JWT (auto-login). Público — el token es la credencial."""
+    try:
+        payload = leer_token_password(body.token)
+    except jwt.PyJWTError:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                            "El enlace no es válido o ha caducado.")
+    staff = await db.get(UsuarioStaff, payload.get("sub"))
+    if staff is None or not staff.activo:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                            "El enlace no es válido o ha caducado.")
+    if payload.get("pn") != nonce_de_hash(staff.password_hash):
+        # El enlace ya se usó (la contraseña cambió) o es de una versión anterior.
+        raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                            "Este enlace ya se usó. Pide uno nuevo.")
+    staff.password_hash = hash_password(body.password)
+    await db.commit()
+    centro = await db.get(Centro, staff.centro_id)
+    token = create_access_token(subject=staff.id,
+                                extra={"rol": staff.rol, "centro_id": staff.centro_id})
+    return TokenOut(
+        access_token=token, id=staff.id, rol=staff.rol, nombre=staff.nombre,
+        centro_id=staff.centro_id, centro_nombre=centro.nombre if centro else "",
+    )
+
+
+@router.post("/forgot-password")
+async def forgot_password(body: ForgotPasswordIn, db: AsyncSession = Depends(get_db)):
+    """Envía un enlace de recuperación si existe una cuenta con ese correo.
+    Responde SIEMPRE igual (no revela qué correos están registrados)."""
+    email = body.email.strip().lower()
+    staff = (await db.execute(
+        select(UsuarioStaff).where(UsuarioStaff.email == email)
+    )).scalars().first()
+    if staff is not None and staff.activo:
+        token = crear_token_password(staff.id, staff.password_hash, minutos=60)
+        url = f"{settings.panel_url}/crear-password?token={token}"
+        await enviar_enlace_recuperacion(destino=email, url=url)
+    return {"mensaje": ("Si ese correo tiene una cuenta, te hemos enviado un "
+                        "enlace para recuperar el acceso.")}

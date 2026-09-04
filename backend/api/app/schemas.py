@@ -172,6 +172,19 @@ class SignupIn(BaseModel):
     _norm_email = field_validator("email")(_email_basico)
 
 
+class SetPasswordIn(BaseModel):
+    """Fija la contraseña desde un enlace de alta/recuperación (token)."""
+    token: str
+    password: str = Field(min_length=8, max_length=128)
+
+
+class ForgotPasswordIn(BaseModel):
+    """Solicita un enlace de recuperación de acceso."""
+    email: str
+
+    _norm_email = field_validator("email")(_email_basico)
+
+
 class PuestaEnMarchaOut(BaseModel):
     """Estado de implantación del centro para el asistente de puesta en marcha."""
     equipo_ok: bool

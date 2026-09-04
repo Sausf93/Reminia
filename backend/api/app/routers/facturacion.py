@@ -25,8 +25,8 @@ from app.database import get_db
 from app.deps import auditar, require_roles_para_pago
 from app.models import Centro, UsuarioFinal, UsuarioStaff
 from app.schemas import CheckoutOut, EstadoSuscripcionOut, SignupIn
-from app.security import generar_password
-from app.services.email import enviar_credenciales_admin
+from app.security import crear_token_password, generar_password
+from app.services.email import enviar_enlace_alta
 
 router = APIRouter(tags=["facturacion"])
 
@@ -211,12 +211,14 @@ async def _provisionar_signup(db, meta, customer_id, subscription_id) -> None:
             centro.stripe_subscription_id = subscription_id or centro.stripe_subscription_id
             centro.estado_suscripcion = "activa"
             await db.commit()
-    # El correo solo se envía si la cuenta se creó AHORA (evita reenviar una
-    # contraseña ya entregada si el webhook se reprocesa).
-    if creado:
-        await enviar_credenciales_admin(
-            destino=email, nombre_centro=nombre_centro,
-            email_login=email, password=password, panel_url=settings.panel_url)
+    # El correo solo se envía si la cuenta se creó AHORA (evita reenviar el enlace
+    # si el webhook se reprocesa). En vez de mandar la contraseña en claro,
+    # enviamos un ENLACE de un solo uso para que el admin cree la suya (más
+    # seguro, y el mismo mecanismo sirve de recuperación).
+    if creado and staff is not None:
+        token = crear_token_password(staff.id, staff.password_hash, minutos=60 * 24 * 7)
+        url = f"{settings.panel_url}/crear-password?token={token}"
+        await enviar_enlace_alta(destino=email, nombre_centro=nombre_centro, url=url)
 
 
 @router.post("/facturacion/webhook", include_in_schema=False)

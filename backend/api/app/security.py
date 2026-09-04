@@ -1,4 +1,5 @@
 """Utilidades de seguridad: hashing de contraseñas y JWT."""
+import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
 
@@ -53,3 +54,36 @@ def decode_access_token(token: str) -> dict:
         settings.jwt_secret,
         algorithms=[settings.jwt_algorithm],
     )
+
+
+# ---- Token de "crear/recuperar contraseña" (enlace por correo) ----
+#
+# En vez de mandar la contraseña en claro por email (que quedaría escrita en el
+# buzón), el alta y la recuperación envían un ENLACE con este token. Lleva
+# embebida la huella del hash de la contraseña ACTUAL (`pn`): en cuanto la
+# contraseña se cambia, el hash (y su huella) cambian, así que el token deja de
+# valer — efecto de un solo uso SIN necesidad de almacenar nada.
+
+def nonce_de_hash(password_hash: str) -> str:
+    return hashlib.sha256(password_hash.encode("utf-8")).hexdigest()[:16]
+
+
+def crear_token_password(staff_id: str, password_hash: str, minutos: int) -> str:
+    now = datetime.now(timezone.utc)
+    payload = {
+        "sub": staff_id,
+        "purpose": "set_password",
+        "pn": nonce_de_hash(password_hash),
+        "iat": now,
+        "exp": now + timedelta(minutes=minutos),
+    }
+    return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+
+def leer_token_password(token: str) -> dict:
+    """Devuelve el payload si es un token de contraseña válido; lanza
+    jwt.PyJWTError si es inválido/expirado o de otro propósito."""
+    payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
+    if payload.get("purpose") != "set_password":
+        raise jwt.InvalidTokenError("propósito de token inválido")
+    return payload

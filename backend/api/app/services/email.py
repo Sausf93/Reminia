@@ -91,3 +91,49 @@ async def enviar_credenciales_admin(
         password=password, panel_url=panel,
     )
     return await enviar_email(destino, asunto, html)
+
+
+def _plantilla_enlace(*, titulo: str, intro: str, cta: str, url: str, nota: str) -> str:
+    teal = "#12A99B"
+    return f"""\
+<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+            max-width:520px;margin:0 auto;color:#213">
+  <h1 style="color:{teal};font-size:22px;margin:0 0 8px">{titulo}</h1>
+  <p style="font-size:15px;line-height:1.5">{intro}</p>
+  <p style="margin:22px 0">
+    <a href="{url}" style="display:inline-block;background:{teal};color:#fff;
+       text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:700">
+       {cta}</a>
+  </p>
+  <p style="font-size:13px;color:#5a6b68;line-height:1.5">{nota}</p>
+  <p style="font-size:12px;color:#9aa8a5;margin-top:22px">— El equipo de {_MARCA}</p>
+</div>"""
+
+
+async def enviar_enlace_alta(*, destino: str, nombre_centro: str, url: str) -> bool:
+    """Correo de bienvenida con un ENLACE para crear la contraseña (no se envía la
+    contraseña en claro). El enlace es de un solo uso."""
+    html = _plantilla_enlace(
+        titulo=f"Bienvenida a {_MARCA}",
+        intro=(f"Ya tienes tu centro <b>{nombre_centro}</b> listo. Solo falta que "
+               "crees tu contraseña para entrar y dejar todo a punto, paso a paso."),
+        cta="Crear mi contraseña",
+        url=url,
+        nota=("El enlace caduca en unos días. Si no reconoces este mensaje, "
+              "ignóralo: sin crear la contraseña nadie puede entrar."),
+    )
+    return await enviar_email(destino, f"Crea tu acceso a {_MARCA} — {nombre_centro}", html)
+
+
+async def enviar_enlace_recuperacion(*, destino: str, url: str) -> bool:
+    """Correo con un ENLACE para elegir una nueva contraseña (recuperación)."""
+    html = _plantilla_enlace(
+        titulo="Recupera tu acceso",
+        intro=("Has pedido recuperar tu acceso. Pulsa el botón para elegir una "
+               "contraseña nueva."),
+        cta="Elegir nueva contraseña",
+        url=url,
+        nota=("El enlace caduca en 1 hora. Si no lo pediste tú, ignóralo: tu "
+              "contraseña actual sigue funcionando."),
+    )
+    return await enviar_email(destino, f"Recuperar tu acceso a {_MARCA}", html)
