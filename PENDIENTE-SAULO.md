@@ -53,6 +53,11 @@ Con eso, monto Python 3.12 + venv + deps, `npm install`, y **verifico todo**.
 - [ ] `pytest` + `tsc` + `flutter analyze` + E2E de escenario en verde (lo corro yo).
 - [ ] Desplegar backend (Cloud Run) + frontends (Cloudflare) con la skill `desplegar`. **No despliego desatendido**; lo hacemos juntos.
 
+## 7. Decisiones de seguridad que necesitan tu criterio (ronda 15)
+La auditoría de seguridad salió **"casi"**: el aislamiento entre centros (IDOR) es **sólido, sin fugas**. Estas dos son decisiones de producto que **no he forzado** (no son exploits, están scoped por centro):
+- [ ] **Documentos legales (DPA, consentimientos con DNI/NIE): ¿quién los descarga/borra?** Hoy **cualquier integradora** del centro puede (el test actual lo da por intencionado). El auditor recomienda restringirlo a **admin_centro** por ser PII sensible. Dime si lo restrinjo.
+- [ ] **El token de la tablet (kiosco) escala a una sesión de staff completa.** `POST /auth/tablet` con el token del dispositivo + elegir un nombre acuña un JWT de profesional (no admin) **sin contraseña** (el PIN es opcional y por defecto nadie lo tiene). Ese JWT abre todos los endpoints de staff (datos de salud del centro, export CSV, documentos). Es inherente a que la tablet en modo "maestra" necesita acceso de staff. Fix robusto (a diseñar con cuidado para no romper el kiosco): token de **alcance reducido** + exigir contraseña/PIN para lo sensible. Lo vemos juntos.
+
 ---
 ### Estado de lo que Claude va avanzando solo (rama `rebrand/reminia`, sin push)
 - Arreglados los 4 bloqueantes de la ronda 13 + pulidos + fix del bypass RGPD de la compuerta legal + 2 fixes de Stripe. (Commits en la rama.)

@@ -139,7 +139,7 @@ class CentroSuscripcionIn(BaseModel):
     """Super-admin fija el estado de suscripción de un centro a mano (cortesía,
     suspender, reactivar) o extiende la prueba unos días."""
     estado: str | None = None  # prueba|activa|cortesia|suspendido|cancelada
-    dias_prueba: int | None = None  # si se da, pone estado='prueba' y fin = hoy+dias
+    dias_prueba: int | None = Field(default=None, ge=1, le=3650)  # tope ~10 años (evita OverflowError en timedelta)
 
 
 class CheckoutOut(BaseModel):

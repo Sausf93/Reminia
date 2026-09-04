@@ -40,6 +40,10 @@ class Settings(BaseSettings):
     # Solo lo conoce el dueño de la plataforma (tú). Nunca se expone al panel.
     platform_token: str = ""
 
+    # Token del banco de pruebas de contenido (cabecera X-Lab-Token). Sin datos
+    # de personas; se puede sobrescribir por entorno.
+    banco_token: str = "trazo-lab-2026"
+
     # --- Stripe (facturación por suscripción). Si stripe_secret_key está vacío,
     # el cobro queda DESACTIVADO (útil en dev/tests: no se llama a Stripe). ---
     stripe_secret_key: str = ""

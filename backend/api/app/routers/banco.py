@@ -6,23 +6,24 @@ personas marquen y el equipo lo consolide en un solo sitio.
 """
 from __future__ import annotations
 
+import secrets
+
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import settings
 from app.deps import get_db
 from app.models import BancoVeredicto
 from app.schemas import BancoVeredictoIn, BancoVeredictoOut
 
 router = APIRouter(prefix="/banco", tags=["banco"])
 
-# Token compartido (secreto de baja seguridad: no hay datos de personas). Debe
-# coincidir con el que envía el banco de la tablet.
-_BANCO_TOKEN = "trazo-lab-2026"
-
-
 def _exigir_token(x_lab_token: str | None = Header(default=None)) -> None:
-    if x_lab_token != _BANCO_TOKEN:
+    # Token compartido (secreto de baja seguridad: no hay datos de personas). Se
+    # lee del entorno (settings.banco_token) y se compara en tiempo constante.
+    esperado = settings.banco_token or ""
+    if not x_lab_token or not secrets.compare_digest(x_lab_token, esperado):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Token del banco no válido")
 
 

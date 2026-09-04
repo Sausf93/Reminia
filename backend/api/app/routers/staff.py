@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -53,7 +54,15 @@ async def crear_staff(
         password_hash=hash_password(body.password),
     )
     db.add(nuevo)
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        # Carrera (doble clic del admin / dos altas casi simultáneas con el mismo
+        # email): la comprobación previa no lo pilla, pero el índice único sí.
+        # Devolvemos el 409 esperado en vez de un 500 crudo.
+        await db.rollback()
+        raise HTTPException(status.HTTP_409_CONFLICT,
+                            "Ya existe una cuenta con ese email")
     await db.refresh(nuevo)
     return nuevo
 

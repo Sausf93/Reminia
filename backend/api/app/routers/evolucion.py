@@ -171,6 +171,10 @@ async def exportar_intentos_csv(
     clínica. Auditado (RGPD)."""
     if centro_id != staff.centro_id:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "No es tu centro")
+    # Anti-IDOR (defensa en profundidad): si se pide una persona concreta, validar
+    # YA que es de este centro ANTES de leer ningún dato suyo (incl. el nombre real).
+    if usuario_final_id is not None:
+        await usuario_del_centro(db, usuario_final_id, staff)  # 403 si no es del centro
     # El nombre real solo tiene sentido (y se permite) en la exportación individual.
     nombre_real = None
     if incluir_nombre and usuario_final_id is not None:
@@ -187,8 +191,7 @@ async def exportar_intentos_csv(
         .where(UsuarioFinal.centro_id == centro_id)
         .order_by(Intento.timestamp_inicio)
     )
-    if usuario_final_id is not None:
-        await usuario_del_centro(db, usuario_final_id, staff)  # anti-IDOR (403)
+    if usuario_final_id is not None:  # ya validado como del centro arriba (anti-IDOR)
         stmt = stmt.where(Intento.usuario_final_id == usuario_final_id)
 
     filas = (await db.execute(stmt)).all()
