@@ -16,6 +16,7 @@ Cada test recibe un `client` con su propia BD sembrada (fixtures en conftest.py)
 from __future__ import annotations
 
 import uuid
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -281,6 +282,14 @@ async def test_serie_descendente_genera_alerta_y_sugerencia(client):
         {"precision": 0.4, "puntos_capturados": 3},    # no_logrado (apenas trazó)
         {"precision": 0.4, "puntos_capturados": 3},
     ]
+    # Una serie descendente SOSTENIDA sucede a lo largo del tiempo, no en el
+    # mismo milisegundo. Mandamos `timestamp_inicio` crecientes (como haría la
+    # tablet con la hora real del dispositivo) para que el orden temporal sea
+    # inequívoco. Sin esto, en Windows `datetime.now()` tiene resolución de ~1ms
+    # y los 7 intentos caerían con la MISMA marca de tiempo: el `ORDER BY
+    # timestamp_inicio` empataría y el motor recibiría la serie desordenada de
+    # forma no determinista (flaky).
+    base = datetime.now(timezone.utc) - timedelta(minutes=len(serie))
     for idx, met in enumerate(serie):
         r = await client.post(
             f"/sesiones/{sesion_id}/intentos",
@@ -291,6 +300,7 @@ async def test_serie_descendente_genera_alerta_y_sugerencia(client):
                 "sesion_id": sesion_id,
                 "ejercicio_id": ejercicio["id"],
                 "estado": "sin_valorar",
+                "timestamp_inicio": (base + timedelta(minutes=idx)).isoformat(),
                 "valores_json": {**met, "tiempo_ms": 90000},
                 # cantidad_objetivo REALISTA: la figura cambia en cada tirada
                 # (como en producción). La dificultad (tolerancia_px) es estable,

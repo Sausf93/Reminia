@@ -96,7 +96,12 @@ async def evaluar_usuario_bloque(
             Intento.usuario_final_id == usuario_final_id,
             EjercicioCatalogo.bloque == bloque,
         )
-        .order_by(Intento.timestamp_inicio.desc())
+        # Desempate por `id` para que el orden sea DETERMINISTA cuando dos
+        # intentos comparten `timestamp_inicio` (p. ej. una tablet en kiosco que
+        # vuelca varios intentos en lote, o marcas con resolución de ~1ms). Sin
+        # el desempate, la serie clínica podría llegar desordenada de forma no
+        # determinista y la alerta de declive dispararse o no según el azar.
+        .order_by(Intento.timestamp_inicio.desc(), Intento.id.desc())
         .limit(_MAX_HISTORIAL)
     )
     intentos = list(reversed((await db.execute(stmt)).scalars().all()))
