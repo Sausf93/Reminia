@@ -71,5 +71,12 @@ ApiKey*
 *apikey*
 *api-key*
 *.key
+# Claves de servicio / credenciales (GCP, etc.) — NUNCA subir
+_deploy/gcp-deploy-key.json
+*service-account*.json
+*service_account*.json
+*-key.json
+gcp-*.json
+credentials*.json
 .claude/settings.local.json
 *.playwright-mcp
