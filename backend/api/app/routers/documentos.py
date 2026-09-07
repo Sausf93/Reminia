@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.deps import auditar, get_current_staff, get_db, usuario_del_centro_id
+from app.deps import auditar, get_current_staff, get_db, require_roles, usuario_del_centro_id
 from app.models import TIPOS_DOCUMENTO, DocumentoLegal, UsuarioStaff
 from app.schemas import DocumentoContenidoOut, DocumentoIn, DocumentoOut
 
@@ -107,9 +107,14 @@ async def descargar_documento(
 async def borrar_documento(
     doc_id: str,
     db: AsyncSession = Depends(get_db),
-    staff: UsuarioStaff = Depends(get_current_staff),
+    staff: UsuarioStaff = Depends(require_roles("admin_centro")),
 ):
-    """Borra un documento (p. ej. subida errónea, o supresión RGPD). Auditado."""
+    """Borra un documento (p. ej. subida errónea, o supresión RGPD). Auditado.
+
+    SEGURIDAD: solo `admin_centro`. Estos documentos son la PRUEBA legal del
+    consentimiento y del DPA (con DNI/NIE); destruirlos es irreversible, así que
+    no puede hacerlo cualquier integradora — es una acción deliberada del
+    responsable del centro (hallazgo bloqueante de la ronda 19)."""
     doc = await db.get(DocumentoLegal, doc_id)
     if doc is None or doc.centro_id != staff.centro_id:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Documento no encontrado")

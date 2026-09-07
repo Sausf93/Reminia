@@ -6,6 +6,7 @@ import base64
 import pytest
 
 INTEGRADORA = ("integradora@trazo.local", "trazo1234")
+ADMIN = ("admin@trazo.local", "trazo1234")
 
 
 async def _login(client, cred=INTEGRADORA):
@@ -38,9 +39,32 @@ async def test_subir_listar_descargar_borrar(client):
     cont = (await client.get(f"/documentos/{doc['id']}/contenido", headers=headers)).json()
     assert cont["contenido_b64"] == contenido
 
-    # Borrado.
-    assert (await client.delete(f"/documentos/{doc['id']}", headers=headers)).status_code == 204
+    # Borrado: SOLO admin_centro (destruir prueba legal es acción controlada).
+    admin = await _login(client, ADMIN)
+    assert (await client.delete(f"/documentos/{doc['id']}", headers=admin)).status_code == 204
     assert (await client.get(f"/documentos/{doc['id']}/contenido", headers=headers)).status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_borrar_documento_requiere_admin(client):
+    """Una integradora NO puede borrar un documento legal (DPA/consentimiento con
+    DNI): destruirlo es irreversible y solo lo hace admin_centro (ronda 19)."""
+    integradora = await _login(client, INTEGRADORA)
+    c = base64.b64encode(b"%PDF-1.4 dpa").decode()
+    doc = (await client.post("/documentos", headers=integradora, json={
+        "tipo": "dpa", "nombre_archivo": "dpa.pdf", "mime": "application/pdf",
+        "contenido_b64": c,
+    })).json()
+
+    # Integradora -> 403 (no puede borrar).
+    r = await client.delete(f"/documentos/{doc['id']}", headers=integradora)
+    assert r.status_code == 403, r.text
+    # El documento sigue ahí.
+    assert (await client.get(f"/documentos/{doc['id']}/contenido",
+                             headers=integradora)).status_code == 200
+    # Admin sí puede.
+    admin = await _login(client, ADMIN)
+    assert (await client.delete(f"/documentos/{doc['id']}", headers=admin)).status_code == 204
 
 
 @pytest.mark.asyncio

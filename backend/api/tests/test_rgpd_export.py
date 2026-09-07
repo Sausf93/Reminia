@@ -97,3 +97,17 @@ async def test_export_csv_scoped(client, Session):
     _, h2 = await _login(client, ("ajeno2@trazo.local", "trazo1234"))
     r = await client.get(f"/export/intentos.csv?centro_id={centro_id}", headers=h2)
     assert r.status_code == 403, r.text
+
+
+def test_csv_safe_neutraliza_formulas():
+    """El alias/nombre lo teclea el staff y el CSV se abre en Excel: una celda que
+    empiece por = + - @ se ejecutaría (fuga/DDE). _csv_safe la deja como texto."""
+    from app.routers.evolucion import _csv_safe
+
+    assert _csv_safe('=HYPERLINK("http://x","abrir")') == '\'=HYPERLINK("http://x","abrir")'
+    for c in ("=", "+", "-", "@", "\t", "\r"):
+        assert _csv_safe(c + "cmd").startswith("'"), c
+    # Texto normal no se toca; el peligro solo cuenta al PRINCIPIO.
+    assert _csv_safe("Paco") == "Paco"
+    assert _csv_safe("a-b") == "a-b"
+    assert _csv_safe(None) == ""

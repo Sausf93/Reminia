@@ -41,6 +41,23 @@ _RESULTADO_CSV = {
     "sin_valorar": "Sin valorar",
 }
 
+# Caracteres con los que Excel/LibreOffice interpretan una celda como FÓRMULA.
+_CSV_PELIGRO = ("=", "+", "-", "@", "\t", "\r", "\n")
+
+
+def _csv_safe(valor) -> str:
+    """Neutraliza la inyección de fórmulas en CSV (CWE-1236).
+
+    El alias y el nombre real de la persona los teclea el staff; este CSV se abre
+    en Excel por terceros (financiadores, historia clínica). Si una celda empieza
+    por = + - @ (o tab/salto), Excel la ejecuta (fuga de datos vía HYPERLINK/
+    WEBSERVICE, o DDE). Prefijamos una comilla simple para que se muestre como
+    texto literal sin cambiar lo que lee un humano."""
+    s = "" if valor is None else str(valor)
+    if s and s[0] in _CSV_PELIGRO:
+        return "'" + s
+    return s
+
 
 _UMBRAL_BAJO = 0.5  # por debajo de este desempeño medio conviene mirar a la persona
 
@@ -203,10 +220,12 @@ async def exportar_intentos_csv(
     cols += ["area", "actividad", "resultado", "con_ayuda"]
     w.writerow(cols)
     for (i, alias, nombre, bloque) in filas:
-        fila = [i.timestamp_inicio.isoformat(sep=" ", timespec="minutes"), alias]
+        fila = [i.timestamp_inicio.isoformat(sep=" ", timespec="minutes"),
+                _csv_safe(alias)]
         if nombre_real:
-            fila.append(nombre_real)
-        fila += [bloque, nombre, _RESULTADO_CSV.get(i.resultado, i.resultado),
+            fila.append(_csv_safe(nombre_real))
+        fila += [_csv_safe(bloque), _csv_safe(nombre),
+                 _RESULTADO_CSV.get(i.resultado, i.resultado),
                  "sí" if i.con_ayuda else "no"]
         w.writerow(fila)
     await auditar(db, staff, "exportar_csv",
@@ -217,7 +236,7 @@ async def exportar_intentos_csv(
     return Response(
         content="﻿" + buf.getvalue(),
         media_type="text/csv; charset=utf-8",
-        headers={"Content-Disposition": 'attachment; filename="trazo-datos.csv"'},
+        headers={"Content-Disposition": 'attachment; filename="reminia-datos.csv"'},
     )
 
 
