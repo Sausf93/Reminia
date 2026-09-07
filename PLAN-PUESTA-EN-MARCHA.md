@@ -42,6 +42,16 @@ En Cloudflare, en cada proyecto **Pages**, *Custom domains* → *Set up a domain
 
 ## Bloque 4 — Desplegar backend + frontends con la marca nueva (YO, con tu ok)
 > Necesito `gcloud` autenticado (o me lees los pasos y los ejecutas tú) y la API key de Resend del Bloque 2. **Stripe sigue en TEST** todavía.
+>
+> ✅ **BASE DE DATOS YA LISTA (Neon):** proyecto "Reminia" creado, conexión probada
+> con la config real de la app (`postgresql+asyncpg` + `DB_SSL=true`, Postgres 18),
+> y **esquema + catálogo (2.928 actividades) ya provisionados** (sin datos demo).
+> Las variables exactas de Cloud Run están en `_deploy/reminia-cloudrun.secret`
+> (git-ignorado), con el `JWT_SECRET` de prod ya generado. Al desplegar: **preservar
+> las claves de Stripe actuales** (leer con `gcloud run services describe trazo-api`
+> antes de tocar) y **añadir `RESEND_API_KEY`** (está en el archivo `ApiKeyResend`).
+> ⚠️ El backend de prod está caído porque apuntaba a la BD vieja (Aiven, muerta);
+> al redesplegar apuntando a Neon, vuelve a la vida.
 1. **Backend (Cloud Run)** con estas variables nuevas (con `--env-vars-file`, no comas):
    - `RESEND_API_KEY` = (la del Bloque 2)
    - `RESEND_FROM` = `Reminia <noreply@reminia.es>`
