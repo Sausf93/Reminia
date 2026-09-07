@@ -341,7 +341,7 @@ export function InformeFamilia({
           cualquier duda, consulte con el personal de referencia.
         </p>
         <p style={{ margin: "8px 0 0" }}>
-          Documento generado por Trazo el {fmtFecha(generado.toISOString())}. Datos tratados conforme al
+          Documento generado por Reminia el {fmtFecha(generado.toISOString())}. Datos tratados conforme al
           RGPD: se identifica a la persona mediante un código interno, sin datos personales.
         </p>
       </footer>

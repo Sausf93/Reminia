@@ -1,5 +1,5 @@
 /**
- * Tokens de diseño de Trazo.
+ * Tokens de diseño de Reminia.
  * Paleta y tipografía tomadas EXACTAMENTE de trazo-presentacion.html (:root)
  * para que el panel se sienta parte del mismo producto.
  */

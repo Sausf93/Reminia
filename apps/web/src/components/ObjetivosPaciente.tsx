@@ -1,6 +1,6 @@
 /**
  * Objetivos/metas clínicas por persona: la integradora fija un desempeño objetivo
- * por área y el panel muestra 'objetivo vs situación actual'. Convierte Trazo en
+ * por área y el panel muestra 'objetivo vs situación actual'. Convierte Reminia en
  * un plan de intervención medible (diferenciador frente a un catálogo).
  */
 import { useState } from "react";

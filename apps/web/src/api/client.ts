@@ -1,5 +1,5 @@
 /**
- * Cliente HTTP centralizado para la API de Trazo.
+ * Cliente HTTP centralizado para la API de Reminia.
  * - La URL base sale de VITE_API_URL (por defecto http://localhost:8000).
  * - Adjunta el JWT Bearer si hay sesión.
  * - Ante un 401 limpia la sesión (token caducado / inválido).

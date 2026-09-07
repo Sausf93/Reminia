@@ -1,4 +1,4 @@
-/** Logo de marca de Trazo — el MISMO en toda la app (panel, tablet, web comercial).
+/** Logo de marca de Reminia — el MISMO en toda la app (panel, tablet, web comercial).
  *  Azulejo salvia con un trazo que empieza tembloroso y termina firme (punto coral). */
 import { colors, fonts } from "../theme";
 
@@ -13,7 +13,7 @@ export function Logo({
 }) {
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-      <svg width={size} height={size} viewBox="0 0 40 40" aria-label="Trazo" role="img">
+      <svg width={size} height={size} viewBox="0 0 40 40" aria-label="Reminia" role="img">
         <rect width="40" height="40" rx="11" fill="#12A99B" />
         <path
           d="M7 26 C11 14 15 30 20 22 C24 16 27 24 33 15"
@@ -26,7 +26,7 @@ export function Logo({
       </svg>
       {showText && (
         <span style={{ fontFamily: fonts.serif, fontSize: textSize, fontWeight: 600, color: colors.ink }}>
-          Trazo
+          Reminia
         </span>
       )}
     </div>

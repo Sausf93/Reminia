@@ -112,7 +112,7 @@ export function PuestaEnMarchaPage() {
             </Paso>
 
             <Paso hecho={d.dpa_ok} titulo="3. Sube el contrato de encargo (DPA)">
-              El acuerdo RGPD entre el centro y Trazo. Sin él no se abren sesiones reales.{" "}
+              El acuerdo RGPD entre el centro y Reminia. Sin él no se abren sesiones reales.{" "}
               <Link to="/cumplimiento" style={{ color: colors.sageDark }}>Ir a Cumplimiento</Link>
             </Paso>
 
@@ -129,7 +129,7 @@ export function PuestaEnMarchaPage() {
               Estado: <strong>{d.estado_suscripcion}</strong>.{" "}
               {d.suscripcion_ok
                 ? "El acceso está garantizado."
-                : "Actívala para seguir usando Trazo."}{" "}
+                : "Actívala para seguir usando Reminia."}{" "}
               <Link to="/cumplimiento" style={{ color: colors.sageDark }}>Gestionar</Link>
             </Paso>
 

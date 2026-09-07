@@ -1,6 +1,6 @@
 /**
  * Página guiada de CUMPLIMIENTO (RGPD) para el admin del centro: una lista de
- * pasos a completar al implantar Trazo (para no olvidar nada) + subida de los
+ * pasos a completar al implantar Reminia (para no olvidar nada) + subida de los
  * documentos del centro (DPA, RAT, DPIA) que quedan guardados en la app para las
  * auditorías. Los consentimientos por persona se gestionan en cada ficha.
  */
@@ -68,13 +68,13 @@ export function CumplimientoPage() {
       <PageHeader
         eyebrow="Panel del centro"
         title="Cumplimiento (RGPD)"
-        subtitle="Pasos para dejar el centro en regla al implantar Trazo, y los documentos guardados en la app para cuando haya una auditoría."
+        subtitle="Pasos para dejar el centro en regla al implantar Reminia, y los documentos guardados en la app para cuando haya una auditoría."
       />
 
       <Card style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 17, marginBottom: 4 }}>Suscripción</h2>
         <p style={{ fontSize: 13.5, color: colors.textMuted, marginBottom: 12 }}>
-          Trazo es de pago por centro (incluye hasta 30 personas; a partir de ahí, un pequeño extra
+          Reminia es de pago por centro (incluye hasta 30 personas; a partir de ahí, un pequeño extra
           por persona). Activa la suscripción para seguir usándolo cuando termine la prueba.
         </p>
         {errorPago && <StateMessage tone="error">{errorPago}</StateMessage>}
@@ -89,7 +89,7 @@ export function CumplimientoPage() {
         {!docs.loading && (
           <div>
             <Paso hecho={tieneTipo("dpa")} titulo="1. Contrato de encargo del tratamiento (DPA) firmado con el centro">
-              Súbelo abajo. Es el contrato Trazo ↔ centro; fírmalo <strong>antes</strong> de cargar datos reales.
+              Súbelo abajo. Es el contrato Reminia ↔ centro; fírmalo <strong>antes</strong> de cargar datos reales.
             </Paso>
             <Paso hecho={tieneTipo("rat")} titulo="2. Registro de Actividades de Tratamiento (RAT)">
               El del centro (responsable). Súbelo abajo cuando lo tengáis.

@@ -141,7 +141,7 @@ export function InformeCentro({
           orientativo, que interpreta el equipo profesional del centro en su contexto.
         </p>
         <p style={{ margin: "8px 0 0" }}>
-          Documento generado por Trazo el {fmtFecha(generado.toISOString())}. Datos tratados conforme al RGPD:
+          Documento generado por Reminia el {fmtFecha(generado.toISOString())}. Datos tratados conforme al RGPD:
           las personas se identifican mediante un código interno, sin datos personales.
         </p>
       </footer>

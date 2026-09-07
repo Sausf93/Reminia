@@ -1,4 +1,4 @@
-/** Piezas de UI reutilizables, alineadas con la paleta de Trazo. */
+/** Piezas de UI reutilizables, alineadas con la paleta de Reminia. */
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from "react";
 import { colors, fonts, radius } from "../theme";
 
