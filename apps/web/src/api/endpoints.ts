@@ -37,6 +37,18 @@ export function login(email: string, password: string): Promise<TokenOut> {
   return http.postForm<TokenOut>("/auth/login", { username: email, password });
 }
 
+/** Crea la contraseña desde el enlace del correo (alta o recuperación) y
+ *  devuelve un JWT (auto-login). El token es la credencial de un solo uso. */
+export function crearPassword(token: string, password: string): Promise<TokenOut> {
+  return http.post<TokenOut>("/auth/set-password", { token, password });
+}
+
+/** Pide un enlace de recuperación. Responde SIEMPRE igual (no revela si el
+ *  correo existe): la UI muestra el mismo mensaje pase lo que pase. */
+export function recuperarAcceso(email: string): Promise<{ mensaje: string }> {
+  return http.post<{ mensaje: string }>("/auth/forgot-password", { email });
+}
+
 // ---- Equipo (staff del centro) ----
 export function listarStaff(signal?: AbortSignal): Promise<Staff[]> {
   return http.get<Staff[]>("/staff", signal);

@@ -6,11 +6,15 @@ import type { ReactNode } from "react";
 import { login as apiLogin } from "../api/endpoints";
 import { clearSession, getSession, saveSession } from "./session";
 import type { Session } from "./session";
+import type { TokenOut } from "../api/types";
 
 interface AuthContextValue {
   session: Session | null;
   isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  /** Aplica un JWT ya obtenido (p. ej. el auto-login tras crear la contraseña
+   *  desde el enlace del correo), sin volver a pedir credenciales. */
+  applyToken: (token: TokenOut) => void;
   signOut: () => void;
 }
 
@@ -24,6 +28,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(saveSession(token));
   }, []);
 
+  const applyToken = useCallback((token: TokenOut) => {
+    setSession(saveSession(token));
+  }, []);
+
   const signOut = useCallback(() => {
     clearSession();
     setSession(null);
@@ -34,9 +42,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       isAdmin: session?.rol === "admin_centro",
       signIn,
+      applyToken,
       signOut,
     }),
-    [session, signIn, signOut],
+    [session, signIn, applyToken, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

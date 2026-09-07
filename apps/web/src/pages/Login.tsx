@@ -1,6 +1,6 @@
 /** Pantalla de acceso. Guarda el JWT + centro_id/rol vía AuthContext. */
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { ApiError } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { Button, Field, inputStyle } from "../components/ui";
@@ -13,6 +13,9 @@ const DEMO_PASS = "trazo1234";
 export function LoginPage() {
   const { session, signIn } = useAuth();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  // Tras pagar el alta, Stripe redirige a "/?alta=ok": el acceso llega por correo.
+  const pagoConfirmado = params.get("alta") === "ok";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +78,26 @@ export function LoginPage() {
             Introduce las credenciales del centro para ver la evolución de las personas usuarias.
           </p>
 
+          {pagoConfirmado && (
+            <div
+              role="status"
+              style={{
+                background: colors.card,
+                border: `1px solid ${colors.sage}`,
+                color: colors.ink,
+                borderRadius: radius.sm,
+                padding: "12px 14px",
+                fontSize: 14,
+                lineHeight: 1.5,
+                marginBottom: 18,
+              }}
+            >
+              <strong>¡Pago confirmado!</strong> Te hemos enviado un correo con un
+              enlace para crear tu contraseña. Revisa tu bandeja (y el spam) para
+              entrar por primera vez.
+            </div>
+          )}
+
           <Field label="Correo electrónico" htmlFor="email">
             <input
               id="email"
@@ -121,6 +144,12 @@ export function LoginPage() {
           <Button type="submit" disabled={loading} style={{ width: "100%" }}>
             {loading ? "Entrando…" : "Entrar"}
           </Button>
+
+          <p style={{ textAlign: "center", marginTop: 16, marginBottom: 0, fontSize: 13.5 }}>
+            <Link to="/recuperar" style={{ color: colors.sageDark, fontWeight: 600 }}>
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </p>
         </form>
 
         {import.meta.env.DEV && (

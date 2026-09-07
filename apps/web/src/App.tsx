@@ -1,6 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AlertasPage } from "./pages/Alertas";
+import { CrearPasswordPage } from "./pages/CrearPassword";
+import { RecuperarPage } from "./pages/Recuperar";
 import { DashboardPage } from "./pages/Dashboard";
 import { DispositivosPage } from "./pages/Dispositivos";
 import { EjerciciosPage } from "./pages/Ejercicios";
@@ -19,6 +21,9 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      {/* Rutas PÚBLICAS del alta/recuperación: el token del enlace es la credencial. */}
+      <Route path="/crear-password" element={<CrearPasswordPage />} />
+      <Route path="/recuperar" element={<RecuperarPage />} />
 
       <Route
         path="/"
