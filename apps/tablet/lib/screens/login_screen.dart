@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const Center(child: TrazoLogo(size: 88)),
                 const SizedBox(height: 14),
-                const Text('Trazo',
+                const Text('Reminia',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 48,

@@ -260,7 +260,7 @@ class _GaleriaScreenState extends State<GaleriaScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Trazo',
+                                Text('Reminia',
                                     style: TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.w700,

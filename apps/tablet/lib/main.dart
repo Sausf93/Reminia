@@ -76,7 +76,7 @@ class TrazoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Trazo',
+      title: 'Reminia',
       navigatorKey: navKey,
       debugShowCheckedModeBanner: false,
       theme: buildTrazoTheme(),
