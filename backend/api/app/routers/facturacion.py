@@ -27,10 +27,14 @@ from app.deps import auditar, require_roles_para_pago
 from app.models import Centro, UsuarioFinal, UsuarioStaff
 from app.schemas import CheckoutOut, EstadoSuscripcionOut, SignupIn
 from app.security import crear_token_password, generar_password
-from app.services.email import enviar_enlace_alta
+from app.services.email import enviar_aviso_impago, enviar_enlace_alta
 from app.services.rate_limit import ip_de_request, limitador_publico
 
 log = logging.getLogger("reminia.facturacion")
+
+# Impago (dunning): nº de cobros fallidos seguidos tras el cual se SUSPENDE el
+# acceso. Los fallos anteriores solo avisan por correo (con enlace para pagar).
+AVISOS_CORTE = 3
 
 router = APIRouter(tags=["facturacion"])
 
@@ -178,19 +182,24 @@ async def estado_suscripcion(
         dias_prueba_restantes=dias,
         personas_activas=personas,
         precio_estimado_cent=12500 + extra * 300,
+        avisos_impago=centro.avisos_impago or 0,
+        avisos_corte=AVISOS_CORTE,
     )
 
 
 def _mapear_estado(status_stripe: str) -> str | None:
-    """Traduce el estado de la suscripción de Stripe al del centro."""
+    """Traduce el estado de la suscripción de Stripe al del centro.
+
+    OJO 'past_due' NO corta aquí: el impago se gestiona con AVISOS (dunning) en
+    `invoice.payment_failed`, que avisa por correo y solo suspende al 3er fallo.
+    Aquí solo reaccionamos a estados TERMINALES (unpaid/canceled/paused)."""
     if status_stripe in ("active", "trialing"):
         return "activa"
-    # 'paused' (pause_collection): sin cobro -> cortar acceso, no dejarlo 'activa'.
-    if status_stripe in ("past_due", "unpaid", "incomplete_expired", "paused"):
+    if status_stripe in ("unpaid", "incomplete_expired", "paused"):
         return "suspendido"
     if status_stripe in ("canceled",):
         return "cancelada"
-    return None  # incomplete / paused: no tocar
+    return None  # past_due / incomplete -> lo maneja el dunning, no tocar aquí
 
 
 async def _centro_por(db: AsyncSession, *, sub_id=None, cust_id=None, centro_id=None):
@@ -206,6 +215,56 @@ async def _centro_por(db: AsyncSession, *, sub_id=None, cust_id=None, centro_id=
     if stmt is None:
         return None
     return (await db.execute(stmt)).scalars().first()
+
+
+async def _emails_admin_centro(db: AsyncSession, centro_id: str) -> list[str]:
+    """Correos de los admin_centro del centro (a quién avisar de impago)."""
+    filas = (await db.execute(
+        select(UsuarioStaff.email).where(
+            UsuarioStaff.centro_id == centro_id,
+            UsuarioStaff.rol == "admin_centro",
+            UsuarioStaff.activo.is_(True),
+        )
+    )).scalars().all()
+    return [e for e in filas if e]
+
+
+async def _registrar_impago(db, centro: Centro, attempt_count: int, url_pago: str) -> None:
+    """Un cobro ha fallado. Suma el aviso; al llegar a AVISOS_CORTE suspende el
+    acceso. En cada fallo avisa por correo a los admin del centro (con enlace de
+    pago). Idempotente por `attempt_count` de Stripe: no cuenta de menos aunque se
+    reprocese, porque fija el contador al nº de intento real."""
+    n = max(int(attempt_count or 0), (centro.avisos_impago or 0) + 1)
+    centro.avisos_impago = n
+    suspendido = n >= AVISOS_CORTE
+    if suspendido:
+        centro.estado_suscripcion = "suspendido"
+    await db.commit()
+    destinos = await _emails_admin_centro(db, centro.id)
+    url = url_pago or settings.panel_url
+    for destino in destinos:
+        enviado = await enviar_aviso_impago(
+            destino=destino, nombre_centro=centro.nombre, aviso_n=n,
+            corte_en=AVISOS_CORTE, url_pago=url, suspendido=suspendido)
+        if not enviado:
+            log.error("IMPAGO SIN CORREO: centro '%s' aviso %s/%s a %s no enviado",
+                      centro.nombre, n, AVISOS_CORTE, destino)
+    log.warning("Impago centro '%s': aviso %s/%s%s",
+                centro.nombre, n, AVISOS_CORTE, " -> SUSPENDIDO" if suspendido else "")
+
+
+async def _registrar_pago_ok(db, centro: Centro) -> None:
+    """Un cobro ha entrado: se olvidan los avisos y se reactiva el acceso si estaba
+    suspendido por impago (no toca cancelaciones ni pruebas)."""
+    cambio = False
+    if (centro.avisos_impago or 0) != 0:
+        centro.avisos_impago = 0
+        cambio = True
+    if centro.estado_suscripcion == "suspendido":
+        centro.estado_suscripcion = "activa"
+        cambio = True
+    if cambio:
+        await db.commit()
 
 
 async def _provisionar_signup(db, meta, customer_id, subscription_id) -> None:
@@ -295,7 +354,23 @@ async def webhook_stripe(request: Request, db: AsyncSession = Depends(get_db)):
                 centro.stripe_customer_id = obj.get("customer") or centro.stripe_customer_id
                 centro.stripe_subscription_id = obj.get("subscription") or centro.stripe_subscription_id
                 centro.estado_suscripcion = "activa"
+                centro.avisos_impago = 0  # pago al día: se olvidan avisos previos
                 await db.commit()
+
+    elif tipo == "invoice.payment_failed":
+        # Cobro fallido -> dunning: avisa y, al 3er fallo, suspende.
+        centro = await _centro_por(
+            db, sub_id=obj.get("subscription"), cust_id=obj.get("customer"))
+        if centro is not None:
+            await _registrar_impago(
+                db, centro, obj.get("attempt_count"), obj.get("hosted_invoice_url"))
+
+    elif tipo == "invoice.payment_succeeded":
+        # Cobro correcto -> olvida avisos y reactiva si estaba suspendido por impago.
+        centro = await _centro_por(
+            db, sub_id=obj.get("subscription"), cust_id=obj.get("customer"))
+        if centro is not None:
+            await _registrar_pago_ok(db, centro)
 
     elif tipo in ("customer.subscription.updated", "customer.subscription.deleted"):
         centro = await _centro_por(
@@ -308,6 +383,8 @@ async def webhook_stripe(request: Request, db: AsyncSession = Depends(get_db)):
                 nuevo = _mapear_estado(obj.get("status", ""))
             if nuevo is not None:
                 centro.estado_suscripcion = nuevo
+                if nuevo == "activa":
+                    centro.avisos_impago = 0
                 if obj.get("id"):
                     centro.stripe_subscription_id = obj.get("id")
                 await db.commit()

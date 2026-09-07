@@ -51,6 +51,13 @@ _COLUMNAS = [
         {"sqlite": "VARCHAR(64)", "postgresql": "VARCHAR(64)"},
     ),
     (
+        # Dunning: nº de cobros fallidos seguidos. Existentes -> 0 (al día).
+        "centros",
+        "avisos_impago",
+        {"sqlite": "INTEGER NOT NULL DEFAULT 0",
+         "postgresql": "INTEGER NOT NULL DEFAULT 0"},
+    ),
+    (
         "dispositivos",
         "visto_en",
         {"sqlite": "TIMESTAMP", "postgresql": "TIMESTAMPTZ"},

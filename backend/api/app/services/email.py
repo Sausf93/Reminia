@@ -138,6 +138,36 @@ async def enviar_enlace_alta(*, destino: str, nombre_centro: str, url: str) -> b
     return await enviar_email(destino, f"Crea tu acceso a {_MARCA} — {nombre_centro}", html)
 
 
+async def enviar_aviso_impago(
+    *, destino: str, nombre_centro: str, aviso_n: int, corte_en: int,
+    url_pago: str, suspendido: bool,
+) -> bool:
+    """Aviso de cobro fallido (dunning). Mientras `suspendido` es False se avisa y
+    se mantiene el acceso; al llegar al corte se comunica la suspensión. `url_pago`
+    lleva a la factura/portal de Stripe para regularizar."""
+    centro = _esc(nombre_centro)
+    if suspendido:
+        titulo = "Acceso suspendido por falta de pago"
+        intro = (f"No hemos podido cobrar la suscripción de <b>{centro}</b> tras "
+                 f"{corte_en} intentos, así que hemos <b>suspendido el acceso</b>. "
+                 "Tus datos se conservan intactos; en cuanto se complete el pago, "
+                 "el acceso vuelve automáticamente.")
+        cta = "Regularizar el pago"
+        nota = "Si crees que es un error, contáctanos y lo revisamos enseguida."
+        asunto = f"Reminia — acceso suspendido ({nombre_centro})"
+    else:
+        titulo = "No pudimos cobrar tu suscripción"
+        intro = (f"Ha fallado el cobro de la suscripción de <b>{centro}</b> "
+                 f"(aviso {aviso_n} de {corte_en}). Actualiza tu método de pago "
+                 "para no perder el acceso.")
+        cta = "Actualizar el pago"
+        nota = (f"Volveremos a intentarlo. Si tras {corte_en} intentos no se "
+                "cobra, se suspenderá el acceso (tus datos se conservan).")
+        asunto = f"Reminia — pago pendiente ({nombre_centro})"
+    html = _plantilla_enlace(titulo=titulo, intro=intro, cta=cta, url=url_pago, nota=nota)
+    return await enviar_email(destino, asunto, html)
+
+
 async def enviar_enlace_recuperacion(*, destino: str, url: str) -> bool:
     """Correo con un ENLACE para elegir una nueva contraseña (recuperación)."""
     html = _plantilla_enlace(

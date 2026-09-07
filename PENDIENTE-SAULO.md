@@ -40,6 +40,8 @@ Con eso, monto Python 3.12 + venv + deps, `npm install`, y **verifico todo**.
 ## 4. Stripe — pasar a cobro real (lo ÚLTIMO)
 - [ ] Cuando todo esté probado en test, **cambiar las claves de Stripe a las de LIVE** (secret key + webhook secret + price id de producción) en Cloud Run. Lo hacemos juntos.
 - [ ] **Probar el checkout con la tarjeta de test `4242 4242 4242 4242`** (yo NO tecleo tarjetas ni contraseñas: esta prueba la haces tú).
+- [ ] **Webhook de Stripe — eventos a suscribir** (en el endpoint `https://<api>/facturacion/webhook`): `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, y **`invoice.payment_failed` + `invoice.payment_succeeded`** (estos dos son los que activan el **flujo de impago con avisos**). Sin ellos, los avisos de impago no se disparan.
+- **Impago (dunning) — ya implementado en backend:** cuando un cobro falla, se envía un **aviso por correo** a los admin del centro (con enlace de pago) y se mantiene el acceso; al **3er cobro fallido** (`AVISOS_CORTE`) se **suspende** el acceso (los datos se conservan). Un cobro correcto resetea los avisos y reactiva. El nº de reintentos/fechas lo marca la config de reintentos de Stripe (Smart Retries).
 
 ## 5. Rebrand total Trazo → Reminia
 - **HECHO (rama `rebrand/reminia`), textos de marca visibles a Reminia:**

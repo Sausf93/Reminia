@@ -158,6 +158,10 @@ class EstadoSuscripcionOut(BaseModel):
     base_cent: int = 12500
     extra_por_persona_cent: int = 300
     precio_estimado_cent: int
+    # Impago (dunning): nº de cobros fallidos seguidos y umbral de corte, para que
+    # el panel avise ("pago pendiente, aviso X de Y") antes de suspender.
+    avisos_impago: int = 0
+    avisos_corte: int = 3
 
 
 class SignupIn(BaseModel):

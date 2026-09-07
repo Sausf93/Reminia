@@ -164,6 +164,10 @@ class Centro(Base):
         DateTime(timezone=True), default=_fin_prueba, nullable=True)
     stripe_customer_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     stripe_subscription_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # Impago: nº de intentos de cobro fallidos seguidos (dunning). Cada fallo suma
+    # y envía un aviso; al llegar a AVISOS_CORTE se suspende el acceso. Un cobro
+    # correcto lo pone a 0. Se rellena desde el webhook de Stripe (invoice.*).
+    avisos_impago: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     staff: Mapped[list[UsuarioStaff]] = relationship(back_populates="centro")
     usuarios_finales: Mapped[list[UsuarioFinal]] = relationship(back_populates="centro")
