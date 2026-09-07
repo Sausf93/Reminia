@@ -19,13 +19,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login", auto_error=True)
 # Mensaje único para un centro suspendido (impago, etc.): se corta el acceso pero
 # los datos se conservan. Se comprueba en CADA petición, así el bloqueo del
 # super-admin surte efecto al instante, incluso con tokens ya emitidos.
-CENTRO_SUSPENDIDO = "Centro suspendido. Contacta con Trazo para reactivarlo."
+CENTRO_SUSPENDIDO = "Centro suspendido. Contacta con Reminia para reactivarlo."
 SUSCRIPCION_SUSPENDIDA = (
     "La suscripción del centro está suspendida (pago pendiente). "
-    "Contacta con Trazo para reactivarla.")
+    "Contacta con Reminia para reactivarla.")
 PRUEBA_TERMINADA = (
     "El periodo de prueba ha terminado. Activa la suscripción del centro para "
-    "seguir usando Trazo.")
+    "seguir usando Reminia.")
 
 
 async def _exigir_centro_activo(db: AsyncSession, centro_id: str) -> None:

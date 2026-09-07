@@ -92,7 +92,7 @@ async def login(
     if centro is None or not centro.activo:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Centro suspendido. Contacta con Trazo para reactivarlo.",
+            detail="Centro suspendido. Contacta con Reminia para reactivarlo.",
         )
 
     # Login correcto: se olvida el historial de fallos de esa IP+email.
@@ -155,7 +155,7 @@ async def login_tablet(
     centro = await db.get(Centro, staff.centro_id)
     if centro is None or not centro.activo:
         raise HTTPException(status.HTTP_403_FORBIDDEN,
-                            "Centro suspendido. Contacta con Trazo para reactivarlo.")
+                            "Centro suspendido. Contacta con Reminia para reactivarlo.")
     limitador_login.limpiar(clave)
     token = create_access_token(
         subject=staff.id,

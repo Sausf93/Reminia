@@ -1,4 +1,4 @@
-"""Punto de entrada de la API de Trazo (FastAPI)."""
+"""Punto de entrada de la API de Reminia (FastAPI)."""
 from __future__ import annotations
 
 import logging
@@ -107,7 +107,7 @@ async def lifespan(app: FastAPI):
 
 _es_dev = settings.entorno.lower() == "dev"
 app = FastAPI(
-    title="Trazo API",
+    title="Reminia API",
     description="Estimulación cognitiva para centros de día — backend.",
     version="0.1.0",
     lifespan=lifespan,
@@ -131,7 +131,7 @@ app.add_middleware(
 
 @app.get("/", tags=["salud"])
 async def raiz():
-    return {"app": "Trazo API", "version": "0.1.0", "docs": "/docs"}
+    return {"app": "Reminia API", "version": "0.1.0", "docs": "/docs"}
 
 
 @app.get("/health", tags=["salud"])

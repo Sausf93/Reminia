@@ -17,4 +17,4 @@ async def test_health_ok(client):
 async def test_raiz(client):
     r = await client.get("/")
     assert r.status_code == 200, r.text
-    assert r.json()["app"] == "Trazo API"
+    assert r.json()["app"] == "Reminia API"
