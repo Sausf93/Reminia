@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 
@@ -29,7 +30,8 @@ from app.security import hash_password
 
 async def alta_centro_admin(db, nombre_centro: str, email: str, password: str,
                             nombre_staff: str, *,
-                            reutilizar_centro_por_nombre: bool = True) -> tuple[str, bool]:
+                            reutilizar_centro_por_nombre: bool = True,
+                            dias_prueba: int | None = None) -> tuple[str, bool]:
     """Crea (idempotente) un centro y su cuenta admin sobre la sesión `db` dada.
 
     Devuelve (mensaje, creado). No hace commit del engine global: opera sobre la
@@ -60,6 +62,14 @@ async def alta_centro_admin(db, nombre_centro: str, email: str, password: str,
         )).scalars().first()
     if centro is None:
         centro = Centro(nombre=nombre_centro)
+        # Cortesía a medida: el super-admin puede fijar los días de prueba (p. ej.
+        # 15 o 30). Sin valor, se queda el defecto del modelo (prueba de 30 días).
+        # Al caducar `fecha_fin_prueba`, la compuerta de acceso corta solo y deja
+        # abierto el camino de pago (deps._exigir_centro_activo).
+        if dias_prueba is not None and dias_prueba > 0:
+            centro.estado_suscripcion = "prueba"
+            centro.fecha_fin_prueba = datetime.now(timezone.utc) + timedelta(
+                days=dias_prueba)
         db.add(centro)
         await db.flush()
 

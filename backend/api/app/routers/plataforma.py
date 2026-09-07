@@ -48,7 +48,8 @@ async def crear_centro(
     """Crea (idempotente) un centro y su cuenta admin. Requiere X-Platform-Token."""
     _exigir_token(x_platform_token)
     mensaje, creado = await alta_centro_admin(
-        db, body.centro, body.email, body.password, body.nombre)
+        db, body.centro, body.email, body.password, body.nombre,
+        dias_prueba=body.dias_prueba)
     return CentroPlataformaOut(mensaje=mensaje, creado=creado)
 
 

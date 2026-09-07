@@ -100,6 +100,9 @@ class CentroPlataformaIn(BaseModel):
     email: str
     password: str = Field(min_length=8, max_length=128)
     nombre: str = "Administración del centro"
+    # Días de cortesía/prueba al crear (p. ej. 15 o 30). Vacío = defecto (30 días).
+    # Al caducar, el acceso se corta solo y queda abierto el camino de pago.
+    dias_prueba: int | None = Field(default=None, ge=1, le=365)
 
     _norm_email = field_validator("email")(_email_basico)
 
