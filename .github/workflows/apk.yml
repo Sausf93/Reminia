@@ -1,4 +1,4 @@
-name: APK Trazo (tablet)
+name: APK Reminia (tablet)
 
 # Compila el APK de la tablet en un runner Linux (evita el bloqueo de loopback
 # de Gradle que hay en el equipo local). Se dispara al hacer push que toque la
@@ -41,25 +41,25 @@ jobs:
         run: flutter build apk --release --dart-define=API_URL=https://trazo-api-11684717030.europe-southwest1.run.app
 
       - name: Renombrar APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Trazo.apk
+        run: cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Reminia.apk
 
       - name: Publicar APK como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: Trazo-apk
-          path: apps/tablet/build/app/outputs/flutter-apk/Trazo.apk
+          name: Reminia-apk
+          path: apps/tablet/build/app/outputs/flutter-apk/Reminia.apk
           if-no-files-found: error
           retention-days: 30
 
       # Publica el APK en un Release fijo ("apk-latest") en cada compilación de
-      # main, para que el QR de instalación (releases/latest/download/Trazo.apk)
+      # main, para que el QR de instalación (releases/latest/download/Reminia.apk)
       # sirva SIEMPRE la última versión, sin pasos manuales.
       - name: Publicar APK en Releases (para el QR de instalación)
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-latest
-          name: App Trazo (tablet) — APK (última)
-          body: "APK de la tablet (compilación más reciente de main). Descarga directa: releases/latest/download/Trazo.apk"
-          files: apps/tablet/build/app/outputs/flutter-apk/Trazo.apk
+          name: App Reminia (tablet) — APK (última)
+          body: "APK de la tablet (compilación más reciente de main). Descarga directa: releases/latest/download/Reminia.apk"
+          files: apps/tablet/build/app/outputs/flutter-apk/Reminia.apk
           make_latest: "true"

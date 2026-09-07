@@ -84,3 +84,6 @@ credentials*.json
 # Herramientas: salidas generadas (regenerables)
 herramientas/revisor-banco.html
 decisiones-banco.json
+
+# Versiones "content-only" para publicar como Artifact (derivadas del .html fuente)
+*.artifact.html

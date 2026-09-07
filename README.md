@@ -1,9 +1,10 @@
-# Trazo
+# Reminia
 
-### 🌐 Web comercial → **https://sausf93.github.io/Reminia/**
+### 🔗 Todos los enlaces útiles → [`docs/ENLACES.md`](docs/ENLACES.md)
+### 🌐 Web pública → **https://reminia.es**
 
-<sub>Se publica sola en cada cambio de `apps/landing/`. Si da 404, activa Pages una vez:
-**Settings → Pages → Build and deployment → Source: "GitHub Actions"**.</sub>
+<sub>Panel: `panel.reminia.es` · Tablet: `app.reminia.es` · Super-admin: `admin.reminia.es`.
+La landing se publica sola en cada cambio de `apps/landing/`.</sub>
 
 ---
 
@@ -23,8 +24,8 @@ Además, una **web comercial** (`apps/landing/`) para presentar el producto y ca
 > cuenta a tiempo**. Toda comparación se hace contra el histórico de la propia
 > persona, nunca entre usuarios distintos.
 
-Documentos de concepto: [`trazo-presentacion.html`](trazo-presentacion.html) ·
-[`trazo-especificacion-tecnica.md`](trazo-especificacion-tecnica.md).
+Documentos de concepto: [`docs/reminia-documento-proyecto.html`](docs/reminia-documento-proyecto.html) ·
+presentación (pitch): [`docs/reminia-deck.html`](docs/reminia-deck.html).
 
 ---
 

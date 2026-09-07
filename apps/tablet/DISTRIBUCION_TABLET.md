@@ -106,7 +106,7 @@ Formato de `version.json`:
 {
   "version_code": 3,
   "version_name": "1.2.0",
-  "apk_url": "https://sausf93.github.io/Reminia/app/trazo-1.2.0.apk",
+  "apk_url": "https://sausf93.github.io/Reminia/app/reminia-1.2.0.apk",
   "notas": "Monitor en vivo y notas de sesión."
 }
 ```
