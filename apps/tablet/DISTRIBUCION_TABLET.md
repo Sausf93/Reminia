@@ -97,7 +97,7 @@ La app comprueba al abrir un `version.json` alojado por vosotros y, si hay una
 versión mayor, muestra un aviso con el enlace de descarga. Config al construir:
 
 ```
---dart-define=UPDATE_URL=https://sausf93.github.io/Trazo/app/version.json
+--dart-define=UPDATE_URL=https://sausf93.github.io/Reminia/app/version.json
 ```
 
 Formato de `version.json`:
@@ -106,7 +106,7 @@ Formato de `version.json`:
 {
   "version_code": 3,
   "version_name": "1.2.0",
-  "apk_url": "https://sausf93.github.io/Trazo/app/trazo-1.2.0.apk",
+  "apk_url": "https://sausf93.github.io/Reminia/app/trazo-1.2.0.apk",
   "notas": "Monitor en vivo y notas de sesión."
 }
 ```

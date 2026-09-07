@@ -1,6 +1,6 @@
 # Trazo
 
-### 🌐 Web comercial → **https://sausf93.github.io/Trazo/**
+### 🌐 Web comercial → **https://sausf93.github.io/Reminia/**
 
 <sub>Se publica sola en cada cambio de `apps/landing/`. Si da 404, activa Pages una vez:
 **Settings → Pages → Build and deployment → Source: "GitHub Actions"**.</sub>

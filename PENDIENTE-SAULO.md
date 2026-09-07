@@ -54,14 +54,14 @@ Con eso, monto Python 3.12 + venv + deps, `npm install`, y **verifico todo**.
   - [ ] **Tablet — confirmar con `flutter analyze`:** los 3 cambios de la tablet son literales de string (no pueden romper el análisis), pero aquí no hay flutter; conviene un `flutter analyze lib` en una máquina con flutter al retomar.
 - **Necesita tu acción (identificadores, no se tocan solos):**
   - [ ] **`applicationId` de la app Android** (`com.trazo.trazo_tablet`): es la IDENTIDAD de la app (cambiarla rompe actualizaciones/firma del APK ya instalado). Decidir si migramos con calma.
-  - [ ] URLs de GitHub del APK (`sausf93.github.io/Trazo`, `github.com/Sausf93/Trazo`, `Trazo.apk`): dependen del rename del repo (abajo).
+  - [ ] URLs de GitHub del APK (`sausf93.github.io/Reminia`, `github.com/Sausf93/Reminia`, `Trazo.apk`): dependen del rename del repo (abajo).
 - ⚠️ **OJO, trampas del rebrand (NO cambiar a ciegas con buscar-y-reemplazar):**
   - `apps/web/src/api/vocab.ts` → `trazo: "Trazo"` es el **nombre de la plantilla clínica** de trazado (el ejercicio), **NO** la marca. No tocar.
   - `"Trazos"` en el CSS de la landing = trazos de pincel (nombre común), no la marca.
   - **Documentos legales (DPA, consentimiento, aviso legal):** ahí "Trazo" es el **nombre del Encargado del tratamiento / nombre comercial registrado**. Cambiarlo a "Reminia" es una decisión **legal**, no una cadena de UI: **necesito que me confirmes cuál es el nombre de la entidad/empresa que firma** (¿"Reminia" es ya el nombre comercial/mercantil, o la sociedad sigue siendo otra?). Sin eso no toco los legales.
-  - URLs de GitHub Pages del APK (`sausf93.github.io/Trazo/...`, `releases/.../Trazo.apk`): dependen del **rename del repo** (tu acción); las actualizo después.
+  - URLs de GitHub Pages del APK (`sausf93.github.io/Reminia/...`, `releases/.../Trazo.apk`): dependen del **rename del repo** (tu acción); las actualizo después.
 - **Necesita tu acción:**
-  - [ ] **Renombrar el repositorio de GitHub** `Sausf93/Trazo` → `.../Reminia` (Settings → Rename). GitHub redirige las URLs viejas; luego actualizo enlaces del APK/badges y `git remote set-url`.
+  - [ ] **Renombrar el repositorio de GitHub** `Sausf93/Reminia` → `.../Reminia` (Settings → Rename). GitHub redirige las URLs viejas; luego actualizo enlaces del APK/badges y `git remote set-url`.
   - [ ] **Proyectos Cloudflare Pages** (`trazo-panel/tablet/web/admin`): NO se renombran (crear nuevos cambiaría las URLs y rompería CORS). Con **dominio propio reminia.es** delante, el cliente ya no ve los `*.pages.dev`, así que **no hace falta** tocarlos. Si aun así los quieres "limpios", es una migración aparte (crear proyectos nuevos + reapuntar + borrar viejos) que hacemos con calma.
   - [ ] **Proyecto GCP** `trazo-505414`: el id es **inmutable**; no se ve con dominio propio. No tocar salvo que quieras migrar (mudanza grande).
   - [ ] **Cuenta/producto de Stripe**: renombrar el producto "Trazo — Centro" (1 clic; el `price_…` no cambia).

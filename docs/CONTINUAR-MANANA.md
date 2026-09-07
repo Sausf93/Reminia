@@ -1,7 +1,7 @@
 # Trazo — Dónde lo dejamos (para retomar)
 
 > Punto de continuación. Al volver: enciende el PC, dime **"sigue con Trazo"** y
-> retomo desde aquí. Todo lo confirmado está en GitHub (github.com/Sausf93/Trazo).
+> retomo desde aquí. Todo lo confirmado está en GitHub (github.com/Sausf93/Reminia).
 
 ## Estado global
 - Último commit **subido y estable**: `f6d9238` (backend de A+B+C completo y verificado).
