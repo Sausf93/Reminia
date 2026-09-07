@@ -87,6 +87,23 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
     } catch {
       /* respuesta sin cuerpo JSON */
     }
+    // Acceso cortado por suscripción (prueba caducada / suspendido / centro
+    // bloqueado): el backend lo devuelve como 403 con un texto reconocible. Lo
+    // anunciamos globalmente para mostrar el "paywall" (Activar suscripción),
+    // en vez de un error suelto en cada página. El camino de pago sigue abierto.
+    if (res.status === 403 && typeof window !== "undefined") {
+      const d = detail.toLowerCase();
+      if (
+        d.includes("prueba ha terminado") ||
+        d.includes("suscripci") ||
+        d.includes("suspendido") ||
+        d.includes("reactivar")
+      ) {
+        window.dispatchEvent(
+          new CustomEvent("reminia:acceso-cortado", { detail: { mensaje: detail } }),
+        );
+      }
+    }
     throw new ApiError(res.status, detail);
   }
 

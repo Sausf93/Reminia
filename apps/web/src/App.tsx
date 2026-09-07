@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import { PaywallOverlay } from "./components/PaywallOverlay";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AlertasPage } from "./pages/Alertas";
 import { CrearPasswordPage } from "./pages/CrearPassword";
@@ -19,7 +20,8 @@ import { UsuarioEvolucionPage } from "./pages/UsuarioEvolucion";
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <Routes>
       <Route path="/login" element={<LoginPage />} />
       {/* Rutas PÚBLICAS del alta/recuperación: el token del enlace es la credencial. */}
       <Route path="/crear-password" element={<CrearPasswordPage />} />
@@ -139,6 +141,8 @@ export default function App() {
       />
 
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+      <PaywallOverlay />
+    </>
   );
 }
