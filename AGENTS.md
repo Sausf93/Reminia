@@ -77,5 +77,5 @@ gcloud run deploy trazo-api --image=$IMAGE --region=europe-southwest1   # NO toc
 - `ronda-qa`: lanzar una ronda multi-agente de revisión/juego por personas.
 
 ## Estado y backlog
-- `CAMBIOS-2026-08-18.md`: changelog de lo último. `BACKLOG-ESPECIALISTAS.md`: mejoras de un panel de 9 especialistas (algunas hechas, otras pendientes). La memoria `trazo-despliegue-gcp` (fuera del repo) lleva el detalle de revisiones desplegadas.
+- **`ESTADO-DEL-PROYECTO.md`**: estado único y actualizado (qué está hecho, qué queda). Sustituye a los antiguos PENDIENTE/BACKLOG/CAMBIOS/PLAN (borrados; su contenido, ya realizado, vive en el código y el historial de git). La memoria del proyecto (engram) lleva el detalle por sesión.
 - Antes de decir "listo para probar": pásalo tú por los flujos como cada persona (emparejar → maestra → participante → panel) y por `verificar`; no hagas que Saulo encuentre lo básico.
