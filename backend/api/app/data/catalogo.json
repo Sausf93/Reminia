@@ -9608,7 +9608,7 @@
     "descripcion": "Encuentra tomate entre otras figuras de verduras.",
     "parametros_json": {
       "dificultad": "media",
-      "instruccion": "Busca tomate",
+      "instruccion": "Busca los tomates",
       "objetivo": {
         "id": "tomate",
         "label": "tomate"
@@ -9645,7 +9645,7 @@
     "descripcion": "Encuentra cebolla entre otras figuras de verduras.",
     "parametros_json": {
       "dificultad": "dificil",
-      "instruccion": "Busca cebolla",
+      "instruccion": "Busca las cebollas",
       "objetivo": {
         "id": "cebolla",
         "label": "cebolla"
@@ -9834,7 +9834,7 @@
     "descripcion": "Encuentra pan entre otras figuras de la comida.",
     "parametros_json": {
       "dificultad": "media",
-      "instruccion": "Busca pan",
+      "instruccion": "Busca los panes",
       "objetivo": {
         "id": "pan",
         "label": "pan"
@@ -9997,7 +9997,7 @@
     "descripcion": "Encuentra puerta entre otras figuras de la casa.",
     "parametros_json": {
       "dificultad": "media",
-      "instruccion": "Busca puerta",
+      "instruccion": "Busca las puertas",
       "objetivo": {
         "id": "puerta",
         "label": "puerta"
