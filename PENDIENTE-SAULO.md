@@ -42,8 +42,19 @@ Con eso, monto Python 3.12 + venv + deps, `npm install`, y **verifico todo**.
 - [ ] **Probar el checkout con la tarjeta de test `4242 4242 4242 4242`** (yo NO tecleo tarjetas ni contraseñas: esta prueba la haces tú).
 
 ## 5. Rebrand total Trazo → Reminia
-- **Hecho (rama `rebrand/reminia`):** textos visibles del **backend** (mensajes de centro suspendido / prueba, título "Reminia API") y el correo transaccional ya salían como Reminia. Verificado con pytest.
-- **Yo puedo hacer (pendiente, con cuidado):** textos visibles del **panel** (apps/web), la **vitrina** (apps/landing) y la **tablet** (apps/tablet). La tablet son 31 archivos Dart y **necesito poder correr `flutter analyze`** antes de darlo por bueno (aquí flutter no está disponible); dime si lo tienes en tu máquina o lo dejamos para una sesión con flutter.
+- **HECHO (rama `rebrand/reminia`), textos de marca visibles a Reminia:**
+  - **Backend** (mensajes, título "Reminia API") + correo transaccional. Verificado con pytest.
+  - **Panel** (apps/web): wordmark, títulos, prosa, informes. Verificado con tsc + navegador.
+  - **Super-admin** (apps/superadmin).
+  - **Vitrina/landing** (apps/landing `index.html` + `instalar.html`): title, meta/OG, marketing.
+  - **Tablet** (apps/tablet): nombre bajo el icono (`android:label`) + wordmark de login/galería + título de app.
+- **Falta de rebrand (necesita algo tuyo):**
+  - [ ] **Logo/icono (el dibujo):** el *texto* "Reminia" ya está en todos lados, pero el **icono** (azulejo verde con el trazo) sigue siendo el de Trazo. **Pásame el diseño del logo de Reminia** (o dime si dejo solo el texto). Está en `Logo.tsx` (panel), `trazo_logo.dart` (tablet) y el favicon SVG de la landing.
+  - [ ] **Documentos y páginas LEGALES** (DPA, consentimiento imprimible del panel; `aviso-legal.html` y `privacidad.html` de la landing): dicen "Encargado del tratamiento: Trazo" / "Nombre comercial: Trazo". **Necesito el nombre de la entidad legal que firma** (ver abajo) para dejarlos coherentes.
+  - [ ] **Tablet — confirmar con `flutter analyze`:** los 3 cambios de la tablet son literales de string (no pueden romper el análisis), pero aquí no hay flutter; conviene un `flutter analyze lib` en una máquina con flutter al retomar.
+- **Necesita tu acción (identificadores, no se tocan solos):**
+  - [ ] **`applicationId` de la app Android** (`com.trazo.trazo_tablet`): es la IDENTIDAD de la app (cambiarla rompe actualizaciones/firma del APK ya instalado). Decidir si migramos con calma.
+  - [ ] URLs de GitHub del APK (`sausf93.github.io/Trazo`, `github.com/Sausf93/Trazo`, `Trazo.apk`): dependen del rename del repo (abajo).
 - ⚠️ **OJO, trampas del rebrand (NO cambiar a ciegas con buscar-y-reemplazar):**
   - `apps/web/src/api/vocab.ts` → `trazo: "Trazo"` es el **nombre de la plantilla clínica** de trazado (el ejercicio), **NO** la marca. No tocar.
   - `"Trazos"` en el CSS de la landing = trazos de pincel (nombre común), no la marca.
@@ -59,10 +70,20 @@ Con eso, monto Python 3.12 + venv + deps, `npm install`, y **verifico todo**.
 - [ ] `pytest` + `tsc` + `flutter analyze` + E2E de escenario en verde (lo corro yo).
 - [ ] Desplegar backend (Cloud Run) + frontends (Cloudflare) con la skill `desplegar`. **No despliego desatendido**; lo hacemos juntos.
 
-## 7. Decisiones de seguridad que necesitan tu criterio (ronda 15)
-La auditoría de seguridad salió **"casi"**: el aislamiento entre centros (IDOR) es **sólido, sin fugas**. Estas dos son decisiones de producto que **no he forzado** (no son exploits, están scoped por centro):
-- [ ] **Documentos legales (DPA, consentimientos con DNI/NIE): ¿quién los descarga/borra?** Hoy **cualquier integradora** del centro puede (el test actual lo da por intencionado). El auditor recomienda restringirlo a **admin_centro** por ser PII sensible. Dime si lo restrinjo.
-- [ ] **El token de la tablet (kiosco) escala a una sesión de staff completa.** `POST /auth/tablet` con el token del dispositivo + elegir un nombre acuña un JWT de profesional (no admin) **sin contraseña** (el PIN es opcional y por defecto nadie lo tiene). Ese JWT abre todos los endpoints de staff (datos de salud del centro, export CSV, documentos). Es inherente a que la tablet en modo "maestra" necesita acceso de staff. Fix robusto (a diseñar con cuidado para no romper el kiosco): token de **alcance reducido** + exigir contraseña/PIN para lo sensible. Lo vemos juntos.
+## 7. Decisiones de seguridad que necesitan tu criterio (rondas 15 y 19)
+Las auditorías salieron **"casi"**: el aislamiento entre centros (IDOR) es **sólido, sin fugas** (confirmado en rondas 14, 15 y 19 sobre sesiones, intentos, export y documentos). Lo que sigue **no son exploits entre centros**; son decisiones de producto.
+
+**Ya cerrado por mí (ronda 19, con test):**
+- ✅ **Borrar** un documento legal (DPA/consentimiento con DNI) ahora exige **admin_centro** (antes lo hacía cualquier integradora, y era borrado físico irreversible). Destruir la prueba del consentimiento es acción del responsable.
+- ✅ **CSV Formula Injection** en el export saneada (un alias tipo `=…` ya no ejecuta nada al abrir el CSV en Excel).
+
+**Pendiente de TU criterio (no lo he forzado para no cambiar flujos sin tu ok):**
+- [ ] **¿Restringir también la DESCARGA de PII a `admin_centro`?** (documentos con DNI + export con nombre real). Hoy cualquier integradora puede descargar. Más seguro restringir; pero puede quitar agilidad a las integradoras. Dime.
+- [ ] **Alcance del token de la tablet.** `POST /auth/tablet` (token del dispositivo + elegir nombre) acuña un JWT de profesional **sin contraseña** (PIN opcional, por defecto nadie lo tiene) que abre endpoints de staff (datos de salud, export, documentos). Una **tablet perdida** = acceso de staff del centro (el admin sí está bloqueado). Fix robusto (a diseñar sin romper el kiosco): token de **alcance reducido** ("maestra": solo sesiones/medición) + **exigir PIN/contraseña** para PII/export/documentos. Lo vemos juntos.
+- [ ] (menor) TOCTOU: una misma persona podría quedar en dos salas abiertas si se fuerza concurrencia deliberada (no cruza centros). Se cierra con un índice único en BD cuando toquemos migraciones.
+
+## 7-bis. Duda LEGAL que me bloquea los documentos (rebrand)
+- [ ] **¿Cuál es el nombre de la entidad/empresa que firma los contratos?** En el DPA y el consentimiento imprimible pone "**Encargado del tratamiento: Trazo**" y en el aviso legal "**Nombre comercial: Trazo**". Necesito saber si el nombre que debe figurar es **"Reminia"** (nombre comercial ya) o el de una sociedad concreta (S.L., etc.). Con eso dejo los legales coherentes. Hasta entonces los he dejado como están (no invento un nombre legal).
 
 ## 8. Auto-alta self-service: backend LISTO y AUDITADO, falta frontend + 1 decisión
 El **backend del alta self-service está construido, seguro y probado** (todo en la rama, con tests):
