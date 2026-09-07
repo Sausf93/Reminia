@@ -132,3 +132,37 @@ async def test_dispositivo_no_cruza_centros_403(client, Session):
     # Ni la sesión activa del centro demo.
     r = await client.get(f"/sesiones/activa?centro_id={centro_demo}", headers=dev2)
     assert r.status_code == 403, r.text
+
+
+@pytest.mark.asyncio
+async def test_tablet_cortada_si_prueba_caducada(client, Session):
+    """Si la prueba del centro caduca, la tablet (token de dispositivo) queda
+    CORTADA en TODO el flujo de kiosco —no solo el panel de la maestra—: sin
+    salas, sin instancias. Así 'las tablets tampoco funcionan hasta que paguen'."""
+    from datetime import datetime, timedelta, timezone
+
+    from sqlalchemy import select
+
+    login, headers = await _login(client)
+    centro_id = login["centro_id"]
+    disp = await _crear_dispositivo(client, headers)
+    dev = {"X-Device-Token": disp["token"]}
+
+    # Con la prueba vigente, la tablet opera con normalidad.
+    r = await client.get(f"/sesiones/activa?centro_id={centro_id}", headers=dev)
+    assert r.status_code == 200, r.text
+
+    # Caduca la prueba del centro (fin = ayer).
+    async with Session() as s:
+        centro = (await s.execute(select(Centro))).scalars().first()
+        centro.estado_suscripcion = "prueba"
+        centro.fecha_fin_prueba = datetime.now(timezone.utc) - timedelta(days=1)
+        await s.commit()
+
+    # Ahora la tablet NO puede descubrir salas...
+    r = await client.get(f"/sesiones/activa?centro_id={centro_id}", headers=dev)
+    assert r.status_code == 403, r.text
+    # ...ni pedir una instancia para jugar (la compuerta de acceso corta antes de
+    # cualquier lógica del ejercicio, por eso vale un id cualquiera).
+    r = await client.get("/ejercicios/cualquier-id/instancia", headers=dev)
+    assert r.status_code == 403, r.text
