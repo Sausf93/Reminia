@@ -74,3 +74,26 @@ async def test_signup_no_reutiliza_centro_por_nombre(client, Session):
             select(Centro).where(Centro.nombre == "Residencia Laura")
         )).scalars().all()
         assert len(centros) == 2, "dos altas con el mismo nombre = dos centros aislados"
+
+
+@pytest.mark.asyncio
+async def test_provisionar_no_pisa_ids_de_stripe_de_centro_existente(Session):
+    """Si un webhook de signup resuelve a un email que YA existe (creado=False), el
+    provisioning NO debe escribir ids de Stripe ni 'activa' sobre ese centro: son de
+    otro alta. Regresion del footgun detectado en la ronda 18."""
+    meta = {"signup": "1", "centro": "Centro Uno", "email": "titular@uno.es",
+            "nombre": "Ana"}
+    async with Session() as db:
+        await _provisionar_signup(db, meta, "cus_BUENO", "sub_BUENO")
+
+    # Segundo webhook con el MISMO email pero ids DISTINTOS (p. ej. otra sesión).
+    async with Session() as db:
+        await _provisionar_signup(db, meta, "cus_MALO", "sub_MALO")
+
+    async with Session() as db:
+        staff = (await db.execute(
+            select(UsuarioStaff).where(UsuarioStaff.email == "titular@uno.es")
+        )).scalars().first()
+        centro = await db.get(Centro, staff.centro_id)
+        assert centro.stripe_customer_id == "cus_BUENO", "no debe pisar el customer id"
+        assert centro.stripe_subscription_id == "sub_BUENO", "no debe pisar la sub id"

@@ -7,6 +7,7 @@ ya está creada; el correo es una comodidad, no un requisito de integridad.
 """
 from __future__ import annotations
 
+import html
 import logging
 
 import httpx
@@ -14,6 +15,15 @@ import httpx
 from app.config import settings
 
 log = logging.getLogger("reminia.email")
+
+
+def _esc(valor: str) -> str:
+    """Escapa un texto que viene del usuario antes de meterlo en el HTML del
+    correo. El nombre del centro (y otros campos) los teclea libremente quien se
+    da de alta; sin escapar, alguien podría inyectar HTML en el correo que recibe
+    OTRA persona (p. ej. dar de alta con el email de un tercero y un nombre de
+    centro con un enlace de phishing). `html.escape` neutraliza < > & " '."""
+    return html.escape(valor or "", quote=True)
 
 _RESEND_URL = "https://api.resend.com/emails"
 _MARCA = "Reminia"
@@ -53,6 +63,8 @@ def _plantilla_credenciales(
     primer paso. Sin dependencias externas: estilos inline para que se vea bien
     en cualquier cliente de correo."""
     teal = "#12A99B"
+    nombre_centro = _esc(nombre_centro)
+    email_login = _esc(email_login)
     return f"""\
 <div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;
             max-width:520px;margin:0 auto;color:#213">
@@ -113,9 +125,10 @@ def _plantilla_enlace(*, titulo: str, intro: str, cta: str, url: str, nota: str)
 async def enviar_enlace_alta(*, destino: str, nombre_centro: str, url: str) -> bool:
     """Correo de bienvenida con un ENLACE para crear la contraseña (no se envía la
     contraseña en claro). El enlace es de un solo uso."""
+    nombre_seguro = _esc(nombre_centro)
     html = _plantilla_enlace(
         titulo=f"Bienvenida a {_MARCA}",
-        intro=(f"Ya tienes tu centro <b>{nombre_centro}</b> listo. Solo falta que "
+        intro=(f"Ya tienes tu centro <b>{nombre_seguro}</b> listo. Solo falta que "
                "crees tu contraseña para entrar y dejar todo a punto, paso a paso."),
         cta="Crear mi contraseña",
         url=url,

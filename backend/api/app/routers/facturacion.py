@@ -226,37 +226,43 @@ async def _provisionar_signup(db, meta, customer_id, subscription_id) -> None:
     _msg, creado = await alta_centro_admin(
         db, nombre_centro, email, password, nombre,
         reutilizar_centro_por_nombre=False)
-    # Fija los ids de Stripe y deja el centro ACTIVO (ya ha pagado).
+    # Solo tocamos el centro si ESTE signup lo creó (creado=True). Si el email ya
+    # existía (creado=False) NO escribimos nada: ese centro es de otro alta y no
+    # debe recibir los ids de Stripe ni pasar a 'activa' por un webhook que no le
+    # corresponde (defensa en profundidad; hoy signup_checkout ya hace 409 con
+    # emails existentes, pero no dependemos de ello). También da idempotencia: un
+    # reintento del webhook (email ya provisionado) no re-escribe.
+    if not creado:
+        return
     staff = (await db.execute(
         select(UsuarioStaff).where(UsuarioStaff.email == email)
     )).scalars().first()
-    if staff is not None:
-        centro = await db.get(Centro, staff.centro_id)
-        if centro is not None:
-            centro.stripe_customer_id = customer_id or centro.stripe_customer_id
-            centro.stripe_subscription_id = subscription_id or centro.stripe_subscription_id
-            centro.estado_suscripcion = "activa"
-            await db.commit()
-    # El correo solo se envía si la cuenta se creó AHORA (evita reenviar el enlace
-    # si el webhook se reprocesa). En vez de mandar la contraseña en claro,
-    # enviamos un ENLACE de un solo uso para que el admin cree la suya (más
-    # seguro, y el mismo mecanismo sirve de recuperación). TTL de 72 h: generoso
-    # para quien acaba de pagar, sin dejar un enlace vivo una semana; si caduca,
-    # "olvidé mi contraseña" genera uno nuevo.
-    if creado and staff is not None:
-        token = crear_token_password(staff.id, staff.password_hash, minutos=60 * 24 * 3)
-        url = f"{settings.panel_url}/crear-password?token={token}"
-        enviado = await enviar_enlace_alta(
-            destino=email, nombre_centro=nombre_centro, url=url)
-        if not enviado:
-            # El centro está creado y PAGADO pero el admin no ha recibido el enlace
-            # de acceso (sin RESEND_API_KEY o fallo de Resend). Traza de nivel ERROR
-            # para detectarlo y reenviar a mano: si no, queda un cliente de pago sin
-            # poder entrar y sin rastro.
-            log.error(
-                "ALTA SIN CORREO: centro '%s' provisionado y pagado, pero el enlace "
-                "de acceso NO se pudo enviar a %s (revisar RESEND y reenviar a mano)",
-                nombre_centro, email)
+    if staff is None:
+        return
+    # Fija los ids de Stripe y deja el centro ACTIVO (ya ha pagado).
+    centro = await db.get(Centro, staff.centro_id)
+    if centro is not None:
+        centro.stripe_customer_id = customer_id or centro.stripe_customer_id
+        centro.stripe_subscription_id = subscription_id or centro.stripe_subscription_id
+        centro.estado_suscripcion = "activa"
+        await db.commit()
+    # En vez de mandar la contraseña en claro, enviamos un ENLACE de un solo uso
+    # para que el admin cree la suya (más seguro, y el mismo mecanismo sirve de
+    # recuperación). TTL de 72 h: generoso para quien acaba de pagar, sin dejar un
+    # enlace vivo una semana; si caduca, "olvidé mi contraseña" genera uno nuevo.
+    token = crear_token_password(staff.id, staff.password_hash, minutos=60 * 24 * 3)
+    url = f"{settings.panel_url}/crear-password?token={token}"
+    enviado = await enviar_enlace_alta(
+        destino=email, nombre_centro=nombre_centro, url=url)
+    if not enviado:
+        # El centro está creado y PAGADO pero el admin no ha recibido el enlace de
+        # acceso (sin RESEND_API_KEY o fallo de Resend). Traza de nivel ERROR para
+        # detectarlo y reenviar a mano: si no, queda un cliente de pago sin poder
+        # entrar y sin rastro.
+        log.error(
+            "ALTA SIN CORREO: centro '%s' provisionado y pagado, pero el enlace "
+            "de acceso NO se pudo enviar a %s (revisar RESEND y reenviar a mano)",
+            nombre_centro, email)
 
 
 @router.post("/facturacion/webhook", include_in_schema=False)
