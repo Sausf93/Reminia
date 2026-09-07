@@ -80,11 +80,15 @@ class BancoVeredictos {
     }
   }
 
-  /// Baja del servidor los veredictos de ESTE revisor y los hace fuente de la
-  /// verdad en el dispositivo. Así, si el equipo BORRA una marca en el servidor
-  /// (porque ya corrigió esa actividad), al reabrir el banco vuelve a salir.
+  /// Baja del servidor los veredictos de TODO el equipo y los hace fuente de la
+  /// verdad en el dispositivo. En cuanto ALGUIEN valora una actividad (Saulo,
+  /// José, Laura…), esa actividad desaparece de "pendientes" para TODOS: nadie
+  /// vuelve a valorar lo que otro ya valoró. Si el equipo BORRA una marca en el
+  /// servidor (porque ya se corrigió), al reabrir el banco vuelve a salir.
+  ///
+  /// [nombre] ya no filtra qué se oculta (se oculta lo de todos); solo se usa
+  /// para, cuando la actividad la marcó este mismo revisor, conservar SU nota.
   Future<void> descargarDeServidor(String nombre) async {
-    if (nombre.trim().isEmpty) return;
     try {
       final base = Uri.parse(Config.apiUrl);
       final url = Uri(
@@ -97,16 +101,23 @@ class BancoVeredictos {
       }).timeout(const Duration(seconds: 8));
       if (resp.statusCode != 200) return;
       final lista = jsonDecode(resp.body) as List<dynamic>;
-      final mios = <String, Veredicto>{};
+      final yo = nombre.trim();
+      final todos = <String, Veredicto>{};
       for (final e in lista) {
         final m = e as Map<String, dynamic>;
-        if ((m['marcado_por'] ?? '').toString() == nombre.trim()) {
-          mios[(m['actividad'] ?? '').toString()] = Veredicto(
-              (m['estado'] ?? '').toString(), (m['nota'] ?? '').toString());
+        final act = (m['actividad'] ?? '').toString();
+        if (act.isEmpty) continue;
+        final quien = (m['marcado_por'] ?? '').toString();
+        final ver = Veredicto(
+            (m['estado'] ?? '').toString(), (m['nota'] ?? '').toString());
+        // La marca del propio revisor tiene prioridad (para ver su nota); si no,
+        // vale la de cualquiera: basta con que exista para que no vuelva a salir.
+        if (!todos.containsKey(act) || (yo.isNotEmpty && quien == yo)) {
+          todos[act] = ver;
         }
       }
       await _cargar();
-      _cache = mios; // servidor manda: refleja exactamente lo suyo del servidor
+      _cache = todos; // servidor manda: refleja lo valorado por TODO el equipo
       await _persistir();
     } catch (_) {
       // Sin red: se queda lo que haya en el dispositivo.
