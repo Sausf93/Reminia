@@ -87,3 +87,6 @@ decisiones-banco.json
 
 # Versiones "content-only" para publicar como Artifact (derivadas del .html fuente)
 *.artifact.html
+
+# Caché local de wrangler (no versionar)
+.wrangler/
