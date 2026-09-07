@@ -1,7 +1,7 @@
 /**
  * Contrato de ENCARGO DEL TRATAMIENTO (DPA, art. 28 RGPD) imprimible y
  * autorrellenado (centro + fecha), listo para imprimir/guardar como PDF y firmar
- * entre Trazo (encargado) y el centro (responsable).
+ * entre Reminia (encargado) y el centro (responsable).
  *
  * BORRADOR basado en `legal/01-contrato-encargo-tratamiento.md`: debe revisarlo
  * un abogado/DPO antes de firmarlo. Aquí queda el MECANISMO. Reutiliza el patrón
@@ -41,7 +41,7 @@ export function DpaImprimible({ centro, onHecho }: { centro: string; onHecho: ()
 
       <p>
         Entre <strong>{centro || "__________________"}</strong> (el «Responsable del tratamiento», el centro)
-        y <strong>Trazo</strong> (el «Encargado del tratamiento»), que presta al centro un servicio de
+        y <strong>Reminia</strong> (el «Encargado del tratamiento»), que presta al centro un servicio de
         estimulación cognitiva y registro de desempeño en tablet.
       </p>
 
@@ -64,14 +64,14 @@ export function DpaImprimible({ centro, onHecho }: { centro: string; onHecho: ()
           <p style={{ margin: 0 }}>Firma y fecha:</p>
         </div>
         <div style={{ flex: "1 1 240px" }}>
-          <p style={{ margin: "0 0 22px" }}>Por el Encargado (Trazo):</p>
+          <p style={{ margin: "0 0 22px" }}>Por el Encargado (Reminia):</p>
           <p style={{ margin: "0 0 10px" }}>Nombre y cargo: <span style={linea} /></p>
           <p style={{ margin: 0 }}>Firma y fecha:</p>
         </div>
       </div>
 
       <p style={{ marginTop: 24, fontSize: 10.5, color: "#666" }}>
-        Documento generado por Trazo el {hoy}. Conserve el original firmado; puede adjuntarse en el panel
+        Documento generado por Reminia el {hoy}. Conserve el original firmado; puede adjuntarse en el panel
         (Cumplimiento) para tenerlo disponible ante una auditoría.
       </p>
     </div>,

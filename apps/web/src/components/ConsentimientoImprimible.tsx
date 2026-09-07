@@ -83,7 +83,7 @@ export function ConsentimientoImprimible({
       <h2 style={{ fontSize: 13 }}>1. Responsable y encargado</h2>
       <p>
         <strong>Responsable del tratamiento:</strong> {centro || "__________________"} (el
-        centro). <strong>Encargado del tratamiento:</strong> Trazo, que trata los datos
+        centro). <strong>Encargado del tratamiento:</strong> Reminia, que trata los datos
         únicamente siguiendo las instrucciones del centro y para prestar el servicio.
       </p>
 
@@ -138,7 +138,7 @@ export function ConsentimientoImprimible({
       </div>
 
       <p style={{ marginTop: 26, fontSize: 10.5, color: "#666" }}>
-        Documento generado por Trazo el {hoy}. Conserve el original firmado; puede
+        Documento generado por Reminia el {hoy}. Conserve el original firmado; puede
         registrarse su referencia (y adjuntarse) en el panel del centro.
       </p>
     </div>,
