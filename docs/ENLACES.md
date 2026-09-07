@@ -17,16 +17,17 @@
 
 ## Actividades
 
-| Qué | Dónde | Contiene |
+| Qué | Enlace | Contiene |
 |---|---|---|
-| **Probar actividades** (aprobadas) | https://reminia.es → botón **«Probar las actividades»** | Todas las **validadas** que ya se sirven a los mayores (vitrina/demo, sin emparejar) |
-| **Validar actividades** (pendientes) | https://claude.ai/code/artifact/9d0894d6-68ce-4fe5-b1a0-d8ff1c34b958 | Las **931 que faltan por valorar** (`en_pruebas`). Se revisan con V/D/S y **se guardan solas en la nube** |
+| **Probar actividades** (vitrina) | https://reminia.es → botón **«Probar las actividades»** | Una muestra bonita para enseñar el producto (sin emparejar) |
+| **Validar actividades** (jugando) | https://app.reminia.es/pendientes-valoracion | Recorre las **pendientes por bloque**, las **juegas** una a una y las marcas Válida / Dudosa / No válida. Se guarda en el servidor |
+| **Repasar aprobadas** (jugando) | https://app.reminia.es/actividades | Juega **todas las ya aprobadas** (filtro final, sin marcar) |
 
 ## Presentación
 
 | Qué | Enlace |
 |---|---|
-| **🎯 Pitch / deck (interactivo)** | https://claude.ai/code/artifact/8de9043d-db00-46d8-bd7a-87bddc35e1c8 |
+| **Presentación de Reminia** (diapositivas, se pasan con ← →) | https://reminia.es/pitch.html |
 
 ## Backend / infraestructura
 
@@ -43,5 +44,5 @@
 
 ---
 
-*Los enlaces `claude.ai/code/artifact/…` son privados de la cuenta de Saulo:
-solo se abren estando conectado con su usuario.*
+*Todo bajo `reminia.es`. Para validar actividades entra a
+`app.reminia.es/pendientes-valoracion`, di tu nombre y juega cada bloque.*
