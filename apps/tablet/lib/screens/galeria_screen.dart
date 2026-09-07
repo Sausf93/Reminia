@@ -771,7 +771,8 @@ class _BancoPruebasScreenState extends State<BancoPruebasScreen> {
                           'para el filtro final, cuando todo esté perfecto.'
                       : 'Elige un bloque y recórrelo entero: revisa que cada '
                           'actividad se ve bien y tiene sentido. Solo salen las '
-                          'que aún NO has valorado (${_todas.length} en total).',
+                          'que aún no ha valorado nadie del equipo '
+                          '(${_todas.length} en total).',
                   style: const TextStyle(
                       color: TrazoColors.sageDark, fontSize: 15),
                 ),
