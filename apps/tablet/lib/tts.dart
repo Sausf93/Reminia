@@ -29,7 +29,7 @@ class Tts {
       // cualquier español disponible (es-MX, es-US…) para no quedar mudo.
       await _fijarIdiomaEspanol();
       await _tts
-          .setSpeechRate(0.42); // pausado: se entiende mejor para el mayor
+          .setSpeechRate(0.47); // pausado pero un pelín más ágil (se entiende bien para el mayor)
       await _tts.setVolume(1.0);
       await _tts.setPitch(1.0);
       try {
