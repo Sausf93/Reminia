@@ -1,5 +1,6 @@
 /** Logo de marca de Reminia — el MISMO en toda la app (panel, tablet, web comercial).
- *  Azulejo salvia con un trazo que empieza tembloroso y termina firme (punto coral). */
+ *  Azulejo salvia con anillos concéntricos (evocan la memoria, los recuerdos que
+ *  vuelven) y un punto coral en el centro. */
 import { colors, fonts } from "../theme";
 
 export function Logo({
@@ -15,14 +16,9 @@ export function Logo({
     <div style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
       <svg width={size} height={size} viewBox="0 0 40 40" aria-label="Reminia" role="img">
         <rect width="40" height="40" rx="11" fill="#12A99B" />
-        <path
-          d="M7 26 C11 14 15 30 20 22 C24 16 27 24 33 15"
-          fill="none"
-          stroke="#FFFEFB"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <circle cx="33" cy="15" r="2.6" fill="#F08A6B" />
+        <circle cx="20" cy="20" r="12.5" fill="none" stroke="#FFFEFB" strokeWidth="2.6" />
+        <circle cx="20" cy="20" r="7" fill="none" stroke="#FFFEFB" strokeWidth="2.6" />
+        <circle cx="20" cy="20" r="2.4" fill="#F08A6B" />
       </svg>
       {showText && (
         <span style={{ fontFamily: fonts.serif, fontSize: textSize, fontWeight: 600, color: colors.ink }}>

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../theme.dart';
 
-/// Logo de Trazo: azulejo salvia redondeado con un trazo blanco que empieza
-/// tembloroso y acaba firme, rematado por un punto coral.
+/// Logo de Reminia: azulejo salvia redondeado con anillos concéntricos blancos
+/// (evocan la memoria, los recuerdos que vuelven) y un punto coral en el centro.
 /// Dibujado con CustomPainter (sin dependencias ni assets).
 class TrazoLogo extends StatelessWidget {
   final double size;
@@ -34,32 +34,19 @@ class _TrazoLogoPainter extends CustomPainter {
     final tilePaint = Paint()..color = TrazoColors.sage;
     canvas.drawRRect(rect, tilePaint);
 
-    // Trazo blanco: comienza tembloroso (izquierda) y acaba firme (derecha).
-    // Coordenadas relativas al lienzo 40x40 escaladas al tamaño real.
-    Offset p(double x, double y) => Offset(x / 40 * w, y / 40 * h);
-
-    final trazo = Path()
-      ..moveTo(p(7, 26).dx, p(7, 26).dy)
-      // tramo tembloroso
-      ..cubicTo(p(9, 20).dx, p(9, 20).dy, p(10, 30).dx, p(10, 30).dy,
-          p(13, 24).dx, p(13, 24).dy)
-      ..cubicTo(p(15, 20).dx, p(15, 20).dy, p(16, 28).dx, p(16, 28).dy,
-          p(20, 22).dx, p(20, 22).dy)
-      // tramo firme
-      ..cubicTo(p(24, 16).dx, p(24, 16).dy, p(27, 24).dx, p(27, 24).dy,
-          p(33, 15).dx, p(33, 15).dy);
-
-    final strokePaint = Paint()
+    // Anillos concéntricos blancos (coordenadas relativas al lienzo 40x40).
+    final center = Offset(w / 2, h / 2);
+    final ringPaint = Paint()
       ..color = TrazoColors.white
       ..style = PaintingStyle.stroke
-      ..strokeWidth = w * 0.075
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    canvas.drawPath(trazo, strokePaint);
+      ..strokeWidth = w * 0.065
+      ..strokeCap = StrokeCap.round;
+    canvas.drawCircle(center, w * (12.5 / 40), ringPaint);
+    canvas.drawCircle(center, w * (7 / 40), ringPaint);
 
-    // Punto coral al final del trazo.
+    // Punto coral en el centro.
     final dotPaint = Paint()..color = TrazoColors.coral;
-    canvas.drawCircle(p(33, 15), w * 0.065, dotPaint);
+    canvas.drawCircle(center, w * 0.06, dotPaint);
   }
 
   @override
