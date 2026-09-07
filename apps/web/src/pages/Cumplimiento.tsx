@@ -5,7 +5,8 @@
  * auditorías. Los consentimientos por persona se gestionan en cada ficha.
  */
 import { Link, Navigate } from "react-router-dom";
-import { crearCheckoutSuscripcion, listarDocumentos, listarUsuarios } from "../api/endpoints";
+import { crearCheckoutSuscripcion, listarDocumentos, listarUsuarios, puestaEnMarcha } from "../api/endpoints";
+import type { PuestaEnMarcha } from "../api/endpoints";
 import type { DocumentoLegal, UsuarioFinal } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import { useState } from "react";
@@ -42,6 +43,10 @@ export function CumplimientoPage() {
   const centroId = session?.centro_id ?? "";
   const docs = useAsync<DocumentoLegal[]>((s) => listarDocumentos({ solo_centro: true }, s), []);
   const personas = useAsync<UsuarioFinal[]>((s) => listarUsuarios(centroId, s), [centroId]);
+  // Estado REAL de consentimientos (mismo cálculo que "Puesta en marcha"): una
+  // persona cuenta solo si tiene su consentimiento registrado. Antes el paso 4 se
+  // daba por hecho con solo existir personas -> falsa seguridad RGPD.
+  const pm = useAsync<PuestaEnMarcha>((s) => puestaEnMarcha(s), []);
   const [imprimirDpa, setImprimirDpa] = useState(false);
   const [pagando, setPagando] = useState(false);
   const [errorPago, setErrorPago] = useState<string | null>(null);
@@ -85,7 +90,7 @@ export function CumplimientoPage() {
 
       <Card style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 17, marginBottom: 6 }}>Pasos a completar</h2>
-        {(docs.loading || personas.loading) && <Spinner label="Comprobando…" />}
+        {(docs.loading || personas.loading || pm.loading) && <Spinner label="Comprobando…" />}
         {!docs.loading && (
           <div>
             <Paso hecho={tieneTipo("dpa")} titulo="1. Contrato de encargo del tratamiento (DPA) firmado con el centro">
@@ -97,7 +102,10 @@ export function CumplimientoPage() {
             <Paso hecho={tieneTipo("dpia")} titulo="3. Evaluación de Impacto (DPIA) revisada">
               Hay un borrador en la documentación; una vez revisado por vuestra asesoría, súbelo.
             </Paso>
-            <Paso hecho={nPersonas > 0} titulo={`4. Consentimiento firmado de cada persona (${nPersonas} activas)`}>
+            <Paso hecho={!!pm.data?.personas_ok} titulo={`4. Consentimiento firmado de cada persona (${nPersonas} activas)`}>
+              {pm.data && pm.data.personas_sin_consentimiento > 0 ? (
+                <><strong style={{ color: colors.coralDark }}>Faltan {pm.data.personas_sin_consentimiento} consentimiento(s).</strong>{" "}</>
+              ) : null}
               En la ficha de cada persona (<Link to="/pacientes" style={{ color: colors.sageDark }}>Personas</Link>):
               genera el PDF, hazlo firmar y súbelo. No des de alta a nadie sin su consentimiento documentado.
             </Paso>
