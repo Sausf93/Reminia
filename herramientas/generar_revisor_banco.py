@@ -103,6 +103,7 @@ const ACTS = __DATOS__;
 const KEY = 'reminia_banco_decisiones';
 let dec = {};
 try { dec = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){}
+let DB = null;  // se resuelve si la página corre como artifact con capacidad db
 const esc = s => String(s??'').replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 
 function render(){
@@ -135,10 +136,14 @@ function render(){
   const n = Object.values(dec).filter(Boolean).length;
   document.getElementById('prog').textContent = n + ' / ' + ACTS.length + (filtro? ' (mostrando '+shown+')':'');
 }
-function marcar(i, estado){
+async function marcar(i, estado){
   if(estado) dec[i]=estado; else delete dec[i];
-  localStorage.setItem(KEY, JSON.stringify(dec));
+  try { localStorage.setItem(KEY, JSON.stringify(dec)); } catch(e){}
   render();
+  if(DB){ try {
+    if(estado){ const a=ACTS.find(x=>x.i==i)||{}; await DB.doc('decisiones/'+i).set({estado, nombre:a.nombre||'', plantilla:a.plantilla||'', ts:Date.now()}); }
+    else { await DB.doc('decisiones/'+i).delete(); }
+  } catch(e){ console.warn('db', e); } }
 }
 function exportar(){
   const out = {validar: [], descartar: []};
@@ -160,6 +165,22 @@ document.addEventListener('keydown', e=>{
 });
 document.getElementById('filtro').addEventListener('change', render);
 render();
+// Si corre como artifact con capacidad db: guarda en la nube y carga lo ya decidido.
+(async ()=>{
+  try { DB = (window.claude && window.claude.use) ? await window.claude.use('db') : null; }
+  catch(e){ DB = null; }
+  if(!DB) return;
+  try {
+    const snap = await DB.collection('decisiones').get();
+    snap.docs.forEach(d=>{ const e=d.data(); if(e && e.estado) dec[d.id]=e.estado; });
+    try { localStorage.setItem(KEY, JSON.stringify(dec)); } catch(e){}
+    render();
+    const p=document.getElementById('prog'); if(p) p.title='Se guarda solo en la nube ☁';
+    // En la nube el export por descarga no aplica; lo sustituyo por un aviso tranquilo.
+    const be=document.querySelector('button.exp');
+    if(be){ be.textContent='Se guarda solo ☁'; be.disabled=true; be.style.cursor='default'; be.style.opacity='.75'; be.onclick=null; }
+  } catch(e){ console.warn('db load', e); }
+})();
 </script></body></html>"""
 
 

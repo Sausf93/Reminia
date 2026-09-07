@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reminia — Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --ivory:#F3F9F7; --card:#FFFFFF; --ink:#12312E; --inkSoft:#3E5B56;
+  --sage:#12A99B; --sageDark:#1F7A70; --sand:#D2E6E2; --sandDeep:#B7D6D0;
+  --coral:#F08A6B; --coralDeep:#C4553A; --deep:#0E2320; --deep2:#123430;
+  --gold:#E8B04B;
+  --disp:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --bg:var(--ivory); --fg:var(--ink); --fgSoft:var(--inkSoft);
+  --surface:var(--card); --line:var(--sand);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);
+  font-size:clamp(15px,1.5vw,19px);line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+
+/* ---------- deck shell ---------- */
+#deck{position:fixed;inset:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(28px,5vw,84px);opacity:0;visibility:hidden;transform:translateY(14px);z-index:1;
+  background:var(--bg);
+  transition:opacity .5s ease,transform .5s ease,visibility .5s;pointer-events:none}
+.slide.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;z-index:2}
+.slide.dark{background:radial-gradient(120% 120% at 80% 10%,var(--deep2),var(--deep));color:#EAF5F2}
+.slide.dark .eyebrow{color:#7FC6BB}
+.slide.dark .muted{color:#A9C7C1}
+.wrap{width:100%;max-width:1120px;margin:0 auto}
+
+/* ---------- typography ---------- */
+.eyebrow{font-family:var(--mono);font-size:clamp(11px,1.05vw,13px);letter-spacing:.22em;
+  text-transform:uppercase;color:var(--sageDark);margin:0 0 clamp(14px,2vw,22px);display:flex;align-items:center;gap:10px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--coral);flex:none}
+h1,h2{font-family:var(--disp);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.01em}
+.kicker h1{font-size:clamp(34px,6vw,76px);line-height:1.03}
+.head h2{font-size:clamp(28px,4.6vw,54px);line-height:1.06}
+.ital{font-style:italic;font-weight:600}
+.coral{color:var(--coralDeep)}
+.slide.dark .coral{color:var(--coral)}
+.sub{font-size:clamp(16px,1.9vw,23px);color:var(--fgSoft);max-width:26ch;margin:clamp(16px,2.4vw,26px) 0 0;line-height:1.4}
+.slide.dark .sub{color:#BfDAD4}
+.muted{color:var(--fgSoft)}
+.tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--sageDark);border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--card)}
+.badge-new{background:var(--coralDeep);color:#fff;border:none;letter-spacing:.14em}
+
+/* ---------- layout helpers ---------- */
+.two{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:center}
+.rows{display:flex;flex-direction:column;gap:clamp(14px,2vw,20px)}
+.center{text-align:center;align-items:center}
+.center .eyebrow{justify-content:center}
+.center .sub{margin-left:auto;margin-right:auto}
+
+/* ---------- ring motif ---------- */
+.rings{position:relative;display:grid;place-items:center}
+.rings svg{width:100%;height:auto;max-width:min(46vh,520px)}
+.ring-c{fill:none;stroke:var(--sage);opacity:.9}
+@keyframes ripple{0%{transform:scale(.55);opacity:.9}70%{opacity:.12}100%{transform:scale(1.25);opacity:0}}
+.rippleG circle{transform-origin:center;transform-box:fill-box}
+.ani .rippleG circle{animation:ripple 3.4s ease-out infinite}
+.ani .rippleG circle:nth-child(2){animation-delay:1.1s}
+.ani .rippleG circle:nth-child(3){animation-delay:2.2s}
+
+/* ---------- big numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,40px) clamp(24px,4vw,56px);margin-top:clamp(22px,3vw,34px)}
+.num .big{font-family:var(--mono);font-weight:700;font-size:clamp(46px,8vw,104px);line-height:.92;letter-spacing:-.03em;color:#EAF5F2}
+.num .big .u{font-size:.36em;color:var(--coral);margin-left:.12em;letter-spacing:0}
+.num .lbl{font-size:clamp(13px,1.3vw,16px);color:#A9C7C1;margin-top:10px}
+.num.stmt .big{font-family:var(--disp);font-size:clamp(30px,4.2vw,52px);font-style:italic;color:var(--coral)}
+
+/* ---------- icon rows (problem) ---------- */
+.prob{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,34px);margin-top:clamp(20px,3vw,32px)}
+.prob .cell{display:flex;flex-direction:column;gap:14px}
+.prob .ic{width:64px;height:64px;border-radius:16px;background:var(--card);border:1px solid var(--line);
+  display:grid;place-items:center;box-shadow:0 6px 22px -12px rgba(18,49,46,.4)}
+.prob .ic svg{width:34px;height:34px}
+.prob h3{font-family:var(--disp);font-weight:600;font-size:clamp(17px,1.7vw,21px);margin:0}
+.prob p{margin:0;color:var(--fgSoft);font-size:clamp(13px,1.3vw,15.5px)}
+
+/* ---------- split comparison ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;border-radius:22px;overflow:hidden;
+  border:1px solid var(--line);margin-top:clamp(22px,3vw,32px);box-shadow:0 24px 60px -34px rgba(18,49,46,.5)}
+.split .col{padding:clamp(22px,3.4vw,40px)}
+.split .old{background:#EEF1F0;color:#5c6b68}
+.split .new{background:linear-gradient(160deg,#12A99B,#1F7A70);color:#fff;position:relative}
+.split .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;margin-bottom:16px}
+.split ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
+.split li{display:flex;gap:11px;align-items:flex-start;font-size:clamp(14px,1.5vw,18px);line-height:1.35}
+.split li .m{flex:none;margin-top:.15em}
+.split .new .price{font-family:var(--mono);font-weight:700;font-size:clamp(22px,2.6vw,30px);margin-top:20px;letter-spacing:-.02em}
+
+/* ---------- tablet mockups ---------- */
+.device{position:relative;background:#0E2320;border-radius:26px;padding:14px;
+  box-shadow:0 40px 80px -40px rgba(18,49,46,.6);width:100%;max-width:440px;margin:0 auto}
+.device .screen{background:var(--ivory);border-radius:14px;overflow:hidden;aspect-ratio:4/3;position:relative;padding:16px}
+.device.tall .screen{aspect-ratio:3/4}
+.screen .topbar{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--sageDark);text-transform:uppercase;margin-bottom:12px}
+.screen .topbar .r{margin-left:auto;color:var(--coralDeep)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.tile{background:#fff;border:1.5px solid var(--sand);border-radius:12px;aspect-ratio:1;display:grid;place-items:center;padding:9px}
+.tile svg{width:100%;height:100%}
+.tile.sel{border-color:var(--sage);box-shadow:0 0 0 3px rgba(18,169,155,.25)}
+.namebtns{display:flex;flex-direction:column;gap:10px}
+.namebtn{background:#fff;border:1.5px solid var(--sand);border-radius:12px;padding:14px 16px;font-weight:600;font-size:16px;color:var(--ink);display:flex;align-items:center;gap:12px}
+.namebtn .av{width:30px;height:30px;border-radius:50%;background:var(--sand);display:grid;place-items:center;font-family:var(--disp);color:var(--sageDark);font-weight:700;flex:none}
+.namebtn.sel{border-color:var(--sage);background:#EAF7F5}
+.consigna{font-family:var(--disp);font-size:clamp(16px,2vw,22px);font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.2}
+.caption{font-size:13px;color:var(--fgSoft);margin-top:14px;text-align:center}
+
+/* ---------- monitor board ---------- */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pcard{background:#fff;border:1px solid var(--sand);border-radius:12px;padding:12px 13px;position:relative}
+.pcard .nm{font-weight:600;font-size:14px}
+.pcard .st{font-size:11.5px;color:var(--sageDark);margin-top:4px;display:flex;align-items:center;gap:6px}
+.pcard .bar{height:5px;border-radius:99px;background:var(--sand);margin-top:9px;overflow:hidden}
+.pcard .bar i{display:block;height:100%;background:var(--sage);border-radius:99px}
+.pcard.att{border-color:var(--coral);box-shadow:0 0 0 3px rgba(240,138,107,.22)}
+.pcard.att .st{color:var(--coralDeep)}
+.pcard .pulse{position:absolute;top:11px;right:11px;width:9px;height:9px;border-radius:50%;background:var(--coral)}
+.ani .pcard.att .pulse{animation:pdot 1.6s ease-in-out infinite}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(240,138,107,.55)}50%{box-shadow:0 0 0 7px rgba(240,138,107,0)}}
+.ani .pcard.att .pulse{animation:pdot 1.6s ease-in-out infinite}
+
+/* ---------- evolution chart ---------- */
+.chartwrap{background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(18px,2.6vw,30px);box-shadow:0 24px 60px -40px rgba(18,49,46,.45)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:13.5px;color:var(--fgSoft)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* ---------- pills (dirección) ---------- */
+.pills{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:clamp(22px,3vw,30px)}
+.pill-card{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:18px 20px;box-shadow:0 10px 30px -20px rgba(18,49,46,.4)}
+.pill-card .ic{width:44px;height:44px;border-radius:12px;background:#EAF7F5;display:grid;place-items:center;flex:none}
+.pill-card .ic svg{width:24px;height:24px}
+.pill-card h3{font-family:var(--disp);font-weight:600;font-size:clamp(16px,1.6vw,20px);margin:0 0 4px}
+.pill-card p{margin:0;font-size:clamp(13px,1.35vw,15px);color:var(--fgSoft)}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,40px);margin-top:clamp(22px,3vw,32px)}
+.kpi .n{font-family:var(--mono);font-weight:700;font-size:clamp(40px,6vw,80px);line-height:.95;color:var(--sageDark);letter-spacing:-.03em}
+.kpi .n .u{font-size:.34em;color:var(--coralDeep);margin-left:.1em}
+.kpi .l{margin-top:10px;color:var(--fgSoft);font-size:clamp(13px,1.35vw,16px);max-width:20ch}
+
+/* ---------- traction ---------- */
+.seals{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.seal{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#EAF5F2;
+  border:1px solid rgba(234,245,242,.28);border-radius:999px;padding:8px 15px}
+.netrow{display:flex;gap:12px;margin-top:8px}
+.netdot{flex:1;height:64px;border-radius:14px;background:rgba(234,245,242,.06);border:1px solid rgba(234,245,242,.18);
+  display:grid;place-items:center;font-family:var(--disp);font-style:italic;color:#9fcdc5;font-size:15px}
+
+/* ---------- CTA ---------- */
+.cta{display:inline-flex;align-items:center;gap:12px;background:var(--coralDeep);color:#fff;font-weight:700;
+  font-size:clamp(16px,1.8vw,20px);padding:16px 28px;border-radius:14px;border:none;position:relative;
+  box-shadow:0 18px 40px -18px rgba(196,85,58,.7)}
+.priceblock{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(18px,2.6vw,26px);display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;
+  box-shadow:0 18px 44px -30px rgba(18,49,46,.5)}
+.priceblock .m{font-family:var(--mono)}
+.priceblock .big{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3vw,38px);color:var(--sageDark);letter-spacing:-.02em}
+.priceblock .li{font-size:14.5px;color:var(--fgSoft)}
+.priceblock .li b{color:var(--ink);font-weight:600}
+.freep{color:var(--coralDeep);font-weight:700}
+
+/* ---------- deck chrome ---------- */
+#chrome{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:16px;
+  padding:14px clamp(20px,4vw,48px);z-index:20;pointer-events:none}
+#dots{display:flex;gap:8px;align-items:center;pointer-events:auto}
+#dots button{width:9px;height:9px;border-radius:50%;border:none;background:var(--sandDeep);cursor:pointer;padding:0;transition:all .3s}
+#dots button.on{background:var(--coralDeep);transform:scale(1.35)}
+.slide.dark ~ #chrome #dots button{background:#456}
+#count{margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--fgSoft);pointer-events:auto}
+#brand{display:flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:700;font-size:15px;color:var(--ink);pointer-events:auto}
+#brand svg{width:22px;height:22px}
+.navhint{position:fixed;right:clamp(20px,4vw,48px);top:clamp(18px,3vw,30px);font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;color:var(--fgSoft);z-index:20;opacity:.7}
+.arrow{position:fixed;top:0;bottom:0;width:16%;z-index:15;border:none;background:transparent;cursor:pointer}
+.arrow.l{left:0}.arrow.r{right:0}
+.arrow:focus-visible{outline:3px solid var(--coral);outline-offset:-6px}
+
+/* progress rings top-left */
+#prog{position:fixed;left:clamp(20px,4vw,48px);top:clamp(16px,3vw,28px);z-index:20;display:flex;gap:6px;align-items:center}
+#prog .seg{width:22px;height:4px;border-radius:99px;background:var(--sandDeep);transition:background .3s}
+#prog .seg.on{background:var(--coralDeep)}
+.slide.dark ~ #prog .seg{background:#2c4b46}
+
+/* dark chrome adaptation via body class set in JS */
+body.on-dark #count,body.on-dark #brand{color:#CfE6E1}
+body.on-dark #brand{color:#EAF5F2}
+body.on-dark #dots button{background:#33564f}
+body.on-dark #dots button.on{background:var(--coral)}
+body.on-dark #prog .seg{background:#2c4b46}
+body.on-dark #prog .seg.on{background:var(--coral)}
+body.on-dark .navhint{color:#7F9E98}
+
+@media (max-width:760px){
+  .two,.split,.nums,.prob,.kpis,.pills{grid-template-columns:1fr}
+  .sub{max-width:none}
+  .device{max-width:300px}
+  .navhint{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .slide{transition:opacity .01s}
+}
+</style>
+</head>
+<body class="ani">
+<div id="deck">
+
+<!-- 1 · HOOK -->
+<section class="slide active center kicker" data-i="0">
+  <div class="wrap center">
+    <div class="rings" aria-hidden="true" style="margin-bottom:8px">
+      <svg viewBox="0 0 240 240">
+        <g class="rippleG">
+          <circle cx="120" cy="120" r="44" class="ring-c" stroke-width="2.5"/>
+          <circle cx="120" cy="120" r="44" class="ring-c" stroke-width="2.5"/>
+          <circle cx="120" cy="120" r="44" class="ring-c" stroke-width="2.5"/>
+        </g>
+        <circle cx="120" cy="120" r="30" fill="none" stroke="#12A99B" stroke-width="4"/>
+        <circle cx="120" cy="120" r="16" fill="none" stroke="#1F7A70" stroke-width="4"/>
+        <circle cx="120" cy="120" r="5.5" fill="#F08A6B"/>
+      </svg>
+    </div>
+    <p class="eyebrow" style="justify-content:center"><span class="dot"></span>Reminia · estimulación cognitiva en tablet</p>
+    <h1>El martes por la tarde,<br><span class="ital coral">Carmen</span> vuelve a sonreír.</h1>
+    <p class="sub">Y esta vez, a fin de mes, su familia lo verá en datos.</p>
+  </div>
+</section>
+
+<!-- 2 · LA PREGUNTA -->
+<section class="slide head" data-i="1">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>El problema</p>
+    <h2>Cada mes una familia pregunta:<br><span class="ital">«¿mi madre está mejor?»</span><br>y la respuesta es una impresión.</h2>
+    <p class="num stmt" style="margin-top:34px"><span class="big">0 datos a fin de mes.</span></p>
+  </div>
+</section>
+
+<!-- 3 · EL MARTES QUE AGOTA -->
+<section class="slide head" data-i="2">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>El día a día pesa</p>
+    <h2>Antes de que llegue el primer mayor,<br>ya se ha ido una hora en fotocopias.</h2>
+    <div class="prob">
+      <div class="cell"><div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C4553A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg>
+      </div><h3>Horas recortando fichas</h3><p>Fotocopiar y recortar antes de empezar.</p></div>
+      <div class="cell"><div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C4553A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </div><h3>Corrección una a una</h3><p>A boli, mientras cuida de diez personas.</p></div>
+      <div class="cell"><div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C4553A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7c-2 0-3.8-.6-5.3-1.5"/><path d="M3 3l18 18"/></svg>
+      </div><h3>Nadie ve la evolución</h3><p>A fin de mes, solo queda la sensación.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · POSICIONAMIENTO -->
+<section class="slide head" data-i="3">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>Por qué Reminia</p>
+    <h2>El referente cobra por cada profesional.<br>Nosotros, <span class="ital coral">por centro</span>.</h2>
+    <div class="split">
+      <div class="col old">
+        <div class="lbl">Lo de siempre</div>
+        <ul>
+          <li><span class="m">✕</span> Se paga por cada asiento</li>
+          <li><span class="m">✕</span> Cuesta arriba en el día a día</li>
+          <li><span class="m">✕</span> Poco vivo dentro de la sesión</li>
+        </ul>
+      </div>
+      <div class="col new">
+        <div class="lbl">Reminia</div>
+        <ul>
+          <li><span class="m">✓</span> Equipo del centro <b>sin límite</b></li>
+          <li><span class="m">✓</span> Se prepara sola; la maestra solo arranca</li>
+          <li><span class="m">✓</span> Corrige y mide sin bajar el rigor</li>
+        </ul>
+        <div class="price">125&nbsp;€/mes · por centro</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · LA SOLUCIÓN + SISTEMA -->
+<section class="slide head" data-i="4">
+  <div class="wrap two">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>Qué es</p>
+      <h2>Se prepara sola.<br>Se juega con dignidad.<br>Se mide <span class="ital coral">sin mentir</span>.</h2>
+      <div class="rows" style="margin-top:28px">
+        <div class="tag" style="align-self:flex-start">1 · Tablet maestra — la única con contraseña</div>
+        <div class="tag" style="align-self:flex-start">2 · Tablets participantes — solo juegan</div>
+        <div class="tag" style="align-self:flex-start">3 · Panel web — lo recuerda todo</div>
+      </div>
+    </div>
+    <div>
+      <div class="device">
+        <div class="screen">
+          <div class="topbar">Memoria · nivel medio <span class="r">● en vivo</span></div>
+          <div class="tiles">
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><circle cx="40" cy="44" r="28" fill="#F7F4EC" stroke="#243027" stroke-width="3"/><path d="M40,20 L40,26 M40,62 L40,68 M16,44 L22,44 M58,44 L64,44" stroke="#243027" stroke-width="3" stroke-linecap="round"/><path d="M40,44 L29,29" stroke="#243027" stroke-width="3.2" stroke-linecap="round"/><path d="M40,44 L52,39" stroke="#243027" stroke-width="4.2" stroke-linecap="round"/><circle cx="40" cy="44" r="3.4" fill="#C4573C" stroke="#243027" stroke-width="2"/></svg></div>
+            <div class="tile sel"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><rect x="37.5" y="14" width="5" height="13" rx="2.5" fill="#7A4A1E" stroke="#243027" stroke-width="2.7"/><ellipse cx="53" cy="17" rx="10" ry="5" transform="rotate(-28 53 17)" fill="#4EA65C" stroke="#243027" stroke-width="2.7"/><path d="M40,30 C32,20 16,23 16,42 C16,60 32,70 40,70 C48,70 64,60 64,42 C64,23 48,20 40,30 Z" fill="#E5352A" stroke="#243027" stroke-width="2.7" stroke-linejoin="round"/><path d="M40,30 C40,30 41,52 40,70 C48,70 64,60 64,42 C64,23 48,20 40,30 Z" fill="#C42A20"/><ellipse cx="29" cy="40" rx="5" ry="10" fill="#fff" opacity="0.28"/></svg></div>
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><rect x="21" y="40" width="38" height="31" fill="#EBCF95" stroke="#243027" stroke-width="3"/><rect x="49" y="23" width="7" height="15" fill="#B14A32" stroke="#243027" stroke-width="2.6"/><path d="M13,43 L40,19 L67,43 Z" fill="#C4573C" stroke="#243027" stroke-width="3" stroke-linejoin="round"/><rect x="34" y="52" width="13" height="19" rx="1" fill="#8A5A2E" stroke="#243027" stroke-width="2.6"/><circle cx="44" cy="62" r="1.5" fill="#EBCF95"/><rect x="24" y="47" width="11" height="11" fill="#7FC3E0" stroke="#243027" stroke-width="2.4"/><path d="M29.5,47 L29.5,58 M24,52.5 L35,52.5" stroke="#243027" stroke-width="1.6"/></svg></div>
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><path d="M40,10 L49,32 L73,34 L55,50 L61,73 L40,60 L19,73 L25,50 L7,34 L31,32 Z" fill="#F2C21E" stroke="#243027" stroke-width="2.7" stroke-linejoin="round"/><path d="M40,10 L49,32 L73,34 L55,50 L61,73 L40,60 Z" fill="#DCA808" opacity="0.5"/></svg></div>
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 72"><rect x="4" y="8" width="112" height="56" rx="8" fill="#D65A50" stroke="#243027" stroke-width="2.6"/><path d="M38,8 L38,64" stroke="#243027" stroke-width="1.6" opacity="0.4"/><path d="M12,8 L38,8 L38,64 L12,64 C7,64 4,60 4,56 L4,16 C4,12 7,8 12,8 Z" fill="#B83F36"/><circle cx="21" cy="36" r="12" fill="#fff" opacity="0.35" stroke="#243027" stroke-width="1.6"/><text x="74" y="48" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="30" fill="#243027">10</text><text x="103" y="30" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="17" fill="#243027">€</text></svg></div>
+            <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><circle cx="40" cy="42" r="30" fill="#F2C79E" stroke="#243027" stroke-width="2.7"/><circle cx="30" cy="36" r="3.4" fill="#243027"/><circle cx="50" cy="36" r="3.4" fill="#243027"/><path d="M28,52 C33,60 47,60 52,52" fill="none" stroke="#243027" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="47" r="4" fill="#E8A87C" opacity="0.6"/><circle cx="56" cy="47" r="4" fill="#E8A87C" opacity="0.6"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <p class="caption">Actividad real del catálogo, en la tablet del participante.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · NÚMEROS (dark) -->
+<section class="slide dark center" data-i="5">
+  <div class="wrap center">
+    <p class="eyebrow" style="justify-content:center"><span class="dot"></span>Ya funciona · con esto dentro</p>
+    <div class="nums" style="grid-template-columns:repeat(3,1fr)">
+      <div class="num"><div class="big" data-count="9">0</div><div class="lbl">tipos de ejercicio</div></div>
+      <div class="num"><div class="big" data-count="2800" data-approx="~">0</div><div class="lbl">actividades en el banco</div></div>
+      <div class="num"><div class="big" data-count="6">0</div><div class="lbl">retos de ingenio en grupo</div></div>
+      <div class="num"><div class="big" data-count="5">0</div><div class="lbl">pasos = un día entero</div></div>
+      <div class="num stmt"><div class="big">En producción</div></div>
+      <div class="num stmt"><div class="big">Datos en la UE</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · ACTO 1 -->
+<section class="slide head" data-i="6">
+  <div class="wrap two">
+    <div>
+      <span class="tag">Acto 1 · Se piensa una vez</span>
+      <h2 style="margin-top:16px">Lo decides el lunes con calma.<br>Sirve <span class="ital coral">toda la semana</span>.</h2>
+      <p class="sub">Eliges dominio y nivel una vez; el motor rota los ejercicios solo y deja lista la sesión de mañana.</p>
+    </div>
+    <div>
+      <div class="device tall">
+        <div class="screen" style="aspect-ratio:3/4;display:flex;flex-direction:column">
+          <div class="topbar">Plan de Carmen</div>
+          <div class="rows" style="gap:10px">
+            <div class="namebtn sel"><span class="av">M</span>Memoria</div>
+            <div class="namebtn"><span class="av">A</span>Atención</div>
+            <div class="namebtn"><span class="av">C</span>Cálculo</div>
+          </div>
+          <div style="margin-top:auto;background:#EAF7F5;border:1px solid var(--sand);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--sageDark);display:flex;align-items:center;gap:8px">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#C4553A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <b style="color:#C4553A">Sesión de mañana lista</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · ACTO 2 -->
+<section class="slide head" data-i="7">
+  <div class="wrap two">
+    <div>
+      <span class="tag">Acto 2 · Arranca solo</span>
+      <h2 style="margin-top:16px">Le das la tablet a Juan.<br>Toca su nombre.<br>Y jamás lee <span class="ital coral">«has fallado»</span>.</h2>
+      <p class="sub">Reparto por toque, sin códigos. Una actividad a pantalla completa, pensada para el más frágil.</p>
+    </div>
+    <div>
+      <div class="device tall">
+        <div class="screen" style="aspect-ratio:3/4;display:flex;flex-direction:column">
+          <div class="topbar">¿Quién juega?</div>
+          <div class="namebtns">
+            <div class="namebtn"><span class="av">C</span>Carmen</div>
+            <div class="namebtn sel"><span class="av">J</span>Juan</div>
+            <div class="namebtn"><span class="av">R</span>Rosa</div>
+          </div>
+          <div style="margin-top:auto;background:#fff;border:1.5px solid var(--sand);border-radius:12px;padding:14px;text-align:center">
+            <div class="consigna" style="margin-bottom:10px">Toca la manzana</div>
+            <div class="tiles" style="grid-template-columns:repeat(3,1fr)">
+              <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><rect x="21" y="40" width="38" height="31" fill="#EBCF95" stroke="#243027" stroke-width="3"/><rect x="49" y="23" width="7" height="15" fill="#B14A32" stroke="#243027" stroke-width="2.6"/><path d="M13,43 L40,19 L67,43 Z" fill="#C4573C" stroke="#243027" stroke-width="3" stroke-linejoin="round"/><rect x="34" y="52" width="13" height="19" rx="1" fill="#8A5A2E" stroke="#243027" stroke-width="2.6"/><circle cx="44" cy="62" r="1.5" fill="#EBCF95"/><rect x="24" y="47" width="11" height="11" fill="#7FC3E0" stroke="#243027" stroke-width="2.4"/><path d="M29.5,47 L29.5,58 M24,52.5 L35,52.5" stroke="#243027" stroke-width="1.6"/></svg></div>
+              <div class="tile sel"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><rect x="37.5" y="14" width="5" height="13" rx="2.5" fill="#7A4A1E" stroke="#243027" stroke-width="2.7"/><ellipse cx="53" cy="17" rx="10" ry="5" transform="rotate(-28 53 17)" fill="#4EA65C" stroke="#243027" stroke-width="2.7"/><path d="M40,30 C32,20 16,23 16,42 C16,60 32,70 40,70 C48,70 64,60 64,42 C64,23 48,20 40,30 Z" fill="#E5352A" stroke="#243027" stroke-width="2.7" stroke-linejoin="round"/><path d="M40,30 C40,30 41,52 40,70 C48,70 64,60 64,42 C64,23 48,20 40,30 Z" fill="#C42A20"/><ellipse cx="29" cy="40" rx="5" ry="10" fill="#fff" opacity="0.28"/></svg></div>
+              <div class="tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 84"><path d="M40,10 L49,32 L73,34 L55,50 L61,73 L40,60 L19,73 L25,50 L7,34 L31,32 Z" fill="#F2C21E" stroke="#243027" stroke-width="2.7" stroke-linejoin="round"/><path d="M40,10 L49,32 L73,34 L55,50 L61,73 L40,60 Z" fill="#DCA808" opacity="0.5"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · ACTO 3 -->
+<section class="slide head" data-i="8">
+  <div class="wrap two">
+    <div>
+      <span class="tag">Acto 3 · La maestra ve el grupo</span>
+      <h2 style="margin-top:16px">Deja de correr de mesa en mesa.<br>La app le dice <span class="ital coral">dónde mirar</span>.</h2>
+      <p class="sub">Tablero en vivo, una tarjeta por persona. Aviso suave si alguien se atasca.</p>
+    </div>
+    <div>
+      <div class="device">
+        <div class="screen">
+          <div class="topbar">Sala de la tarde · 6 personas <span class="r">● en vivo</span></div>
+          <div class="board">
+            <div class="pcard"><div class="nm">Carmen</div><div class="st">● en marcha</div><div class="bar"><i style="width:70%"></i></div></div>
+            <div class="pcard att"><span class="pulse"></span><div class="nm">Juan</div><div class="st">◆ necesita apoyo</div><div class="bar"><i style="width:22%;background:#C4553A"></i></div></div>
+            <div class="pcard"><div class="nm">Rosa</div><div class="st">● en marcha</div><div class="bar"><i style="width:55%"></i></div></div>
+            <div class="pcard"><div class="nm">Pilar</div><div class="st">✓ terminó</div><div class="bar"><i style="width:100%"></i></div></div>
+            <div class="pcard"><div class="nm">Manuel</div><div class="st">● en marcha</div><div class="bar"><i style="width:40%"></i></div></div>
+            <div class="pcard"><div class="nm">Lola</div><div class="st">● en marcha</div><div class="bar"><i style="width:80%"></i></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · MOMENTO MÁGICO (dark) -->
+<section class="slide dark center" data-i="9">
+  <div class="wrap center">
+    <span class="tag badge-new" style="margin-bottom:22px">Nuevo · retos de ingenio</span>
+    <h2 style="font-size:clamp(30px,5.2vw,64px)">«Esto no lo da<br>una <span class="ital coral">ficha de papel</span>.»</h2>
+    <p class="sub" style="color:#Bfdad4">Un grupo resolviendo juntos las Torres de Hanói, las ranas, el taquín… y la pantalla lo celebra con ellos.</p>
+    <div class="rings ani" aria-hidden="true" style="margin-top:26px">
+      <svg viewBox="0 0 220 120" style="max-width:min(38vh,420px)">
+        <g class="rippleG">
+          <circle cx="110" cy="60" r="26" class="ring-c" stroke="#F08A6B" stroke-width="2.5"/>
+          <circle cx="110" cy="60" r="26" class="ring-c" stroke="#F08A6B" stroke-width="2.5"/>
+          <circle cx="110" cy="60" r="26" class="ring-c" stroke="#F08A6B" stroke-width="2.5"/>
+        </g>
+        <circle cx="110" cy="60" r="18" fill="none" stroke="#7FC6BB" stroke-width="3.5"/>
+        <circle cx="110" cy="60" r="6" fill="#F08A6B"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · RIGOR -->
+<section class="slide head" data-i="10">
+  <div class="wrap two">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>El rigor que os protege</p>
+      <h2>No tocar algo<br><span class="ital coral">no es fallar</span>.</h2>
+      <p class="sub">El intento nace <i>sin valorar</i>. Nada puntúa sin revisión humana. Cada persona se compara consigo misma, nunca con otras.</p>
+      <p style="font-family:var(--disp);font-style:italic;font-size:clamp(17px,1.9vw,22px);color:var(--sageDark);margin-top:22px">Medimos desempeño, nunca deterioro.</p>
+    </div>
+    <div>
+      <div class="chartwrap">
+        <svg viewBox="0 0 360 220" style="width:100%;height:auto" font-family="var(--mono)">
+          <!-- grid -->
+          <g stroke="#E3EFEC" stroke-width="1">
+            <line x1="44" y1="30" x2="340" y2="30"/><line x1="44" y1="80" x2="340" y2="80"/>
+            <line x1="44" y1="130" x2="340" y2="130"/><line x1="44" y1="180" x2="340" y2="180"/>
+          </g>
+          <g fill="#7d938e" font-size="10">
+            <text x="38" y="34" text-anchor="end">1,0</text>
+            <text x="38" y="134" text-anchor="end">0,5</text>
+            <text x="38" y="184" text-anchor="end">0</text>
+          </g>
+          <!-- área -->
+          <path d="M60 150 L130 120 L200 96 L270 70 L320 58 L320 180 L60 180 Z" fill="rgba(18,169,155,.14)"/>
+          <!-- línea -->
+          <path d="M60 150 L130 120 L200 96 L270 70 L320 58" fill="none" stroke="#1F7A70" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#1F7A70"><circle cx="60" cy="150" r="4"/><circle cx="130" cy="120" r="4"/><circle cx="200" cy="96" r="4"/><circle cx="270" cy="70" r="4"/></g>
+          <circle cx="320" cy="58" r="6" fill="#C4553A"/>
+          <g fill="#7d938e" font-size="10" text-anchor="middle">
+            <text x="60" y="200">sem 1</text><text x="130" y="200">sem 2</text><text x="200" y="200">sem 3</text><text x="270" y="200">sem 4</text><text x="320" y="200">hoy</text>
+          </g>
+        </svg>
+        <div class="legend">
+          <span><i style="background:#1F7A70"></i>logrado (1)</span>
+          <span><i style="background:#9CC9C2"></i>parcial (0,5)</span>
+          <span><i style="background:#D2E6E2"></i>no logrado (0)</span>
+        </div>
+      </div>
+      <p class="caption">Evolución de una persona, segmentada por dificultad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · DIRECCIÓN -->
+<section class="slide head" data-i="11">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>Lo que a dirección le quita el sueño, resuelto</p>
+    <h2>Se cae el wifi. La sesión sigue.<br>Se pierde una tablet. Se corta <span class="ital coral">en un toque</span>.</h2>
+    <div class="pills">
+      <div class="pill-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1F7A70" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 0 0 .5-9 6 6 0 0 0-11.6-1.5A4 4 0 0 0 6.5 19"/><path d="m2 2 20 20"/></svg></div>
+        <div><h3>Funciona sin internet</h3><p>La sesión continúa y sincroniza cuando vuelve la conexión.</p></div></div>
+      <div class="pill-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1F7A70" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div><h3>RGPD por diseño</h3><p>Datos en la UE, pseudonimizados. En el día a día solo se ve el alias.</p></div></div>
+      <div class="pill-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1F7A70" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div><h3>Revocación desde el panel</h3><p>¿Se pierde una tablet? Se desvincula en un toque.</p></div></div>
+      <div class="pill-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1F7A70" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M12 7v5l3 2"/></svg></div>
+        <div><h3>El impago no borra datos</h3><p>Se avisa antes; el acceso se pausa, la historia se conserva.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · QUIÉN GANA -->
+<section class="slide head" data-i="12">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>Quién gana</p>
+    <h2>La maestra recupera horas.<br>La familia, por fin, <span class="ital coral">ve datos</span>.</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="n">Cero</div><div class="l">correcciones a mano en la sesión</div></div>
+      <div class="kpi"><div class="n" data-count="5"><span>0</span><span class="u">min</span></div><div class="l">para dejar lista la sesión del día siguiente</div></div>
+      <div class="kpi"><div class="n">Evolución</div><div class="l">clara para enseñar a la familia cada mes</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · TRACCIÓN (dark) -->
+<section class="slide dark head" data-i="13">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>Tracción y confianza</p>
+    <h2>No es una promesa.<br>Está en producción,<br>con una <span class="ital coral">red detrás</span>.</h2>
+    <div class="netrow">
+      <div class="netdot">Centro 1</div><div class="netdot">Centro 2</div><div class="netdot">Centro 3</div><div class="netdot">Centro 4</div><div class="netdot">Centro 5</div>
+    </div>
+    <p class="muted" style="margin-top:14px;font-size:15px">Red ancla de 5 centros de referencia · alta self-service en minutos.</p>
+    <div class="seals">
+      <span class="seal">● en producción</span>
+      <span class="seal">◆ datos en la UE</span>
+      <span class="seal">✓ sin permanencia</span>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · LA PETICIÓN -->
+<section class="slide head" data-i="14">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>La petición</p>
+    <h2>No os pido que decidáis hoy.<br>Os pido <span class="ital coral">un centro</span>.</h2>
+    <p class="sub" style="max-width:34ch">Probadlo en uno antes de hablar de los cinco. El piloto va primero; el precio, después y sin sustos.</p>
+    <div style="margin-top:26px"><button class="cta">Empezar un piloto <span aria-hidden="true">→</span></button></div>
+    <div class="priceblock">
+      <span class="big">125&nbsp;€<span style="font-size:.5em;color:var(--fgSoft)">/mes</span></span>
+      <span class="li"><b>por centro</b> · equipo sin límite</span>
+      <span class="li"><b>+3&nbsp;€</b>/persona a partir de 30</span>
+      <span class="li freep">piloto 0&nbsp;€ · sin permanencia</span>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="prog" aria-hidden="true"></div>
+<p class="navhint">← → o espacio</p>
+<button class="arrow l" id="prev" aria-label="Anterior"></button>
+<button class="arrow r" id="next" aria-label="Siguiente"></button>
+
+<div id="chrome">
+  <span id="brand">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#12A99B"/><circle cx="20" cy="20" r="12.5" fill="none" stroke="#fff" stroke-width="2.6"/><circle cx="20" cy="20" r="7" fill="none" stroke="#fff" stroke-width="2.6"/><circle cx="20" cy="20" r="2.4" fill="#F08A6B"/></svg>
+    Reminia
+  </span>
+  <div id="dots"></div>
+  <span id="count"></span>
+</div>
+
+<script>
+document.body.classList.add('ani'); // habilita animaciones (tanto standalone como en artifact)
+const slides=[...document.querySelectorAll('.slide')];
+const N=slides.length;let cur=0;
+const dotsC=document.getElementById('dots'),progC=document.getElementById('prog'),countC=document.getElementById('count');
+slides.forEach((_,i)=>{
+  const b=document.createElement('button');b.setAttribute('aria-label','Ir a la diapositiva '+(i+1));
+  b.onclick=()=>go(i);dotsC.appendChild(b);
+  const s=document.createElement('div');s.className='seg';progC.appendChild(s);
+});
+const dots=[...dotsC.children],segs=[...progC.children];
+const counted=new WeakSet();
+function animateCounts(sl){
+  sl.querySelectorAll('[data-count]').forEach(el=>{
+    if(counted.has(el))return;counted.add(el);
+    const target=+el.dataset.count,approx=el.dataset.approx||'';
+    const uNode=el.querySelector('.u');const uHTML=uNode?uNode.outerHTML:'';
+    const dur=900,t0=performance.now();
+    const fmt=v=>approx+(v>=1000?v.toLocaleString('es-ES'):v);
+    function step(t){const p=Math.min(1,(t-t0)/dur);const e=1-Math.pow(1-p,3);
+      const v=Math.round(target*e);el.innerHTML=fmt(v)+uHTML;
+      if(p<1)requestAnimationFrame(step);}
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches){el.innerHTML=fmt(target)+uHTML;}
+    else requestAnimationFrame(step);
+  });
+}
+function go(i){
+  cur=(i+N)%N;
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  segs.forEach((s,k)=>s.classList.toggle('on',k<=cur));
+  countC.textContent=String(cur+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+  document.body.classList.toggle('on-dark',slides[cur].classList.contains('dark'));
+  animateCounts(slides[cur]);
+}
+document.getElementById('next').onclick=()=>go(cur+1);
+document.getElementById('prev').onclick=()=>go(cur-1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(N-1);
+});
+let x0=null;
+addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;
+  if(Math.abs(dx)>50)go(cur+(dx<0?1:-1));x0=null;},{passive:true});
+go(0);
+</script>
+</body>
+</html>
