@@ -66,5 +66,10 @@ _deploy/*.aab
 # Secretos locales (NUNCA subir)
 _deploy/cloudflare_token.txt
 *.secret
+ApiKeyResend
+ApiKey*
+*apikey*
+*api-key*
+*.key
 .claude/settings.local.json
 *.playwright-mcp
