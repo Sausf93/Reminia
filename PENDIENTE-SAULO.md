@@ -58,12 +58,18 @@ La auditoría de seguridad salió **"casi"**: el aislamiento entre centros (IDOR
 - [ ] **Documentos legales (DPA, consentimientos con DNI/NIE): ¿quién los descarga/borra?** Hoy **cualquier integradora** del centro puede (el test actual lo da por intencionado). El auditor recomienda restringirlo a **admin_centro** por ser PII sensible. Dime si lo restrinjo.
 - [ ] **El token de la tablet (kiosco) escala a una sesión de staff completa.** `POST /auth/tablet` con el token del dispositivo + elegir un nombre acuña un JWT de profesional (no admin) **sin contraseña** (el PIN es opcional y por defecto nadie lo tiene). Ese JWT abre todos los endpoints de staff (datos de salud del centro, export CSV, documentos). Es inherente a que la tablet en modo "maestra" necesita acceso de staff. Fix robusto (a diseñar con cuidado para no romper el kiosco): token de **alcance reducido** + exigir contraseña/PIN para lo sensible. Lo vemos juntos.
 
-## 8. Auto-alta self-service: backend LISTO, falta frontend + 1 decisión
+## 8. Auto-alta self-service: backend LISTO y AUDITADO, falta frontend + 1 decisión
 El **backend del alta self-service está construido, seguro y probado** (todo en la rama, con tests):
 - `POST /facturacion/signup` (público) → checkout de Stripe.
 - Webhook crea centro + admin y envía un **enlace de "crea tu contraseña"** (token de un solo uso, **no** se manda la contraseña en claro).
 - `POST /auth/set-password` (crea la contraseña desde el enlace + auto-login) y `POST /auth/forgot-password` (recuperación, sin revelar qué correos existen).
 - `GET /facturacion/estado` (estado de suscripción + precio para la conversión).
+
+**Auditoría de seguridad (ronda 17, multiagente adversarial): 2 fallos CRÍTICOS encontrados y CERRADOS** (con test de regresión), más 4 recomendados aplicados:
+- 🔴 **Confusión de propósito** — el enlace del correo (token "crear contraseña") valía como sesión admin completa si se usaba de `Bearer`. Cerrado: `decode_access_token` rechaza cualquier token con propósito; TTL del enlace 7 días → 72 h.
+- 🔴 **Secuestro cross-tenant** — pagar un alta con el nombre EXACTO de un centro ya cliente te metía como admin de ESE centro (datos de salud ajenos). Cerrado: el alta pública SIEMPRE crea un centro nuevo y aislado (nunca reutiliza por nombre).
+- 🟠 Aplicados además: forgot-password sin oráculo de temporización (envío en 2º plano), rate-limit por IP en signup y forgot-password, errores de Stripe sin filtrar detalles, y log de ERROR si un alta pagada se queda sin poder enviar el correo.
+- ⚪ **Recomendados NO forzados (tu criterio):** (a) el signup responde 409 "ya existe una cuenta con ese correo" → revela qué correos están registrados; quitarlo mejora la privacidad pero cambia la UX del embudo (habría que decir "revisa tu correo" en vez de redirigir a Stripe). (b) **Verificación de email antes de cobrar** (doble opt-in): evita que un typo deje un centro pagado e inaccesible; es una mejora de producto para cuando montemos el frontend. (c) Idempotencia del webhook por `event.id` (hoy es por email, suficiente para reintentos normales de Stripe).
 
 **Falta para que funcione de cara al cliente:**
 - [ ] **DECISIÓN de producto:** ¿enlazar el "pagar y empezar" en la **landing**? Hoy la landing vende *piloto sin coste → contacto por correo*. El self-service (pagar ya) es otro embudo. Si lo quieres, añado un botón "Empezar ahora" → mini-form (centro, nombre, email) → `POST <API>/facturacion/signup` → redirige a Stripe. Dime si va, y si conviven con el "piloto".

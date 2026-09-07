@@ -2,7 +2,14 @@
 from __future__ import annotations
 
 import jwt
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    HTTPException,
+    Request,
+    status,
+)
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +28,7 @@ from app.security import (
     verify_password,
 )
 from app.services.email import enviar_enlace_recuperacion
-from app.services.rate_limit import limitador_login
+from app.services.rate_limit import ip_de_request, limitador_login, limitador_publico
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -189,9 +196,29 @@ async def set_password(body: SetPasswordIn, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/forgot-password")
-async def forgot_password(body: ForgotPasswordIn, db: AsyncSession = Depends(get_db)):
+async def forgot_password(
+    body: ForgotPasswordIn,
+    request: Request,
+    background: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
+):
     """Envía un enlace de recuperación si existe una cuenta con ese correo.
-    Responde SIEMPRE igual (no revela qué correos están registrados)."""
+    Responde SIEMPRE igual (no revela qué correos están registrados).
+
+    El correo se envía en SEGUNDO PLANO (BackgroundTasks): así el tiempo de
+    respuesta es el mismo exista o no la cuenta. Si se esperara al envío en línea,
+    la diferencia de latencia (POST a Resend vs respuesta inmediata) sería un
+    oráculo de temporización que revelaría qué correos existen, anulando la
+    protección de cuerpo idéntico. Rate-limit por IP contra barrido/bombardeo."""
+    clave = f"forgot:{ip_de_request(request)}"
+    espera = limitador_publico.segundos_bloqueo(clave)
+    if espera > 0:
+        raise HTTPException(
+            status.HTTP_429_TOO_MANY_REQUESTS,
+            "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+            headers={"Retry-After": str(espera)})
+    limitador_publico.registrar_fallo(clave)
+
     email = body.email.strip().lower()
     staff = (await db.execute(
         select(UsuarioStaff).where(UsuarioStaff.email == email)
@@ -199,6 +226,6 @@ async def forgot_password(body: ForgotPasswordIn, db: AsyncSession = Depends(get
     if staff is not None and staff.activo:
         token = crear_token_password(staff.id, staff.password_hash, minutos=60)
         url = f"{settings.panel_url}/crear-password?token={token}"
-        await enviar_enlace_recuperacion(destino=email, url=url)
+        background.add_task(enviar_enlace_recuperacion, destino=email, url=url)
     return {"mensaje": ("Si ese correo tiene una cuenta, te hemos enviado un "
                         "enlace para recuperar el acceso.")}

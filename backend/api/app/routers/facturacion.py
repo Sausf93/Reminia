@@ -12,6 +12,7 @@ en vez de fallar: en dev/tests el cobro queda desactivado.
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 
 import stripe
@@ -27,6 +28,9 @@ from app.models import Centro, UsuarioFinal, UsuarioStaff
 from app.schemas import CheckoutOut, EstadoSuscripcionOut, SignupIn
 from app.security import crear_token_password, generar_password
 from app.services.email import enviar_enlace_alta
+from app.services.rate_limit import ip_de_request, limitador_publico
+
+log = logging.getLogger("reminia.facturacion")
 
 router = APIRouter(tags=["facturacion"])
 
@@ -93,22 +97,36 @@ async def crear_checkout(
             success_url=f"{settings.panel_url}/cumplimiento?suscripcion=ok",
             cancel_url=f"{settings.panel_url}/cumplimiento?suscripcion=cancelada",
         )
-    except Exception as e:  # noqa: BLE001 — error de Stripe → mensaje limpio
+    except Exception as e:  # noqa: BLE001 — no filtrar detalles de Stripe
+        log.warning("Error creando checkout del centro %s: %s", centro.id, e)
         raise HTTPException(status.HTTP_502_BAD_GATEWAY,
-                            f"No se pudo iniciar el pago: {e}")
+                            "No se pudo iniciar el pago. Inténtalo de nuevo más tarde.")
     await auditar(db, staff, "checkout_suscripcion",
                   detalle=f"cantidad={cantidad}")
     return CheckoutOut(url=sesion.url)
 
 
 @router.post("/facturacion/signup", response_model=CheckoutOut)
-async def signup_checkout(body: SignupIn, db: AsyncSession = Depends(get_db)):
+async def signup_checkout(
+    body: SignupIn, request: Request, db: AsyncSession = Depends(get_db),
+):
     """Alta SELF-SERVICE (sin login): inicia el checkout de suscripción para un
     centro NUEVO. La cuenta se crea en el webhook al confirmarse el pago (no se
     crean centros sin pagar). Devuelve la URL de Stripe a la que redirigir."""
     if not settings.stripe_activo:
         raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
                             "El alta con pago no está disponible todavía.")
+    # Rate-limit por IP: este endpoint es público y cada llamada crea una sesión
+    # de Stripe (coste/latencia). Frena spam de checkouts y barridos.
+    clave = f"signup:{ip_de_request(request)}"
+    espera = limitador_publico.segundos_bloqueo(clave)
+    if espera > 0:
+        raise HTTPException(
+            status.HTTP_429_TOO_MANY_REQUESTS,
+            "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+            headers={"Retry-After": str(espera)})
+    limitador_publico.registrar_fallo(clave)
+
     email = body.email.strip().lower()
     existe = (await db.execute(
         select(UsuarioStaff).where(UsuarioStaff.email == email)
@@ -128,9 +146,10 @@ async def signup_checkout(body: SignupIn, db: AsyncSession = Depends(get_db)):
             success_url=f"{settings.panel_url}/?alta=ok",
             cancel_url=f"{settings.landing_url}/?alta=cancelada",
         )
-    except Exception as e:  # noqa: BLE001 — error de Stripe -> mensaje limpio
+    except Exception as e:  # noqa: BLE001 — no filtrar detalles de Stripe al público
+        log.warning("Error creando checkout de signup: %s", e)
         raise HTTPException(status.HTTP_502_BAD_GATEWAY,
-                            f"No se pudo iniciar el alta: {e}")
+                            "No se pudo iniciar el alta. Inténtalo de nuevo más tarde.")
     return CheckoutOut(url=sesion.url)
 
 
@@ -199,7 +218,14 @@ async def _provisionar_signup(db, meta, customer_id, subscription_id) -> None:
     if not email:
         return
     password = generar_password()
-    _msg, creado = await alta_centro_admin(db, nombre_centro, email, password, nombre)
+    # SELF-SERVICE: crear SIEMPRE un centro nuevo. NUNCA reutilizar por nombre —
+    # el nombre lo teclea un desconocido en el endpoint público y no es único, así
+    # que reutilizarlo dejaría al que paga como admin del centro de otro (secuestro
+    # cross-tenant de datos de salud). La idempotencia ante reintentos del webhook
+    # la garantiza el email único (alta_centro_admin devuelve creado=False).
+    _msg, creado = await alta_centro_admin(
+        db, nombre_centro, email, password, nombre,
+        reutilizar_centro_por_nombre=False)
     # Fija los ids de Stripe y deja el centro ACTIVO (ya ha pagado).
     staff = (await db.execute(
         select(UsuarioStaff).where(UsuarioStaff.email == email)
@@ -214,11 +240,23 @@ async def _provisionar_signup(db, meta, customer_id, subscription_id) -> None:
     # El correo solo se envía si la cuenta se creó AHORA (evita reenviar el enlace
     # si el webhook se reprocesa). En vez de mandar la contraseña en claro,
     # enviamos un ENLACE de un solo uso para que el admin cree la suya (más
-    # seguro, y el mismo mecanismo sirve de recuperación).
+    # seguro, y el mismo mecanismo sirve de recuperación). TTL de 72 h: generoso
+    # para quien acaba de pagar, sin dejar un enlace vivo una semana; si caduca,
+    # "olvidé mi contraseña" genera uno nuevo.
     if creado and staff is not None:
-        token = crear_token_password(staff.id, staff.password_hash, minutos=60 * 24 * 7)
+        token = crear_token_password(staff.id, staff.password_hash, minutos=60 * 24 * 3)
         url = f"{settings.panel_url}/crear-password?token={token}"
-        await enviar_enlace_alta(destino=email, nombre_centro=nombre_centro, url=url)
+        enviado = await enviar_enlace_alta(
+            destino=email, nombre_centro=nombre_centro, url=url)
+        if not enviado:
+            # El centro está creado y PAGADO pero el admin no ha recibido el enlace
+            # de acceso (sin RESEND_API_KEY o fallo de Resend). Traza de nivel ERROR
+            # para detectarlo y reenviar a mano: si no, queda un cliente de pago sin
+            # poder entrar y sin rastro.
+            log.error(
+                "ALTA SIN CORREO: centro '%s' provisionado y pagado, pero el enlace "
+                "de acceso NO se pudo enviar a %s (revisar RESEND y reenviar a mano)",
+                nombre_centro, email)
 
 
 @router.post("/facturacion/webhook", include_in_schema=False)

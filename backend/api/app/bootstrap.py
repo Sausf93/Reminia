@@ -28,12 +28,21 @@ from app.security import hash_password
 
 
 async def alta_centro_admin(db, nombre_centro: str, email: str, password: str,
-                            nombre_staff: str) -> tuple[str, bool]:
+                            nombre_staff: str, *,
+                            reutilizar_centro_por_nombre: bool = True) -> tuple[str, bool]:
     """Crea (idempotente) un centro y su cuenta admin sobre la sesión `db` dada.
 
     Devuelve (mensaje, creado). No hace commit del engine global: opera sobre la
     sesión que le pasen, así vale tanto para el CLI como para el endpoint de
-    plataforma (y es testeable sobre la BD de test)."""
+    plataforma (y es testeable sobre la BD de test).
+
+    `reutilizar_centro_por_nombre`: si un centro con ese nombre ya existe, engancha
+    el nuevo admin a ESE centro (idempotencia del CLI/plataforma, donde el operador
+    es de confianza). El alta SELF-SERVICE debe pasar False: el nombre lo teclea
+    libremente un desconocido en un endpoint público, y `Centro.nombre` no es único,
+    así que reutilizar por nombre permitiría colarse como admin en el centro de otro
+    (secuestro cross-tenant de datos de salud). Con False se crea SIEMPRE un centro
+    nuevo y aislado."""
     # Normalizar el email igual que auth.login (que compara con strip().lower()).
     # Sin esto, un alta por CLI con mayúsculas ('Admin@Centro.ES') crearía una
     # cuenta que NUNCA podría iniciar sesión (el login busca en minúsculas).
@@ -44,9 +53,11 @@ async def alta_centro_admin(db, nombre_centro: str, email: str, password: str,
     if existe is not None:
         return (f"La cuenta {email} ya existe (no se hace nada).", False)
 
-    centro = (await db.execute(
-        select(Centro).where(Centro.nombre == nombre_centro)
-    )).scalars().first()
+    centro = None
+    if reutilizar_centro_por_nombre:
+        centro = (await db.execute(
+            select(Centro).where(Centro.nombre == nombre_centro)
+        )).scalars().first()
     if centro is None:
         centro = Centro(nombre=nombre_centro)
         db.add(centro)

@@ -48,12 +48,23 @@ def create_access_token(subject: str, extra: dict | None = None) -> str:
 
 
 def decode_access_token(token: str) -> dict:
-    """Devuelve el payload; lanza jwt.PyJWTError si es inválido/expirado."""
-    return jwt.decode(
+    """Devuelve el payload de un token de ACCESO; lanza jwt.PyJWTError si es
+    inválido/expirado.
+
+    SEGURIDAD (confused-deputy): rechaza cualquier token que lleve el claim
+    `purpose`. Los tokens de "crear/recuperar contraseña" (purpose='set_password')
+    se firman con el MISMO secreto que los de acceso; sin este control servirían
+    como Bearer de sesión (el enlace del correo daría acceso admin completo). Los
+    tokens de acceso legítimos (create_access_token) nunca ponen `purpose`, así
+    que este filtro no afecta al login normal."""
+    payload = jwt.decode(
         token,
         settings.jwt_secret,
         algorithms=[settings.jwt_algorithm],
     )
+    if payload.get("purpose") is not None:
+        raise jwt.InvalidTokenError("token de propósito no válido para sesión")
+    return payload
 
 
 # ---- Token de "crear/recuperar contraseña" (enlace por correo) ----

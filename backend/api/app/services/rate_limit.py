@@ -11,6 +11,24 @@ from __future__ import annotations
 
 import time
 from collections import defaultdict
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # pragma: no cover
+    from fastapi import Request
+
+
+def ip_de_request(request: "Request") -> str:
+    """IP real del cliente detrás del proxy de Cloud Run.
+
+    Cloud Run AÑADE la IP real al FINAL de X-Forwarded-For y conserva lo que el
+    cliente mandara antes; hay que tomar el ÚLTIMO valor, no el primero (que el
+    cliente puede falsificar para rotar la clave y saltarse el rate-limit)."""
+    xff = request.headers.get("x-forwarded-for")
+    if xff:
+        partes = [p.strip() for p in xff.split(",") if p.strip()]
+        if partes:
+            return partes[-1]
+    return request.client.host if request.client else "desconocida"
 
 
 class LimitadorIntentos:
@@ -51,3 +69,9 @@ class LimitadorIntentos:
 
 # Instancia compartida por la app (5 fallos cada 5 min por IP+email).
 limitador_login = LimitadorIntentos(max_intentos=5, ventana_seg=300.0)
+
+# Límite para endpoints PÚBLICOS abusables sin login (alta self-service, olvido de
+# contraseña): frena barridos de enumeración, email-bombing y spam de checkouts de
+# Stripe. Más laxo en ventana que el login (una persona real usa estas rutas pocas
+# veces): 5 acciones por hora y clave (normalmente la IP).
+limitador_publico = LimitadorIntentos(max_intentos=5, ventana_seg=3600.0)
