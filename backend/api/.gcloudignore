@@ -1,0 +1,11 @@
+# Excluye del contexto de subida a Cloud Build lo que no va en la imagen
+# (acelera el build y evita subir el entorno virtual local de 80+MB).
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.db
+*.sqlite
+.env
+.git/
