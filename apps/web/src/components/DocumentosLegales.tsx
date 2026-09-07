@@ -6,6 +6,7 @@
 import { useRef, useState } from "react";
 import { borrarDocumento, descargarDocumento, listarDocumentos, subirDocumento } from "../api/endpoints";
 import type { DocumentoLegal } from "../api/types";
+import { useAuth } from "../auth/AuthContext";
 import { useAsync } from "../hooks/useAsync";
 import { Card, Spinner, StateMessage, Button } from "./ui";
 import { colors, radius } from "../theme";
@@ -46,6 +47,7 @@ export function DocumentosLegales({
   tipos: Tipo[];
   version?: string;
 }) {
+  const { isAdmin } = useAuth();
   const scope = usuarioFinalId ? { usuario_final_id: usuarioFinalId } : { solo_centro: true };
   const docs = useAsync<DocumentoLegal[]>((s) => listarDocumentos(scope, s), [usuarioFinalId ?? "centro"]);
   const [tipo, setTipo] = useState(tipos[0]?.value ?? "otro");
@@ -140,10 +142,19 @@ export function DocumentosLegales({
                     {d.version && <> · {d.version}</>}
                   </div>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <Button variant="ghost" onClick={() => onDescargar(d.id)}>Descargar</Button>
-                  <Button variant="ghost" onClick={() => onBorrar(d.id, d.nombre_archivo)}>Borrar</Button>
-                </div>
+                {/* Descargar/Borrar solo admin_centro: el archivo lleva PII (DNI)
+                    y su descarga/borrado es una acción del responsable del centro
+                    (el backend también lo exige). La integradora ve el listado. */}
+                {isAdmin ? (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Button variant="ghost" onClick={() => onDescargar(d.id)}>Descargar</Button>
+                    <Button variant="ghost" onClick={() => onBorrar(d.id, d.nombre_archivo)}>Borrar</Button>
+                  </div>
+                ) : (
+                  <div style={{ fontSize: 12.5, color: colors.textFaint }}>
+                    Solo administración
+                  </div>
+                )}
               </div>
             </Card>
           ))}

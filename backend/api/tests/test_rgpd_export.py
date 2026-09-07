@@ -99,6 +99,28 @@ async def test_export_csv_scoped(client, Session):
     assert r.status_code == 403, r.text
 
 
+@pytest.mark.asyncio
+async def test_export_con_nombre_real_solo_admin(client):
+    """Exportar con el NOMBRE REAL (PII) es solo de admin_centro; la integradora
+    exporta con alias (pseudonimizado). Blinda una tablet perdida (ronda 19)."""
+    login_admin, admin = await _login(client, ADMIN)
+    centro_id = login_admin["centro_id"]
+    paco = (await _usuarios(client, admin, centro_id))["Paco"]
+    await client.patch(f"/usuarios/{paco['id']}", headers=admin,
+                       json={"nombre_real": "Francisco Ruiz"})
+
+    _, integradora = await _login(client, INTEGRADORA)
+    url = f"/export/intentos.csv?centro_id={centro_id}&usuario_final_id={paco['id']}&incluir_nombre=true"
+    # Integradora -> 403 al pedir el nombre real.
+    assert (await client.get(url, headers=integradora)).status_code == 403
+    # Sin nombre real, la integradora sí exporta (alias).
+    assert (await client.get(
+        f"/export/intentos.csv?centro_id={centro_id}&usuario_final_id={paco['id']}",
+        headers=integradora)).status_code == 200
+    # Admin sí puede con nombre real.
+    assert (await client.get(url, headers=admin)).status_code == 200
+
+
 def test_csv_safe_neutraliza_formulas():
     """El alias/nombre lo teclea el staff y el CSV se abre en Excel: una celda que
     empiece por = + - @ se ejecutaría (fuga/DDE). _csv_safe la deja como texto."""

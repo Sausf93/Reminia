@@ -89,9 +89,16 @@ async def listar_documentos(
 async def descargar_documento(
     doc_id: str,
     db: AsyncSession = Depends(get_db),
-    staff: UsuarioStaff = Depends(get_current_staff),
+    staff: UsuarioStaff = Depends(require_roles("admin_centro")),
 ):
-    """Descarga el contenido (base64) de un documento del centro. Auditado."""
+    """Descarga el contenido (base64) de un documento del centro. Auditado.
+
+    SEGURIDAD: solo `admin_centro`. Estos documentos llevan PII sensible (DNI/NIE
+    en consentimientos, datos del DPA); su descarga es una salida de datos que debe
+    quedar en el responsable del centro. Las integradoras suben y ven el listado
+    (metadatos), pero no descargan el archivo. Blinda además una tablet perdida:
+    su token solo acuña sesión de integradora, que ya no puede exfiltrar estos
+    ficheros (hallazgo de la ronda 19)."""
     doc = await db.get(DocumentoLegal, doc_id)
     if doc is None or doc.centro_id != staff.centro_id:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Documento no encontrado")

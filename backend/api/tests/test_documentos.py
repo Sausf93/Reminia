@@ -31,24 +31,25 @@ async def test_subir_listar_descargar_borrar(client):
     doc = r.json()
     assert doc["tamano"] > 0 and "contenido_b64" not in doc  # metadatos, sin contenido
 
-    # Lista por persona.
+    # Lista por persona (metadatos): accesible a la integradora.
     lst = (await client.get(f"/documentos?usuario_final_id={uid}", headers=headers)).json()
     assert len(lst) == 1 and lst[0]["id"] == doc["id"]
 
-    # Descarga el contenido.
-    cont = (await client.get(f"/documentos/{doc['id']}/contenido", headers=headers)).json()
+    # Descarga del contenido (PII): SOLO admin_centro.
+    admin = await _login(client, ADMIN)
+    cont = (await client.get(f"/documentos/{doc['id']}/contenido", headers=admin)).json()
     assert cont["contenido_b64"] == contenido
 
     # Borrado: SOLO admin_centro (destruir prueba legal es acción controlada).
-    admin = await _login(client, ADMIN)
     assert (await client.delete(f"/documentos/{doc['id']}", headers=admin)).status_code == 204
-    assert (await client.get(f"/documentos/{doc['id']}/contenido", headers=headers)).status_code == 404
+    assert (await client.get(f"/documentos/{doc['id']}/contenido", headers=admin)).status_code == 404
 
 
 @pytest.mark.asyncio
-async def test_borrar_documento_requiere_admin(client):
-    """Una integradora NO puede borrar un documento legal (DPA/consentimiento con
-    DNI): destruirlo es irreversible y solo lo hace admin_centro (ronda 19)."""
+async def test_descargar_y_borrar_documento_requieren_admin(client):
+    """Una integradora sube y ve el listado, pero NO descarga ni borra: la salida
+    de PII (DNI en consentimientos/DPA) y su destrucción son de admin_centro
+    (ronda 19). Blinda además una tablet perdida (solo acuña sesión de integradora)."""
     integradora = await _login(client, INTEGRADORA)
     c = base64.b64encode(b"%PDF-1.4 dpa").decode()
     doc = (await client.post("/documentos", headers=integradora, json={
@@ -56,14 +57,20 @@ async def test_borrar_documento_requiere_admin(client):
         "contenido_b64": c,
     })).json()
 
-    # Integradora -> 403 (no puede borrar).
-    r = await client.delete(f"/documentos/{doc['id']}", headers=integradora)
-    assert r.status_code == 403, r.text
-    # El documento sigue ahí.
+    # Integradora: puede ver el listado (metadatos)...
+    assert any(d["id"] == doc["id"]
+               for d in (await client.get("/documentos?solo_centro=true",
+                                           headers=integradora)).json())
+    # ...pero NO descargar el contenido ni borrar.
     assert (await client.get(f"/documentos/{doc['id']}/contenido",
-                             headers=integradora)).status_code == 200
-    # Admin sí puede.
+                             headers=integradora)).status_code == 403
+    assert (await client.delete(f"/documentos/{doc['id']}",
+                                headers=integradora)).status_code == 403
+
+    # Admin sí: descarga y borra.
     admin = await _login(client, ADMIN)
+    assert (await client.get(f"/documentos/{doc['id']}/contenido",
+                             headers=admin)).status_code == 200
     assert (await client.delete(f"/documentos/{doc['id']}", headers=admin)).status_code == 204
 
 

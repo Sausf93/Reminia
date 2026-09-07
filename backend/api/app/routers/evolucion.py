@@ -188,6 +188,14 @@ async def exportar_intentos_csv(
     clínica. Auditado (RGPD)."""
     if centro_id != staff.centro_id:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "No es tu centro")
+    # SEGURIDAD (PII): incluir el NOMBRE REAL en el export es una salida de datos
+    # identificativos; solo el admin_centro puede. El resto del personal exporta
+    # con el alias (pseudonimizado), que le basta para su trabajo. Blinda además
+    # una tablet perdida (solo acuña sesión de integradora).
+    if incluir_nombre and staff.rol != "admin_centro":
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN,
+            "Exportar con el nombre real requiere una cuenta de administración del centro.")
     # Anti-IDOR (defensa en profundidad): si se pide una persona concreta, validar
     # YA que es de este centro ANTES de leer ningún dato suyo (incl. el nombre real).
     if usuario_final_id is not None:
