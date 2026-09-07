@@ -80,3 +80,7 @@ gcp-*.json
 credentials*.json
 .claude/settings.local.json
 *.playwright-mcp
+
+# Herramientas: salidas generadas (regenerables)
+herramientas/revisor-banco.html
+decisiones-banco.json
