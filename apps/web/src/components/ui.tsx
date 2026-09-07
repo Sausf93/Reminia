@@ -5,14 +5,17 @@ import { colors, fonts, radius } from "../theme";
 export function Card({
   children,
   style,
+  className,
   as: Tag = "div",
 }: {
   children: ReactNode;
   style?: CSSProperties;
+  className?: string;
   as?: "div" | "section" | "article";
 }) {
   return (
     <Tag
+      className={className}
       style={{
         background: colors.white,
         border: `1px solid ${colors.sand}`,
@@ -168,12 +171,49 @@ export function StateMessage({
   tone = "neutral",
   title,
   children,
+  icon,
 }: {
   tone?: "neutral" | "error";
   title?: string;
   children?: ReactNode;
+  /** Ilustración/emoji opcional para un vacío amable (no para errores). */
+  icon?: ReactNode;
 }) {
   const isError = tone === "error";
+  // Vacío amable: icono centrado + mensaje, en vez de una caja de texto plana.
+  if (!isError && icon) {
+    return (
+      <div
+        style={{
+          background: colors.card,
+          border: `1px solid ${colors.sand}`,
+          borderRadius: radius.md,
+          padding: "30px 24px",
+          textAlign: "center",
+          color: colors.textMuted,
+        }}
+      >
+        <div
+          aria-hidden
+          style={{
+            width: 52,
+            height: 52,
+            margin: "0 auto 12px",
+            borderRadius: "50%",
+            background: colors.white,
+            border: `1px solid ${colors.sand}`,
+            display: "grid",
+            placeItems: "center",
+            color: colors.sageDark,
+          }}
+        >
+          {icon}
+        </div>
+        {title && <strong style={{ display: "block", marginBottom: 4, color: colors.ink }}>{title}</strong>}
+        {children}
+      </div>
+    );
+  }
   return (
     <div
       role={isError ? "alert" : undefined}

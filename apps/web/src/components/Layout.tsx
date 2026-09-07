@@ -30,6 +30,42 @@ const NAV_ADMIN = [
   { to: "/cumplimiento", label: "Cumplimiento", end: false },
 ];
 
+// Iconos de línea por ruta: aceleran el escaneo para personal no técnico. Usan
+// currentColor, así que sirven tanto activos (blanco) como inactivos (tinta).
+const NAV_PATHS: Record<string, string> = {
+  "/": "M3 12h7V3H3zM14 21h7v-9h-7zM14 3v6h7V3zM3 21h7v-6H3z",
+  "/pacientes": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11",
+  "/dispositivos": "M5 2h14a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1M11 18h2",
+  "/revisar": "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
+  "/alertas": "M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0",
+  "/sesion": "M23 7l-7 5 7 5zM1 5h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H1z",
+  "/sesiones": "M3 3v5h5M3.05 13A9 9 0 1 0 6 5.3L3 8M12 7v5l4 2",
+  "/puesta-en-marcha": "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7",
+  "/equipo": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M20 8v6M23 11h-6",
+  "/cumplimiento": "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10M9 12l2 2 4-4",
+};
+
+function NavIcon({ to }: { to: string }) {
+  const d = NAV_PATHS[to];
+  if (!d) return null;
+  return (
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      style={{ flexShrink: 0 }}
+    >
+      <path d={d} />
+    </svg>
+  );
+}
+
 /** True cuando la ventana es estrecha (móvil/tablet vertical). */
 function useEsMovil(bp = 820) {
   const [movil, setMovil] = useState(
@@ -181,6 +217,7 @@ export function Layout({ children }: { children: ReactNode }) {
                   background: isActive ? colors.sageDark : colors.card,
                 })}
               >
+                <NavIcon to={item.to} />
                 <span>{item.label}</span>
                 {badge(item.to)}
               </NavLink>
@@ -238,7 +275,10 @@ export function Layout({ children }: { children: ReactNode }) {
                 background: isActive ? colors.sageDark : "transparent",
               })}
             >
-              <span>{item.label}</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <NavIcon to={item.to} />
+                {item.label}
+              </span>
               {badge(item.to)}
             </NavLink>
           ))}

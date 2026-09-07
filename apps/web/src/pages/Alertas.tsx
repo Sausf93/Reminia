@@ -90,7 +90,14 @@ export function AlertasPage() {
         </StateMessage>
       )}
       {alertas.data && alertas.data.length === 0 && (
-        <StateMessage title={filtro === "pendientes" ? "Nada pendiente" : "Sin alertas"}>
+        <StateMessage
+          title={filtro === "pendientes" ? "Nada pendiente" : "Sin alertas"}
+          icon={
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          }
+        >
           {filtro === "pendientes"
             ? "No hay alertas sin revisar ahora mismo."
             : "No se ha generado ninguna alerta en este centro."}

@@ -80,6 +80,46 @@ textarea {
   font-family: var(--font-mono);
 }
 
+/* --------------------------------------------------------------------------
+ * Micro-interacciones. El panel usa estilos inline, así que no hay :hover en
+ * los componentes. Damos "vida" de forma global y segura: un realce sutil de
+ * brillo en todo lo clicable (visible en botones de color, inocuo en blanco) y
+ * una utilidad .clickable para las tarjetas grandes (persona, alerta, pasos),
+ * que además se elevan al pasar el ratón. Sin transform en el selector global
+ * para no descolocar iconos ni píldoras de nav. prefers-reduced-motion (arriba)
+ * ya anula las animaciones; el estado en sí se conserva.
+ * ------------------------------------------------------------------------ */
+button,
+[style*="cursor: pointer"],
+[style*="cursor:pointer"] {
+  transition: filter 140ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+@media (hover: hover) {
+  button:not(:disabled):hover,
+  [style*="cursor: pointer"]:hover,
+  [style*="cursor:pointer"]:hover {
+    filter: brightness(1.04);
+  }
+}
+button:not(:disabled):active,
+[style*="cursor: pointer"]:active,
+[style*="cursor:pointer"]:active {
+  filter: brightness(0.97);
+}
+.clickable {
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+@media (hover: hover) {
+  .clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -18px rgba(18, 49, 46, 0.45);
+    border-color: var(--sage);
+  }
+}
+.clickable:active {
+  transform: translateY(0);
+}
+
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;

@@ -18,6 +18,7 @@ export function LoginPage() {
   const pagoConfirmado = params.get("alta") === "ok";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [verPass, setVerPass] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -112,16 +113,51 @@ export function LoginPage() {
           </Field>
 
           <Field label="Contraseña" htmlFor="password">
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={inputStyle}
-              placeholder="••••••••"
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                id="password"
+                type={verPass ? "text" : "password"}
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{ ...inputStyle, paddingRight: 46 }}
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setVerPass((v) => !v)}
+                aria-label={verPass ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-pressed={verPass}
+                style={{
+                  position: "absolute",
+                  right: 6,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  padding: 8,
+                  display: "grid",
+                  placeItems: "center",
+                  color: colors.textMuted,
+                  cursor: "pointer",
+                  borderRadius: radius.sm,
+                }}
+              >
+                {verPass ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7c-2 0-3.8-.6-5.3-1.5" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M3 3l18 18" />
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </Field>
 
           {error && (

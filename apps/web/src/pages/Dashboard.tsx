@@ -154,7 +154,14 @@ export function DashboardPage() {
           </StateMessage>
         )}
         {alertas.data && alertas.data.length === 0 && (
-          <StateMessage title="Sin alertas pendientes">
+          <StateMessage
+            title="Sin alertas pendientes"
+            icon={
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            }
+          >
             Nada fuera de lo normal ahora mismo. Cuando el sistema detecte un cambio en el patrón de
             alguien, aparecerá aquí.
           </StateMessage>
@@ -164,8 +171,9 @@ export function DashboardPage() {
             {alertas.data.map((a) => (
               <button
                 key={a.id}
+                className="clickable"
                 onClick={() => navigate(`/usuarios/${a.usuario_final_id}`)}
-                style={{ background: "none", border: "none", padding: 0, margin: 0, font: "inherit", color: "inherit", textAlign: "left", cursor: "pointer", display: "block" }}
+                style={{ background: "none", border: "none", padding: 0, margin: 0, font: "inherit", color: "inherit", textAlign: "left", cursor: "pointer", display: "block", borderRadius: 14 }}
                 aria-label={`Ver evolución de ${aliasPorId.get(a.usuario_final_id) ?? "la persona"}`}
               >
                 <AlertCard alerta={a} aliasLabel={aliasPorId.get(a.usuario_final_id)} />
@@ -217,7 +225,14 @@ export function DashboardPage() {
           </StateMessage>
         )}
         {usuarios.data && usuarios.data.length === 0 && (
-          <StateMessage title="Aún no hay personas dadas de alta">
+          <StateMessage
+            title="Aún no hay personas dadas de alta"
+            icon={
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M19 8v6M22 11h-6" />
+              </svg>
+            }
+          >
             Cuando se registren personas usuarias en el centro, aparecerán en esta lista.
           </StateMessage>
         )}
@@ -235,6 +250,7 @@ export function DashboardPage() {
                 <Card
                   key={u.id}
                   as="article"
+                  className="clickable"
                   style={{
                     padding: 0,
                     overflow: "hidden",

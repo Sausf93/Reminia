@@ -155,7 +155,14 @@ export function EvolucionChart({ data }: { data: PuntoChart[] }) {
             strokeWidth={2.5}
             dot={<PuntoDot />}
             activeDot={false}
-            isAnimationActive={false}
+            /* La línea "crece" al entrar: es el instante clave del panel. Recharts
+               anima por JS, así que respetamos prefers-reduced-motion a mano. */
+            isAnimationActive={
+              !(typeof window !== "undefined" &&
+                window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
+            }
+            animationDuration={480}
+            animationEasing="ease-out"
           />
         </LineChart>
       </ResponsiveContainer>
