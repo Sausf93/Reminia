@@ -138,6 +138,25 @@ async def enviar_enlace_alta(*, destino: str, nombre_centro: str, url: str) -> b
     return await enviar_email(destino, f"Crea tu acceso a {_MARCA} — {nombre_centro}", html)
 
 
+async def enviar_aviso_alta_plataforma(
+    *, destino: str, nombre_centro: str, email_admin: str,
+) -> bool:
+    """Aviso al DUEÑO de la plataforma (super-admin) de que se ha dado de alta un
+    centro nuevo (pago confirmado)."""
+    centro = _esc(nombre_centro)
+    admin = _esc(email_admin)
+    html = _plantilla_enlace(
+        titulo="Nueva alta en Reminia",
+        intro=(f"Se ha dado de alta un centro nuevo: <b>{centro}</b>. "
+               f"Cuenta de administración: <b>{admin}</b>. El pago se ha confirmado "
+               "y el acceso ya está activo."),
+        cta="Ver centros (super-admin)",
+        url=f"{settings.landing_url}",
+        nota="Puedes ver todas las altas y su estado de pago en el panel de super-admin.",
+    )
+    return await enviar_email(destino, f"Reminia — alta nueva: {nombre_centro}", html)
+
+
 async def enviar_aviso_impago(
     *, destino: str, nombre_centro: str, aviso_n: int, corte_en: int,
     url_pago: str, suspendido: bool,

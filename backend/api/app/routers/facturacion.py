@@ -27,7 +27,11 @@ from app.deps import auditar, require_roles_para_pago
 from app.models import Centro, UsuarioFinal, UsuarioStaff
 from app.schemas import CheckoutOut, EstadoSuscripcionOut, SignupIn
 from app.security import crear_token_password, generar_password
-from app.services.email import enviar_aviso_impago, enviar_enlace_alta
+from app.services.email import (
+    enviar_aviso_alta_plataforma,
+    enviar_aviso_impago,
+    enviar_enlace_alta,
+)
 from app.services.rate_limit import ip_de_request, limitador_publico
 
 log = logging.getLogger("reminia.facturacion")
@@ -234,6 +238,11 @@ async def _registrar_impago(db, centro: Centro, attempt_count: int, url_pago: st
     acceso. En cada fallo avisa por correo a los admin del centro (con enlace de
     pago). Idempotente por `attempt_count` de Stripe: no cuenta de menos aunque se
     reprocese, porque fija el contador al nº de intento real."""
+    # El dunning solo escala centros de PAGO activos. No tocar cortesía (gratis por
+    # la plataforma), cancelada, prueba, ni re-suspender uno ya suspendido: un
+    # evento de factura despistado no debe suspender a quien no procede.
+    if centro.estado_suscripcion != "activa":
+        return
     n = max(int(attempt_count or 0), (centro.avisos_impago or 0) + 1)
     centro.avisos_impago = n
     suspendido = n >= AVISOS_CORTE
@@ -254,15 +263,17 @@ async def _registrar_impago(db, centro: Centro, attempt_count: int, url_pago: st
 
 
 async def _registrar_pago_ok(db, centro: Centro) -> None:
-    """Un cobro ha entrado: se olvidan los avisos y se reactiva el acceso si estaba
-    suspendido por impago (no toca cancelaciones ni pruebas)."""
+    """Un cobro ha entrado: se olvidan los avisos y se reactiva el acceso SOLO si
+    estaba suspendido POR IMPAGO (avisos_impago > 0). Si la suspensión fue MANUAL
+    del super-admin (avisos_impago == 0), un pago no debe reactivar por su cuenta
+    — esa decisión es de la plataforma. Tampoco toca cancelada/prueba/cortesía."""
+    era_impago = (centro.avisos_impago or 0) > 0
     cambio = False
-    if (centro.avisos_impago or 0) != 0:
+    if era_impago:
         centro.avisos_impago = 0
         cambio = True
-    if centro.estado_suscripcion == "suspendido":
-        centro.estado_suscripcion = "activa"
-        cambio = True
+        if centro.estado_suscripcion == "suspendido":
+            centro.estado_suscripcion = "activa"
     if cambio:
         await db.commit()
 
@@ -322,6 +333,11 @@ async def _provisionar_signup(db, meta, customer_id, subscription_id) -> None:
             "ALTA SIN CORREO: centro '%s' provisionado y pagado, pero el enlace "
             "de acceso NO se pudo enviar a %s (revisar RESEND y reenviar a mano)",
             nombre_centro, email)
+    # Aviso al dueño de la plataforma (super-admin) de la nueva alta.
+    if settings.plataforma_email:
+        await enviar_aviso_alta_plataforma(
+            destino=settings.plataforma_email,
+            nombre_centro=nombre_centro, email_admin=email)
 
 
 @router.post("/facturacion/webhook", include_in_schema=False)

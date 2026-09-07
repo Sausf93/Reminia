@@ -51,8 +51,16 @@ async def test_descargar_y_borrar_documento_requieren_admin(client):
     de PII (DNI en consentimientos/DPA) y su destrucción son de admin_centro
     (ronda 19). Blinda además una tablet perdida (solo acuña sesión de integradora)."""
     integradora = await _login(client, INTEGRADORA)
+    admin = await _login(client, ADMIN)
     c = base64.b64encode(b"%PDF-1.4 dpa").decode()
-    doc = (await client.post("/documentos", headers=integradora, json={
+
+    # La integradora NO puede subir un DPA (documento legal del centro) -> 403.
+    assert (await client.post("/documentos", headers=integradora, json={
+        "tipo": "dpa", "nombre_archivo": "dpa.pdf", "mime": "application/pdf",
+        "contenido_b64": c,
+    })).status_code == 403
+    # Lo sube el admin.
+    doc = (await client.post("/documentos", headers=admin, json={
         "tipo": "dpa", "nombre_archivo": "dpa.pdf", "mime": "application/pdf",
         "contenido_b64": c,
     })).json()
@@ -76,7 +84,7 @@ async def test_descargar_y_borrar_documento_requieren_admin(client):
 
 @pytest.mark.asyncio
 async def test_tipo_invalido_y_documento_centro(client):
-    headers = await _login(client)
+    headers = await _login(client, ADMIN)  # el DPA lo sube admin_centro
     c = base64.b64encode(b"x").decode()
     # Tipo inválido -> 422.
     assert (await client.post("/documentos", headers=headers, json={

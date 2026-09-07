@@ -128,6 +128,9 @@ class CentroInfoOut(BaseModel):
     # Suscripción: estado y fin de prueba (para que el super-admin lo vea).
     estado_suscripcion: str = "prueba"
     fecha_fin_prueba: datetime | None = None
+    # Impago: nº de cobros fallidos seguidos (0 = al corriente). Para que el
+    # super-admin vea de un vistazo quién está en aviso de impago.
+    avisos_impago: int = 0
 
 
 class CentroEstadoIn(BaseModel):

@@ -110,6 +110,7 @@ async def listar_centros(
             personas_extra=extra,
             estado_suscripcion=getattr(c, "estado_suscripcion", "cortesia"),
             fecha_fin_prueba=getattr(c, "fecha_fin_prueba", None),
+            avisos_impago=getattr(c, "avisos_impago", 0) or 0,
         ))
     return salida
 

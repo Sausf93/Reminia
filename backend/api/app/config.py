@@ -58,6 +58,9 @@ class Settings(BaseSettings):
     resend_from: str = "Reminia <onboarding@resend.dev>"
     # URL pública de la landing (para enlaces en los correos de alta).
     landing_url: str = "https://trazo-web-af2.pages.dev"
+    # Correo del dueño de la plataforma (tú): recibe un aviso en cada alta nueva.
+    # Vacío = no se avisa. Se define como variable de entorno PLATAFORMA_EMAIL.
+    plataforma_email: str = ""
 
     @property
     def correo_activo(self) -> bool:

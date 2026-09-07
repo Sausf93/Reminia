@@ -1,7 +1,7 @@
 """Registro de intentos (idempotente por UUID) y cambio de estado."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
@@ -36,6 +36,10 @@ from app.services.alertas import evaluar_usuario_bloque
 from app.services.correccion import corregir
 
 router = APIRouter(tags=["intentos"])
+
+# Ventana de "sala en vivo" (igual que sesiones._HORAS_SALA_VIVA): una sala que
+# quedó abierta de días atrás no debe seguir admitiendo mediciones sin supervisión.
+_HORAS_SALA_VIVA = 12
 
 
 @router.get("/pendientes", response_model=list[PendienteRevisionOut])
@@ -116,6 +120,18 @@ async def registrar_intento(
     if ses.cerrada:
         raise HTTPException(status.HTTP_409_CONFLICT,
                             "La sesión está cerrada: no admite más intentos")
+    # SEGURIDAD/flujo: no se puede "saltar pasos". Solo se aceptan mediciones si la
+    # sala está realmente EN VIVO: ABIERTA por la maestra y dentro de la ventana de
+    # frescura. Así no se pueden inyectar intentos en una sala solo PROGRAMADA
+    # (abierta=False, nunca abierta por la maestra) ni en una sala "zombi" de días
+    # atrás, preservando el invariante "no hay medición sin la maestra al mando".
+    if not ses.abierta:
+        raise HTTPException(status.HTTP_409_CONFLICT,
+                            "La sala no está abierta: la maestra debe abrirla")
+    _fecha = ses.fecha if ses.fecha.tzinfo else ses.fecha.replace(tzinfo=timezone.utc)
+    if _fecha < datetime.now(timezone.utc) - timedelta(hours=_HORAS_SALA_VIVA):
+        raise HTTPException(status.HTTP_409_CONFLICT,
+                            "La sala ya no está en vivo (caducó): ábrela de nuevo")
 
     # La persona debe ser participante de ESTA sesión: si no, se estarían
     # inyectando intentos en el histórico de otro paciente (falsearía alertas).

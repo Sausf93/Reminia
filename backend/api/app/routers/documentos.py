@@ -34,6 +34,13 @@ async def subir_documento(
     if body.tipo not in TIPOS_DOCUMENTO:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
                             f"tipo inválido (usa: {', '.join(TIPOS_DOCUMENTO)})")
+    # Los documentos LEGALES del CENTRO (DPA/RAT/DPIA) los sube solo admin_centro:
+    # sustentan la base jurídica del tratamiento y no debe cargarlos cualquiera. Los
+    # consentimientos por persona sí puede subirlos la integradora (los recoge ella).
+    if body.tipo in ("dpa", "rat", "dpia") and staff.rol != "admin_centro":
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN,
+            "Solo la administración del centro puede subir el DPA/RAT/DPIA.")
     try:
         crudo = base64.b64decode(body.contenido_b64, validate=True)
     except Exception:
