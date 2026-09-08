@@ -217,7 +217,7 @@ class _RetoGarrafasWidgetState extends State<RetoGarrafasWidget> {
             style: TextStyle(
                 fontSize: 15,
                 color: _sel == null
-                    ? TrazoColors.bordeControl
+                    ? TrazoColors.sageDark
                     : TrazoColors.coralDark,
                 fontWeight: _sel == null ? FontWeight.normal : FontWeight.w700),
           ),
@@ -416,7 +416,7 @@ class _RetoGarrafasWidgetState extends State<RetoGarrafasWidget> {
                   fontWeight: tapada ? FontWeight.w700 : FontWeight.normal,
                   color: tapada
                       ? TrazoColors.coralDark
-                      : TrazoColors.bordeControl)),
+                      : TrazoColors.sageDark)),
           if (widget.reto.conGrifo || tapada) ...[
             const SizedBox(height: 8),
             Row(

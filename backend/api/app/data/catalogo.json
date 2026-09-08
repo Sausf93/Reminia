@@ -6308,17 +6308,6 @@
             "Una ardilla",
             "Un gato"
           ]
-        },
-        {
-          "id": "an_pollo",
-          "instruccion": "¿Qué animal es?",
-          "imagen": "pollo",
-          "correcta": "Un pollo",
-          "distractores": [
-            "Un pato",
-            "Un cerdo",
-            "Un conejo"
-          ]
         }
       ]
     },
@@ -92047,10 +92036,6 @@
           "label": "queso"
         },
         {
-          "id": "pollo",
-          "label": "pollo"
-        },
-        {
           "id": "flor",
           "label": "flor"
         }
@@ -92611,10 +92596,6 @@
         {
           "id": "gallina",
           "label": "gallina"
-        },
-        {
-          "id": "pollo",
-          "label": "pollo"
         },
         {
           "id": "pato",
@@ -109832,16 +109813,6 @@
           "instruccion": "¿Qué es esto?",
           "imagen": "gallina",
           "correcta": "Una gallina",
-          "distractores": [
-            "Un perro",
-            "Un gato"
-          ]
-        },
-        {
-          "id": "pollo",
-          "instruccion": "¿Qué es esto?",
-          "imagen": "pollo",
-          "correcta": "Un pollo",
           "distractores": [
             "Un perro",
             "Un gato"
@@ -168623,10 +168594,6 @@
         {
           "id": "gallina",
           "label": "gallina"
-        },
-        {
-          "id": "pollo",
-          "label": "pollo"
         }
       ]
     },
