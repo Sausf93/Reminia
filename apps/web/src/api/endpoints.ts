@@ -231,7 +231,7 @@ export async function descargarIntentosCsv(params: { centro_id: string; usuario_
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = params.usuario_final_id ? "trazo-persona.csv" : "trazo-centro.csv";
+  a.download = params.usuario_final_id ? "reminia-persona.csv" : "reminia-centro.csv";
   document.body.appendChild(a);
   a.click();
   a.remove();
