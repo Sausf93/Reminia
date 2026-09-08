@@ -14,6 +14,7 @@ import {
 import type { UsuarioFinal } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import { Button, Card, PageHeader, Spinner, StateMessage, inputStyle } from "../components/ui";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 import { useAsync } from "../hooks/useAsync";
 import { colors, radius } from "../theme";
 
@@ -140,23 +141,15 @@ function FilaPaciente({ usuario, esAdmin, onCambio }: { usuario: UsuarioFinal; e
   const [alias, setAlias] = useState(usuario.alias_interno);
   const [ocupado, setOcupado] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmando, setConfirmando] = useState<null | "baja" | "suprimir">(null);
 
-  async function suprimir() {
-    // Acción irreversible: se pide teclear el alias exacto para confirmar.
-    const conf = window.prompt(
-      `SUPRIMIR (RGPD) a "${usuario.alias_interno}".\n\n` +
-        "Se borran su nombre real, consentimientos y documentos escaneados; se conserva su histórico DISOCIADO (estadística). Es IRREVERSIBLE.\n\n" +
-        `Para confirmar, escribe el nombre exacto: ${usuario.alias_interno}`,
-    );
-    if (conf == null) return;
-    if (conf.trim() !== usuario.alias_interno) {
-      setError("El nombre no coincide: no se ha suprimido nada.");
-      return;
-    }
+  // Acción irreversible: el modal exige teclear el alias exacto antes de habilitar.
+  async function hacerSuprimir() {
     setOcupado(true);
     setError(null);
     try {
       await suprimirUsuario(usuario.id);
+      setConfirmando(null);
       onCambio();
     } catch {
       setError("No se pudo suprimir. Inténtalo de nuevo.");
@@ -179,12 +172,12 @@ function FilaPaciente({ usuario, esAdmin, onCambio }: { usuario: UsuarioFinal; e
     }
   }
 
-  async function baja() {
-    if (!window.confirm(`¿Dar de baja a "${usuario.alias_interno}"? Se conserva su histórico, pero deja de aparecer.`)) return;
+  async function hacerBaja() {
     setOcupado(true);
     setError(null);
     try {
       await darDeBajaUsuario(usuario.id);
+      setConfirmando(null);
       onCambio();
     } catch {
       setError("No se pudo dar de baja. Inténtalo de nuevo.");
@@ -231,10 +224,10 @@ function FilaPaciente({ usuario, esAdmin, onCambio }: { usuario: UsuarioFinal; e
         ) : (
           <Button variant="ghost" onClick={() => setEditando(true)} disabled={ocupado}>Editar</Button>
         )}
-        <Button variant="coral" onClick={baja} disabled={ocupado}>Baja</Button>
+        <Button variant="coral" onClick={() => setConfirmando("baja")} disabled={ocupado}>Baja</Button>
         {esAdmin && (
           <button
-            onClick={suprimir}
+            onClick={() => setConfirmando("suprimir")}
             disabled={ocupado}
             title="Derecho de supresión (RGPD): anonimiza a la persona"
             style={{
@@ -252,6 +245,28 @@ function FilaPaciente({ usuario, esAdmin, onCambio }: { usuario: UsuarioFinal; e
           </button>
         )}
       </div>
+
+      <ConfirmDialog
+        open={confirmando === "baja"}
+        title={`Dar de baja a ${usuario.alias_interno}`}
+        mensaje="Deja de aparecer en el día a día del centro, pero se conserva todo su histórico. Puedes darle de alta otra vez más adelante."
+        confirmLabel="Dar de baja"
+        tone="peligro"
+        loading={ocupado}
+        onConfirm={hacerBaja}
+        onCancel={() => setConfirmando(null)}
+      />
+      <ConfirmDialog
+        open={confirmando === "suprimir"}
+        title={`Suprimir (RGPD) a ${usuario.alias_interno}`}
+        mensaje="Se borran su nombre real, consentimientos y documentos escaneados; se conserva su histórico disociado (solo estadística). Esta acción es irreversible."
+        confirmLabel="Suprimir definitivamente"
+        tone="peligro"
+        requireText={usuario.alias_interno}
+        loading={ocupado}
+        onConfirm={hacerSuprimir}
+        onCancel={() => setConfirmando(null)}
+      />
     </div>
   );
 }
