@@ -1679,7 +1679,7 @@ class _FichaCard extends StatelessWidget {
       default:
         return (
           texto: 'Trabajando',
-          color: TrazoColors.sage,
+          color: TrazoColors.sageDark,
           icono: Icons.edit
         );
     }

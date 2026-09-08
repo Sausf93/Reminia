@@ -118420,7 +118420,7 @@
           "id": "jabon",
           "instruccion": "¿Qué es esto?",
           "imagen": "jabon",
-          "correcta": "Una jabon",
+          "correcta": "Un jabón",
           "distractores": [
             "Una llave",
             "Un plato"
@@ -118568,7 +118568,7 @@
           "id": "clavel",
           "instruccion": "¿Qué es esto?",
           "imagen": "clavel",
-          "correcta": "Una clavel",
+          "correcta": "Un clavel",
           "distractores": [
             "Un árbol",
             "Una hoja"
@@ -118578,7 +118578,7 @@
           "id": "girasol",
           "instruccion": "¿Qué es esto?",
           "imagen": "girasol",
-          "correcta": "Una girasol",
+          "correcta": "Un girasol",
           "distractores": [
             "Un árbol",
             "Una hoja"
@@ -118598,7 +118598,7 @@
           "id": "tulipan",
           "instruccion": "¿Qué es esto?",
           "imagen": "tulipan",
-          "correcta": "Una tulipan",
+          "correcta": "Un tulipán",
           "distractores": [
             "Un árbol",
             "Una hoja"
