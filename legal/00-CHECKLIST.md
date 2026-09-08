@@ -1,13 +1,13 @@
-# Checklist legal / RGPD para el piloto de Trazo
+# Checklist legal / RGPD para el piloto de Reminia
 
 > ⚠️ **AVISO IMPORTANTE — LEER ANTES DE USAR**
 > Este documento es un **BORRADOR ORIENTATIVO generado por una IA**. **NO es asesoramiento jurídico** ni sustituye la revisión de un profesional. Antes de arrancar el piloto con pacientes reales, **debe revisarlo y adaptarlo un abogado especializado en protección de datos y/o un DPO (Delegado de Protección de Datos)**. Los datos tratados son **datos de salud (categoría especial, art. 9 RGPD)** de **personas vulnerables**, muchas con capacidad de decisión modificada: el margen de error legal es muy bajo. Todos los campos a rellenar están marcados **[ENTRE CORCHETES]**.
 
 **Contexto del caso (para quien revise):**
-- **Modelo de roles:** el **CENTRO es RESPONSABLE del tratamiento**; **Trazo (la empresa) es ENCARGADO del tratamiento** (art. 28 RGPD).
+- **Modelo de roles:** el **CENTRO es RESPONSABLE del tratamiento**; **Reminia (la empresa) es ENCARGADO del tratamiento** (art. 28 RGPD).
 - **Naturaleza del dato:** datos de salud / categoría especial (art. 9 RGPD) de personas mayores, mayoría con Alzheimer.
 - **Qué hace la app:** pseudonimiza (alias interno; nombre real en tabla separada), mide **desempeño** en actividades, compara a cada persona consigo misma y avisa de cambios para revisión profesional. **No es diagnóstico ni producto sanitario.**
-- **Infraestructura (ACTUALIZADA 2026-09):** servicios gestionados en la nube — **API en Google Cloud Run (región `europe-southwest1`, Madrid, EEE)**, **base de datos Aiven for PostgreSQL** (único almacén persistente; cifrado en reposo por defecto), **frontends en Cloudflare Pages** (solo estáticos). Detalle técnico y medidas del art. 32 en **`04-medidas-seguridad-infraestructura.md`**. *(La descripción anterior — servidor propio + `docker-compose` + `./backups` + LUKS manual — YA NO aplica.)*
+- **Infraestructura (ACTUALIZADA 2026-09):** servicios gestionados en la nube — **API en Google Cloud Run (región `europe-southwest1`, Madrid, EEE)**, **base de datos Neon for PostgreSQL** (único almacén persistente; cifrado en reposo por defecto), **frontends en Cloudflare Pages** (solo estáticos). Detalle técnico y medidas del art. 32 en **`04-medidas-seguridad-infraestructura.md`**. *(La descripción anterior — servidor propio + `docker-compose` + `./backups` + LUKS manual — YA NO aplica.)*
 - **Modelo de negocio:** B2B, por paciente activo/mes.
 - **Titular / encargado (RESUELTO):** Saulo Miguel De la Santacruz Fernández, **empresario individual (autónomo)**, NIF 42238667H, Santa Cruz de Tenerife (Islas Canarias), contacto saulodlsf@gmail.com.
 
@@ -21,10 +21,10 @@
 | 2 | Contrato de encargo del tratamiento (art. 28 RGPD) | 🟡 Borrador (`01-…`) + generador en el panel. Rellenar datos y revisar con asesor; **lo firma cada centro**. |
 | 3 | Consentimiento informado + representante legal (capacidad modificada) | 🟡 Modelado + formulario imprimible en el panel. **Lo recaba cada centro** por persona/representante. |
 | 4 | DPIA / EIPD (Evaluación de Impacto, art. 35 RGPD) | 🟡 Borrador (`03-…`) + anexo técnico (`04-…`) completado. Falta cierre/firma formal (DPO). |
-| 5 | Cifrado en reposo de la base de datos y de los backups | ✅ **Cubierto por la plataforma** (Aiven: LUKS/AES-256 en datos y backups). Solo **documentar** y archivar el DPA de Aiven. Ver `04-…`. |
-| 6 | Arrancar producción y probar restauración de backup | 🟡 Producción ya viva en Cloud Run. Falta **confirmar plan de Aiven con retención/PITR** y **registrar una prueba de restauración**. |
+| 5 | Cifrado en reposo de la base de datos y de los backups | ✅ **Cubierto por la plataforma** (Neon: LUKS/AES-256 en datos y backups). Solo **documentar** y archivar el DPA de Neon. Ver `04-…`. |
+| 6 | Arrancar producción y probar restauración de backup | 🟡 Producción ya viva en Cloud Run. Falta **confirmar plan de Neon con retención/PITR** y **registrar una prueba de restauración**. |
 
-> Regla práctica (actualizada): el **1** y el **5** ya están cerrados. Antes del primer dato real quedan: revisar con asesor el **2/3/4** y **fijar plan de backups de Aiven (6)**. El **3** debe firmarse (por el centro) **antes de dar de alta a cada persona**.
+> Regla práctica (actualizada): el **1** y el **5** ya están cerrados. Antes del primer dato real quedan: revisar con asesor el **2/3/4** y **fijar plan de backups de Neon (6)**. El **3** debe firmarse (por el centro) **antes de dar de alta a cada persona**.
 
 ---
 
@@ -32,7 +32,7 @@
 
 > ✅ **RESUELTO (2026-09).** Forma jurídica: **empresario individual (autónomo)**. Titular: **Saulo Miguel De la Santacruz Fernández**, NIF **42238667H**, Santa Cruz de Tenerife (Islas Canarias), contacto **saulodlsf@gmail.com**, epígrafe IAE **845**. Placeholders ya sustituidos en `apps/landing/aviso-legal.html` y `apps/landing/privacidad.html`. **Pendiente de Saulo (fiscal, no del texto):** alta en **RETA** (Seguridad Social) y **modelo 400** (IGIC, ATC — valorar REPEP si factura <30.000 €/año). Retirar el banner "Borrador…" cuando un asesor valide el texto.
 
-**Qué es.** Trazo, como encargado del tratamiento, necesita ser una **persona (física o jurídica) identificable y responsable en derecho**. Hoy el aviso legal y la política de privacidad tienen huecos sin rellenar (`[Razón social o nombre del titular]`, `[NIF/CIF pendiente]`, `[Dirección postal pendiente]`) y el único contacto es un correo de Gmail personal.
+**Qué es.** Reminia, como encargado del tratamiento, necesita ser una **persona (física o jurídica) identificable y responsable en derecho**. Hoy el aviso legal y la política de privacidad tienen huecos sin rellenar (`[Razón social o nombre del titular]`, `[NIF/CIF pendiente]`, `[Dirección postal pendiente]`) y el único contacto es un correo de Gmail personal.
 
 **Por qué es obligatorio.**
 - La **LSSI-CE (Ley 34/2002)** obliga a que el titular del sitio web esté plenamente identificado (razón social, NIF/CIF, domicilio, contacto).
@@ -54,7 +54,7 @@
 
 ## 2. Contrato de encargo del tratamiento (art. 28 RGPD)
 
-**Qué es.** El documento que regula que **el centro (responsable) encarga a Trazo (encargado)** el tratamiento de datos personales por cuenta del centro. Es un contrato firmado, con contenido mínimo tasado por el art. 28.3 RGPD.
+**Qué es.** El documento que regula que **el centro (responsable) encarga a Reminia (encargado)** el tratamiento de datos personales por cuenta del centro. Es un contrato firmado, con contenido mínimo tasado por el art. 28.3 RGPD.
 
 **Por qué es obligatorio.**
 - El art. 28 RGPD **prohíbe** que un encargado trate datos por cuenta de un responsable sin un contrato (o acto jurídico) que lo vincule. Sin él, el tratamiento es ilícito desde el primer registro.
@@ -65,7 +65,7 @@
   - [ ] **Objeto, duración, naturaleza y finalidad** del tratamiento.
   - [ ] **Tipo de datos** (identificativos pseudonimizados + datos de salud/desempeño) y **categorías de interesados** (personas usuarias del centro; también profesionales usuarios de la app).
   - [ ] Tratar los datos **solo siguiendo instrucciones documentadas** del responsable.
-  - [ ] **Confidencialidad** del personal de Trazo con acceso a los datos.
+  - [ ] **Confidencialidad** del personal de Reminia con acceso a los datos.
   - [ ] **Medidas de seguridad** del art. 32 (enlazar/anexar las técnicas y organizativas: TLS, pseudonimización, cifrado en reposo del bloque 5, control de accesos, backups).
   - [ ] Régimen de **subencargados** (p. ej. proveedor de hosting/servidor): autorización previa del responsable y traslado de las mismas obligaciones. Listar los actuales: **[PROVEEDOR DE HOSTING / SERVIDOR]**, **[OTROS SUBENCARGADOS]**.
   - [ ] **Asistencia al responsable** para atender derechos de los interesados (acceso, rectificación, supresión, etc.) y para el cumplimiento de los arts. 32-36.
@@ -76,7 +76,7 @@
 - [ ] Preparar una **plantilla estándar** que el centro pueda revisar y firmar (facilita la venta B2B).
 - [ ] **Firmar con el centro del piloto ANTES de cargar datos reales**. Centro: **[NOMBRE DEL CENTRO]**, firmante: **[REPRESENTANTE DEL CENTRO]**, fecha: **[FECHA]**.
 - [ ] Confirmar por escrito quién ejerce de **DPO del centro** y establecer el canal de comunicación entre DPOs/responsables.
-- [ ] Verificar que el centro dispone de su propia base de legitimación y de su **Registro de Actividades de Tratamiento (RAT)**; Trazo, como encargado, debe llevar también su **RAT de encargado** (art. 30.2 RGPD).
+- [ ] Verificar que el centro dispone de su propia base de legitimación y de su **Registro de Actividades de Tratamiento (RAT)**; Reminia, como encargado, debe llevar también su **RAT de encargado** (art. 30.2 RGPD).
 
 ---
 
@@ -91,9 +91,9 @@
 
 **Pasos concretos.**
 - [ ] **Definir con el abogado/DPO la base jurídica del art. 9.2** para el piloto (habitualmente: consentimiento explícito del interesado o su representante, y/o art. 9.2.h — asistencia social/sanitaria por profesional sujeto a secreto). Base elegida: **[BASE JURÍDICA ART. 9.2]**.
-- [ ] **El centro (responsable) es quien recaba el consentimiento**, no Trazo. Trazo aporta la **plantilla y la cláusula informativa**; el centro la usa e integra en su circuito.
+- [ ] **El centro (responsable) es quien recaba el consentimiento**, no Reminia. Reminia aporta la **plantilla y la cláusula informativa**; el centro la usa e integra en su circuito.
 - [ ] Redactar una **hoja de información + consentimiento** en lenguaje claro y accesible que cubra:
-  - [ ] Identidad del **responsable (el centro)** y del **encargado (Trazo)**.
+  - [ ] Identidad del **responsable (el centro)** y del **encargado (Reminia)**.
   - [ ] Finalidad real: **medir desempeño en actividades y avisar de cambios para revisión profesional**. Dejar explícito que **NO es diagnóstico ni producto sanitario** y que **no sustituye la valoración clínica**.
   - [ ] Categorías de datos, plazo de conservación y **pseudonimización** (alias interno; nombre real en tabla separada).
   - [ ] Derechos RGPD y cómo ejercerlos; derecho a **retirar el consentimiento** sin consecuencias asistenciales.
@@ -115,7 +115,7 @@
 **Por qué es obligatorio.**
 - El art. 35 RGPD exige EIPD cuando el tratamiento **entrañe alto riesgo**. Aquí concurren **varios criterios que la disparan**: **datos de categoría especial** (salud), **sujetos vulnerables** (mayores con deterioro cognitivo), **evaluación/scoring** del desempeño y **datos a gran escala** si escala a varios centros.
 - El tratamiento encaja en la **lista de la AEPD** de tratamientos que requieren EIPD (datos de salud + colectivos vulnerables). Realizarla **antes** de iniciar el tratamiento es obligatorio, no opcional.
-- **Titular formal de la EIPD:** el **responsable (el centro)**. Pero Trazo, como fabricante/encargado, debe **proporcionar la información técnica** y lo más práctico es que **aporte una EIPD-plantilla** que el centro adopte y adapte. Aclarar el reparto con el DPO.
+- **Titular formal de la EIPD:** el **responsable (el centro)**. Pero Reminia, como fabricante/encargado, debe **proporcionar la información técnica** y lo más práctico es que **aporte una EIPD-plantilla** que el centro adopte y adapte. Aclarar el reparto con el DPO.
 
 **Pasos concretos.**
 - [ ] Usar una metodología reconocida (**Guía de EIPD de la AEPD** y/o la herramienta **PIA de la CNIL**).
@@ -131,7 +131,7 @@
 
 ## 5. Cifrado en reposo de la base de datos y de los backups
 
-> ✅ **CUBIERTO POR LA PLATAFORMA (2026-09).** La infraestructura ya NO es autoalojada: la BD es **Aiven for PostgreSQL**, que cifra **datos y backups en reposo por defecto** (LUKS + AES-256, claves por fichero). Los pasos de abajo (LUKS manual, cifrar `./backups`, GPG/age) **ya no aplican**; se conservan solo como referencia histórica. Lo único pendiente aquí es **documentar** la medida y **archivar el DPA/certificaciones de Aiven**. Ver `04-medidas-seguridad-infraestructura.md` §2.
+> ✅ **CUBIERTO POR LA PLATAFORMA (2026-09).** La infraestructura ya NO es autoalojada: la BD es **Neon for PostgreSQL**, que cifra **datos y backups en reposo por defecto** (LUKS + AES-256, claves por fichero). Los pasos de abajo (LUKS manual, cifrar `./backups`, GPG/age) **ya no aplican**; se conservan solo como referencia histórica. Lo único pendiente aquí es **documentar** la medida y **archivar el DPA/certificaciones de Neon**. Ver `04-medidas-seguridad-infraestructura.md` §2.
 
 **Qué es.** Que los datos almacenados en disco (la base de datos PostgreSQL y los ficheros de backup) estén **cifrados**, de modo que quien acceda físicamente al disco o robe una copia **no pueda leerlos**.
 

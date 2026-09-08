@@ -21,7 +21,7 @@ En lo sucesivo, **"el Responsable"** o **"el Centro"**.
 
 **[RAZÓN SOCIAL DE TRAZO, S.L.]**, con CIF **[CIF]** y domicilio en **[DIRECCIÓN COMPLETA]**, representada por **[NOMBRE Y APELLIDOS DEL REPRESENTANTE]**, con DNI/NIE **[DNI/NIE]**, en su condición de **[CARGO]**.
 
-En lo sucesivo, **"el Encargado"** o **"Trazo"**.
+En lo sucesivo, **"el Encargado"** o **"Reminia"**.
 
 Ambas partes se reconocen mutuamente la capacidad legal necesaria para obligarse y suscribir el presente contrato y, a tal efecto,
 
@@ -29,13 +29,13 @@ Ambas partes se reconocen mutuamente la capacidad legal necesaria para obligarse
 
 **I.** Que el Centro presta servicios de atención a personas mayores —mayoritariamente con enfermedad de Alzheimer u otras demencias— en régimen de **[CENTRO DE DÍA / RESIDENCIA / AMBOS]**, y en el marco de dicha actividad realiza tratamientos de estimulación cognitiva a sus usuarios/as.
 
-**II.** Que Trazo es titular y proveedor de una aplicación de software (en adelante, **"la Aplicación"** o **"Trazo"**) que se ejecuta en tablet y permite realizar actividades de estimulación cognitiva, registrar el **desempeño** de la persona usuaria en dichas actividades y ofrecer al profesional información de apoyo sobre la evolución de cada usuario/a **comparado consigo mismo/a**.
+**II.** Que Reminia es titular y proveedor de una aplicación de software (en adelante, **"la Aplicación"** o **"Reminia"**) que se ejecuta en tablet y permite realizar actividades de estimulación cognitiva, registrar el **desempeño** de la persona usuaria en dichas actividades y ofrecer al profesional información de apoyo sobre la evolución de cada usuario/a **comparado consigo mismo/a**.
 
 **III.** Que la Aplicación **no realiza diagnóstico clínico**, **no constituye producto sanitario** en el sentido del Reglamento (UE) 2017/745, y **no emite valoraciones de "deterioro"**: se limita a medir el desempeño en las actividades y a señalar variaciones para que un profesional del Centro las revise bajo su criterio.
 
-**IV.** Que la prestación del servicio implica que Trazo trate, por cuenta del Centro, datos personales que incluyen **datos relativos a la salud** (categoría especial del art. 9 RGPD) de personas en situación de **vulnerabilidad**, muchas de ellas con la capacidad de obrar modificada o disminuida.
+**IV.** Que la prestación del servicio implica que Reminia trate, por cuenta del Centro, datos personales que incluyen **datos relativos a la salud** (categoría especial del art. 9 RGPD) de personas en situación de **vulnerabilidad**, muchas de ellas con la capacidad de obrar modificada o disminuida.
 
-**V.** Que, siendo el Centro quien determina los fines y medios del tratamiento, ostenta la condición de **Responsable del tratamiento**, y Trazo la de **Encargado del tratamiento**, conforme al art. 4.7 y 4.8 RGPD.
+**V.** Que, siendo el Centro quien determina los fines y medios del tratamiento, ostenta la condición de **Responsable del tratamiento**, y Reminia la de **Encargado del tratamiento**, conforme al art. 4.7 y 4.8 RGPD.
 
 **VI.** Que, a fin de dar cumplimiento al art. 28 RGPD, ambas partes suscriben el presente contrato con arreglo a las siguientes
 
@@ -45,7 +45,7 @@ Ambas partes se reconocen mutuamente la capacidad legal necesaria para obligarse
 
 ### CLÁUSULA 1 — OBJETO
 
-**1.1.** El presente contrato regula las condiciones en las que el Encargado (Trazo) tratará, por cuenta y bajo las instrucciones del Responsable (el Centro), los datos personales necesarios para la prestación del servicio descrito en el Anexo I, en el marco del contrato principal de prestación de servicios **[REFERENCIA / FECHA DEL CONTRATO PRINCIPAL]** ("el Contrato Principal").
+**1.1.** El presente contrato regula las condiciones en las que el Encargado (Reminia) tratará, por cuenta y bajo las instrucciones del Responsable (el Centro), los datos personales necesarios para la prestación del servicio descrito en el Anexo I, en el marco del contrato principal de prestación de servicios **[REFERENCIA / FECHA DEL CONTRATO PRINCIPAL]** ("el Contrato Principal").
 
 **1.2.** El Encargado tratará los datos personales únicamente conforme a lo previsto en este contrato, en el Contrato Principal y en las **instrucciones documentadas** del Responsable. En caso de contradicción, prevalecerá lo dispuesto en materia de protección de datos en el presente contrato.
 
@@ -55,7 +55,7 @@ Ambas partes se reconocen mutuamente la capacidad legal necesaria para obligarse
 
 ### CLÁUSULA 2 — DURACIÓN
 
-**2.1.** El presente contrato entrará en vigor el **[FECHA DE INICIO]** y mantendrá su vigencia mientras esté vigente el Contrato Principal o mientras Trazo trate datos personales por cuenta del Centro.
+**2.1.** El presente contrato entrará en vigor el **[FECHA DE INICIO]** y mantendrá su vigencia mientras esté vigente el Contrato Principal o mientras Reminia trate datos personales por cuenta del Centro.
 
 **2.2.** La finalización del Contrato Principal, por cualquier causa, implicará la del presente contrato, sin perjuicio de las obligaciones que por su naturaleza deban subsistir tras su extinción (en particular, las de confidencialidad y las relativas a la devolución o supresión de datos de la Cláusula 11).
 
@@ -250,7 +250,7 @@ Y en prueba de conformidad, las partes firman el presente contrato por duplicado
 
 | Elemento | Detalle |
 |---|---|
-| **Objeto del encargo** | Prestación del servicio de la aplicación Trazo de estimulación cognitiva en tablet y tratamiento asociado de datos. |
+| **Objeto del encargo** | Prestación del servicio de la aplicación Reminia de estimulación cognitiva en tablet y tratamiento asociado de datos. |
 | **Naturaleza y operaciones** | Recogida, registro, estructuración, conservación, consulta, análisis de desempeño, generación de informes de evolución, alojamiento y supresión. |
 | **Finalidad** | Realización y documentación de actividades de estimulación cognitiva e información de apoyo al profesional del Centro. **[DETALLAR SI PROCEDE]** |
 | **Tipo de datos** | Identificativos seudonimizados (alias interno + tabla separada de identidad); datos de categoría especial (**salud**): desempeño y evolución; datos de profesionales y logs. **[COMPLETAR]** |

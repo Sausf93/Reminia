@@ -16,10 +16,10 @@
 
 | Campo | Contenido |
 |---|---|
-| Título | EIPD del tratamiento "Estimulación cognitiva y medición de desempeño — Trazo" |
+| Título | EIPD del tratamiento "Estimulación cognitiva y medición de desempeño — Reminia" |
 | Versión | 0.9 (borrador técnico, pendiente de revisión por DPO/asesoría) |
 | Fecha | [FECHA de aprobación] |
-| Autor del borrador | Saulo Miguel De la Santacruz Fernández (Trazo, encargado del tratamiento), con la parte técnica completada y verificada contra el código y la infraestructura reales |
+| Autor del borrador | Saulo Miguel De la Santacruz Fernández (Reminia, encargado del tratamiento), con la parte técnica completada y verificada contra el código y la infraestructura reales |
 | Revisado por (DPO) | [NOMBRE DPO] |
 | Revisado por (asesoría jurídica) | [DESPACHO / ABOGADO] |
 | Aprobado por (responsable del tratamiento) | [NOMBRE / CARGO EN EL CENTRO] |
@@ -39,10 +39,10 @@
 | **Responsable del tratamiento** | El CENTRO / residencia | [RAZÓN SOCIAL DEL CENTRO], [NIF], [DIRECCIÓN], [CONTACTO] — a cumplimentar por cada centro |
 | **Encargado del tratamiento** | TRAZO (proveedor del software) | Saulo Miguel De la Santacruz Fernández (empresario individual/autónomo), NIF 42238667H, Santa Cruz de Tenerife (Islas Canarias, España), saulodlsf@gmail.com |
 | **DPO del responsable** | [NOMBRE / CONTACTO — lo designa el centro; obligatorio si se cumple art. 37 RGPD, probable por tratamiento a gran escala de datos de salud] |
-| **DPO / contacto RGPD de Trazo** | Saulo Miguel De la Santacruz Fernández, saulodlsf@gmail.com (contacto RGPD; la designación formal de DPO se valorará según art. 37) |
-| **Subencargados** | **Google Cloud** (Cloud Run, región Madrid `europe-southwest1`) · **Aiven** (PostgreSQL gestionado, base de datos) · **Cloudflare** (Pages, webs estáticas). Detalle en `04-medidas-seguridad-infraestructura.md` §8 |
+| **DPO / contacto RGPD de Reminia** | Saulo Miguel De la Santacruz Fernández, saulodlsf@gmail.com (contacto RGPD; la designación formal de DPO se valorará según art. 37) |
+| **Subencargados** | **Google Cloud** (Cloud Run, región Madrid `europe-southwest1`) · **Neon** (PostgreSQL gestionado, base de datos) · **Cloudflare** (Pages, webs estáticas). Detalle en `04-medidas-seguridad-infraestructura.md` §8 |
 
-Relación regulada mediante **contrato de encargo de tratamiento (art. 28 RGPD)** entre cada centro y Trazo. [REFERENCIA AL CONTRATO / ANEXO].
+Relación regulada mediante **contrato de encargo de tratamiento (art. 28 RGPD)** entre cada centro y Reminia. [REFERENCIA AL CONTRATO / ANEXO].
 
 ### 1.2. Finalidad del tratamiento
 
@@ -65,9 +65,9 @@ Relación regulada mediante **contrato de encargo de tratamiento (art. 28 RGPD)*
 
 1. Alta de la persona usuaria: el centro registra el nombre real y datos identificativos en una **tabla separada** y le asigna un **alias interno (seudónimo)**.
 2. La operativa de actividades y medición trabaja **solo con el alias**; el desempeño se asocia al seudónimo.
-3. Los datos se alojan en **servicios gestionados en la nube dentro del EEE**: la API corre en **Google Cloud Run** (región `europe-southwest1`, **Madrid**), sin almacenamiento persistente; el **único almacén de datos** es **Aiven for PostgreSQL** (cifrado en reposo por defecto, ver §5); las webs son estáticas en **Cloudflare Pages** (sin datos personales). **TLS** en tránsito. Detalle técnico en `04-medidas-seguridad-infraestructura.md`. [CONFIRMAR que la región del servicio de Aiven está en el EEE.]
+3. Los datos se alojan en **servicios gestionados en la nube dentro del EEE**: la API corre en **Google Cloud Run** (región `europe-southwest1`, **Madrid**), sin almacenamiento persistente; el **único almacén de datos** es **Neon for PostgreSQL** (cifrado en reposo por defecto, ver §5); las webs son estáticas en **Cloudflare Pages** (sin datos personales). **TLS** en tránsito. Detalle técnico en `04-medidas-seguridad-infraestructura.md`. [CONFIRMAR que la región del servicio de Neon está en el EEE.]
 4. El profesional consulta la evolución y los avisos desde la app, limitado a las personas de **su centro** (control de acceso por centro).
-5. [DESCRIBIR cualquier flujo adicional: exportaciones, informes en PDF, integración con historia del centro, soporte técnico de Trazo con acceso a datos, etc.]
+5. [DESCRIBIR cualquier flujo adicional: exportaciones, informes en PDF, integración con historia del centro, soporte técnico de Reminia con acceso a datos, etc.]
 
 > **Recomendación:** adjuntar un **diagrama de flujo de datos** y el **inventario/Registro de Actividades de Tratamiento (RAT, art. 30 RGPD)** correspondiente como anexos. [ANEXO I: diagrama] · [ANEXO II: RAT].
 
@@ -101,7 +101,7 @@ Los datos de desempeño en actividades de estimulación, vinculados a personas c
 
 ### 2.4. Derechos de los interesados
 
-Procedimientos para atender **acceso, rectificación, supresión, limitación, oposición y portabilidad** (arts. 15-22 RGPD), adaptados a personas con capacidad modificada y a la intervención de figuras de apoyo. Como **encargado**, Trazo asistirá al responsable en su atención (art. 28.3.e). [DESCRIBIR canal, plazos y responsable de respuesta.]
+Procedimientos para atender **acceso, rectificación, supresión, limitación, oposición y portabilidad** (arts. 15-22 RGPD), adaptados a personas con capacidad modificada y a la intervención de figuras de apoyo. Como **encargado**, Reminia asistirá al responsable en su atención (art. 28.3.e). [DESCRIBIR canal, plazos y responsable de respuesta.]
 
 ---
 
@@ -111,7 +111,7 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 
 - **Personas usuarias del centro**, mayoritariamente personas **mayores** con **Alzheimer u otras demencias** → **colectivo especialmente vulnerable**; muchas con **capacidad de decisión modificada**.
 - **Profesionales del centro** (usuarios de la app): terapeutas, personal asistencial. [Detallar perfiles.]
-- [Otros: representantes legales/figuras de apoyo, familiares, personal de soporte de Trazo.]
+- [Otros: representantes legales/figuras de apoyo, familiares, personal de soporte de Reminia.]
 
 ### 3.2. Categorías de datos
 
@@ -146,7 +146,7 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 - **Descripción:** el sistema no detecta un cambio relevante de desempeño.
 - **Afección a derechos:** pérdida de oportunidad de revisión profesional; **exceso de confianza** en la herramienta.
 - **P/S (bruto):** [P: Media] / [S: Media-Alta]
-- **Nota clínica:** el diseño de Trazo fija que el sistema **mide desempeño y avisa, no diagnostica**; el falso negativo no debe interpretarse como "ausencia de problema".
+- **Nota clínica:** el diseño de Reminia fija que el sistema **mide desempeño y avisa, no diagnostica**; el falso negativo no debe interpretarse como "ausencia de problema".
 
 ### R4 — Decisiones sobre personas vulnerables / sesgo de automatización
 - **Descripción:** que el profesional (o el centro) trate los avisos como conclusiones y adopte decisiones que afecten a una persona vulnerable sin valoración propia.
@@ -191,13 +191,13 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 ### Medidas frente a R1 (reidentificación)
 - **Seudonimización** por diseño: alias interno; el nombre real en **tabla separada** con acceso restringido y segregado.
 - Separación lógica y de permisos entre la tabla identificativa (`datos_identificativos`) y la base operativa (que trabaja solo con alias).
-- **Cifrado en reposo: cubierto** — toda la base de datos (incluida la tabla identificativa) reside en Aiven, cifrada en reposo por defecto (LUKS/AES-256); cifrado en tránsito (TLS/`sslmode=require`). Ver `04-…` §2.
+- **Cifrado en reposo: cubierto** — toda la base de datos (incluida la tabla identificativa) reside en Neon, cifrada en reposo por defecto (LUKS/AES-256); cifrado en tránsito (TLS/`sslmode=require`). Ver `04-…` §2.
 - Minimización de datos de contexto que faciliten inferencia.
 - [Evaluar reglas para evitar reidentificación por grupos muy pequeños en informes.]
 - **Riesgo residual:** [ ]
 
 ### Medidas frente a R2 y R3 (falsos positivos / negativos)
-- **Principio de diseño no revertible (Trazo):** el intento nace **sin valorar**; se mide **desempeño, no "deterioro"**; se compara a la persona **consigo misma**.
+- **Principio de diseño no revertible (Reminia):** el intento nace **sin valorar**; se mide **desempeño, no "deterioro"**; se compara a la persona **consigo misma**.
 - Las salidas son **avisos para revisión profesional**, nunca conclusiones automáticas.
 - [Documentar umbrales de alerta, su justificación y su calibración; evitar sobre-alertado.]
 - Mensajería en la interfaz que recuerde el carácter orientativo del aviso y la necesidad de juicio profesional.
@@ -212,12 +212,12 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 - **Riesgo residual:** [ ]
 
 ### Medidas frente a R5 (brechas)
-- **Cifrado** en tránsito (TLS) y **en reposo** (Aiven cifra datos y backups por defecto, LUKS/AES-256).
-- **Copias de seguridad** gestionadas por Aiven (automáticas y cifradas). Pendiente: **confirmar plan con retención/PITR** adecuado y **registrar una prueba de restauración** (el plan gratuito retiene poco).
-- Base de datos gestionada por Aiven (parcheado y endurecimiento del proveedor); API sin estado en Cloud Run; secretos en variables de entorno del servicio, fuera de git.
+- **Cifrado** en tránsito (TLS) y **en reposo** (Neon cifra datos y backups por defecto, LUKS/AES-256).
+- **Copias de seguridad** gestionadas por Neon (automáticas y cifradas). Pendiente: **confirmar plan con retención/PITR** adecuado y **registrar una prueba de restauración** (el plan gratuito retiene poco).
+- Base de datos gestionada por Neon (parcheado y endurecimiento del proveedor); API sin estado en Cloud Run; secretos en variables de entorno del servicio, fuera de git.
 - Gestión de dispositivos (tablets): bloqueo, cifrado del dispositivo, borrado remoto, no persistencia local de datos sensibles [CONFIRMAR].
 - Registro de accesos (logs) y monitorización.
-- **Procedimiento de notificación de brechas** (arts. 33-34 RGPD): 72 h a la AEPD y, si alto riesgo, a los interesados; como encargado, Trazo notificará al responsable **sin dilación indebida** (art. 33.2). [DEFINIR protocolo y contactos.]
+- **Procedimiento de notificación de brechas** (arts. 33-34 RGPD): 72 h a la AEPD y, si alto riesgo, a los interesados; como encargado, Reminia notificará al responsable **sin dilación indebida** (art. 33.2). [DEFINIR protocolo y contactos.]
 - **Riesgo residual:** [ ]
 
 ### Medidas frente a R6 (acceso entre centros / permisos)
@@ -238,13 +238,13 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 - **Riesgo residual:** [ ]
 
 ### Medidas frente a R9 (subencargados / ubicación)
-- Alojamiento en **servicios gestionados del EEE**: API en Google Cloud Madrid; datos y backups en Aiven [CONFIRMAR región Aiven = EEE]; webs estáticas en Cloudflare (sin datos personales).
-- **Firmar/archivar el DPA de cada subencargado** (Google Cloud, Aiven, Cloudflare) con las garantías del cap. V (SCCs / EU-US DPF) para cualquier acceso desde fuera del EEE. Autorización del responsable en el contrato de encargo.
+- Alojamiento en **servicios gestionados del EEE**: API en Google Cloud Madrid; datos y backups en Neon [CONFIRMAR región Neon = EEE]; webs estáticas en Cloudflare (sin datos personales).
+- **Firmar/archivar el DPA de cada subencargado** (Google Cloud, Neon, Cloudflare) con las garantías del cap. V (SCCs / EU-US DPF) para cualquier acceso desde fuera del EEE. Autorización del responsable en el contrato de encargo.
 - **Riesgo residual:** [ ]
 
 ### Medidas frente a R10 (continuidad)
 - Plan de continuidad y recuperación; pruebas de restauración de backups; [RTO/RPO].
-- [Plan de reversibilidad/portabilidad de datos al finalizar el contrato con Trazo.]
+- [Plan de reversibilidad/portabilidad de datos al finalizar el contrato con Reminia.]
 - **Riesgo residual:** [ ]
 
 ---
@@ -253,7 +253,7 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 
 - **DPO:** dictamen sobre esta EIPD (art. 35.2). [INCORPORAR informe del DPO.]
 - **Interesados / representantes:** cuando proceda, recabar opiniones (art. 35.9) o justificar por qué no. [DOCUMENTAR.]
-- **Encargado (Trazo):** información técnica aportada y compromisos de seguridad. [REFERENCIA.]
+- **Encargado (Reminia):** información técnica aportada y compromisos de seguridad. [REFERENCIA.]
 - **Consulta previa a la AEPD (art. 36 RGPD):** obligatoria **solo si**, pese a las medidas, subsiste un **alto riesgo residual**. Valoración de partida: [PENDIENTE — el DPO debe decidir. Con las medidas previstas, no debería ser necesaria, pero requiere confirmación.]
 
 ---
@@ -266,12 +266,12 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 |---|---|---|---|
 | Validar base jurídica (art. 6) y condición art. 9 | DPO / Asesoría | [FECHA] | [ ] |
 | Definir circuito de información/consentimiento y apoyo (Ley 8/2021) | DPO / Centro | [FECHA] | [ ] |
-| Cifrado en reposo | Trazo | — | ✅ Cubierto (Aiven). Pendiente solo archivar DPA/certificaciones de Aiven |
-| Gestión de tablets (revocación de dispositivo perdido) | Trazo | — | ✅ Implementado (token revocable desde el panel). MFA del panel: [valorar] |
+| Cifrado en reposo | Reminia | — | ✅ Cubierto (Neon). Pendiente solo archivar DPA/certificaciones de Neon |
+| Gestión de tablets (revocación de dispositivo perdido) | Reminia | — | ✅ Implementado (token revocable desde el panel). MFA del panel: [valorar] |
 | Definir plazos de conservación y borrado/anonimización | DPO / Centro | [FECHA] | [ ] Pendiente (ver propuesta en `04-…` / política de retención) |
-| Confirmar región EEE de Aiven y firmar DPAs de subencargados (Google/Aiven/Cloudflare) | Trazo | [FECHA] | [ ] API en Madrid ✅; falta confirmar región Aiven y archivar DPAs |
+| Confirmar región EEE de Neon y firmar DPAs de subencargados (Google/Neon/Cloudflare) | Reminia | [FECHA] | [ ] API en Madrid ✅; falta confirmar región Neon y archivar DPAs |
 | Aprobar cláusula informativa accesible | DPO | [FECHA] | [ ] |
-| Protocolo de brechas (33-34) y contactos | DPO / Trazo | [FECHA] | [ ] |
+| Protocolo de brechas (33-34) y contactos | DPO / Reminia | [FECHA] | [ ] |
 | Decidir sobre consulta previa AEPD (art. 36) | DPO | [FECHA] | [ ] |
 
 **Revisión:** esta EIPD debe **revisarse periódicamente** y **siempre que cambie el riesgo** que representa el tratamiento (art. 35.11): nuevas funcionalidades, cambios de proveedor, incidentes, cambios normativos.
@@ -281,7 +281,7 @@ Procedimientos para atender **acceso, rectificación, supresión, limitación, o
 ### Anexos (a completar)
 - **Anexo I** — Diagrama de flujos de datos.
 - **Anexo II** — Registro de Actividades de Tratamiento (art. 30).
-- **Anexo III** — Contrato de encargo de tratamiento (art. 28) Centro ↔ Trazo y subencargos.
+- **Anexo III** — Contrato de encargo de tratamiento (art. 28) Centro ↔ Reminia y subencargos.
 - **Anexo IV** — Cláusula/política de información a interesados y modelo de consentimiento/apoyo.
 - **Anexo V** — Política de seguridad, gestión de dispositivos y plan de continuidad.
 - **Anexo VI** — Informe del DPO.

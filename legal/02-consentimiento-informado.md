@@ -3,7 +3,7 @@
 
 ---
 
-# Documento de información y consentimiento para el uso de **Trazo**
+# Documento de información y consentimiento para el uso de **Reminia**
 ### Actividades de estimulación cognitiva y seguimiento del desempeño
 
 **Centro responsable del tratamiento:** [NOMBRE DEL CENTRO DE DÍA / RESIDENCIA]
@@ -18,7 +18,7 @@
 
 ## 1. ¿Por qué le entregamos este documento?
 
-En [NOMBRE DEL CENTRO] utilizamos una herramienta digital en tablet llamada **Trazo** para realizar **actividades de estimulación cognitiva** (juegos y ejercicios de memoria, atención, lenguaje, cálculo, etc.) con las personas que acuden al centro, y para **hacer un seguimiento de cómo la persona realiza esas actividades a lo largo del tiempo**.
+En [NOMBRE DEL CENTRO] utilizamos una herramienta digital en tablet llamada **Reminia** para realizar **actividades de estimulación cognitiva** (juegos y ejercicios de memoria, atención, lenguaje, cálculo, etc.) con las personas que acuden al centro, y para **hacer un seguimiento de cómo la persona realiza esas actividades a lo largo del tiempo**.
 
 Antes de empezar, queremos **explicarle con claridad** qué información se guarda, para qué se usa, quién puede verla y qué derechos tiene. Después le pediremos su autorización (o la de su representante, si procede).
 
@@ -26,18 +26,18 @@ Antes de empezar, queremos **explicarle con claridad** qué información se guar
 
 ---
 
-## 2. ¿Qué es Trazo y qué NO es? (en lenguaje claro)
+## 2. ¿Qué es Reminia y qué NO es? (en lenguaje claro)
 
-- Trazo es una **herramienta de apoyo a la estimulación cognitiva**. Propone actividades adaptadas a cada persona y registra **cómo las realiza** (por ejemplo, si completa la actividad de forma autónoma, con ayuda, o si no la termina).
-- Trazo **compara a cada persona consigo misma** a lo largo del tiempo y **avisa al profesional** cuando detecta cambios en el desempeño, para que **una persona profesional lo revise**.
+- Reminia es una **herramienta de apoyo a la estimulación cognitiva**. Propone actividades adaptadas a cada persona y registra **cómo las realiza** (por ejemplo, si completa la actividad de forma autónoma, con ayuda, o si no la termina).
+- Reminia **compara a cada persona consigo misma** a lo largo del tiempo y **avisa al profesional** cuando detecta cambios en el desempeño, para que **una persona profesional lo revise**.
 
-> **MUY IMPORTANTE — lo que Trazo NO es:**
+> **MUY IMPORTANTE — lo que Reminia NO es:**
 > - **NO es un diagnóstico** médico ni neurológico.
 > - **NO es un producto sanitario** ni un dispositivo médico.
 > - **NO detecta ni predice enfermedades** (como el Alzheimer) ni mide "deterioro".
 > - **NO sustituye** la valoración de médicos, neuropsicólogos ni otros profesionales.
 >
-> Trazo solo mide **desempeño en actividades** y **señala cambios para que un profesional los interprete**. Cualquier decisión clínica corresponde siempre a los profesionales, no a la herramienta.
+> Reminia solo mide **desempeño en actividades** y **señala cambios para que un profesional los interprete**. Cualquier decisión clínica corresponde siempre a los profesionales, no a la herramienta.
 
 ---
 
@@ -55,7 +55,7 @@ Antes de empezar, queremos **explicarle con claridad** qué información se guar
 **c) Categoría especial de datos (datos de salud):**
 El seguimiento del desempeño en estas actividades se considera **dato de salud** conforme al **art. 9 del RGPD**, por lo que recibe **protección reforzada**.
 
-> **Pseudonimización:** dentro de Trazo, la información de las actividades se asocia a un **alias interno**. La correspondencia entre ese alias y el nombre real se guarda en un **registro separado y con acceso restringido**, de modo que quien vea los datos de actividad no vea directamente la identidad.
+> **Pseudonimización:** dentro de Reminia, la información de las actividades se asocia a un **alias interno**. La correspondencia entre ese alias y el nombre real se guarda en un **registro separado y con acceso restringido**, de modo que quien vea los datos de actividad no vea directamente la identidad.
 
 **No se recogen** datos innecesarios para esta finalidad. [AJUSTAR: indicar aquí si se recoge algún otro dato, p. ej. fecha de nacimiento, y por qué es necesario.]
 
@@ -84,7 +84,7 @@ Los datos **no se utilizan** para ninguna finalidad ajena a las anteriores. **No
 ## 6. ¿Quién puede acceder a los datos?
 
 - **Profesionales del centro** autorizados que intervienen en la atención (por ejemplo: [PERFILES: integradora social, terapeuta ocupacional, psicólogo/neuropsicólogo, coordinación]). Cada uno accede **solo a lo necesario** para su función.
-- **Trazo (la empresa proveedora)**, como **encargado del tratamiento**, únicamente para **prestar y mantener el servicio** siguiendo las instrucciones del centro y con obligación de **confidencialidad y seguridad** (contrato art. 28 RGPD).
+- **Reminia (la empresa proveedora)**, como **encargado del tratamiento**, únicamente para **prestar y mantener el servicio** siguiendo las instrucciones del centro y con obligación de **confidencialidad y seguridad** (contrato art. 28 RGPD).
 - La persona usuaria y/o su **representante legal**, respecto de su propia información.
 
 **No se comunican datos a terceros** salvo obligación legal. [INDICAR SI PROCEDE: comunicaciones a servicios sanitarios, a la familia designada, etc., y su base.]
@@ -142,7 +142,7 @@ Puede ejercer en cualquier momento los derechos de **acceso, rectificación, sup
 - **Cómo ejercerlos:** dirigiéndose a [CANAL DE EJERCICIO DE DERECHOS — email/dirección] o al **DPO**: [CONTACTO DPO].
 - **Reclamación:** si considera que sus derechos no se han atendido, puede reclamar ante la **Agencia Española de Protección de Datos (AEPD)** — www.aepd.es.
 
-> **Sobre los avisos automáticos:** Trazo puede **señalar cambios** en el desempeño, pero **siempre los revisa un profesional** antes de tomar cualquier decisión. **No hay decisiones automatizadas** que produzcan efectos jurídicos o similares sin intervención humana.
+> **Sobre los avisos automáticos:** Reminia puede **señalar cambios** en el desempeño, pero **siempre los revisa un profesional** antes de tomar cualquier decisión. **No hay decisiones automatizadas** que produzcan efectos jurídicos o similares sin intervención humana.
 
 ---
 
@@ -152,10 +152,10 @@ Declaro que:
 - He recibido y comprendido esta información, redactada en lenguaje claro.
 - He podido **preguntar** y se me han **resuelto las dudas**.
 - Entiendo que la participación es **voluntaria** y **revocable**, sin consecuencias en la atención.
-- Entiendo que Trazo **no es un diagnóstico ni un producto sanitario**.
+- Entiendo que Reminia **no es un diagnóstico ni un producto sanitario**.
 
 **Marque su decisión:**
-- [ ] **AUTORIZO** el uso de Trazo y el tratamiento de datos descrito.
+- [ ] **AUTORIZO** el uso de Reminia y el tratamiento de datos descrito.
 - [ ] **NO autorizo.**
 
 Autorizaciones adicionales (opcionales, marque si procede):

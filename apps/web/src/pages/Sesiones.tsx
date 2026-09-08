@@ -131,7 +131,7 @@ function ResumenDetalle({ sesion, onVolver }: { sesion: SesionListItem; onVolver
           }}
         >
           <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.4 }}>
-            Observaciones de la facilitadora
+            Observaciones de la integradora
           </div>
           <div style={{ whiteSpace: "pre-wrap", color: colors.text }}>{resumen.data.notas}</div>
         </div>
