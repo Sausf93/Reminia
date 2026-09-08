@@ -1310,8 +1310,8 @@
       "cantidad_min": 2,
       "cantidad_max": 6,
       "objetos": [
-        "boton_grande",
-        "boton_pequeno"
+        "manzana",
+        "naranja"
       ]
     },
     "estado": "validada"
@@ -11857,13 +11857,13 @@
         {
           "id": "ca5",
           "titulo": "Cuenta atrás",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 1 arriba).",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 5 arriba).",
           "pasos": [
-            "1",
-            "2",
-            "3",
+            "5",
             "4",
-            "5"
+            "3",
+            "2",
+            "1"
           ]
         }
       ],
@@ -11884,13 +11884,13 @@
         {
           "id": "ca10",
           "titulo": "Cuenta atrás",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 6 arriba).",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 10 arriba).",
           "pasos": [
-            "6",
-            "7",
-            "8",
+            "10",
             "9",
-            "10"
+            "8",
+            "7",
+            "6"
           ]
         }
       ],
@@ -16484,8 +16484,8 @@
   {
     "bloque": "funcion_ejecutiva",
     "plantilla_tipo": "secuencia_ordenar",
-    "nombre": "Ordena: las horas del reloj",
-    "descripcion": "Coloca en orden.",
+    "nombre": "Ordena: las horas de la mañana",
+    "descripcion": "Pon en orden las horas de la mañana, de la primera a la última.",
     "parametros_json": {
       "dificultad": "facil",
       "pasos_min": 6,
@@ -16493,15 +16493,15 @@
       "tareas": [
         {
           "id": "seq_las ho",
-          "titulo": "las horas del reloj",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 1 arriba).",
+          "titulo": "las horas de la mañana",
+          "instruccion": "Ponlas en orden, de la primera a la última.",
           "pasos": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6"
+            "Las 7",
+            "Las 8",
+            "Las 9",
+            "Las 10",
+            "Las 11",
+            "Las 12"
           ]
         }
       ],
@@ -19195,19 +19195,19 @@
       "tareas": [
         {
           "id": "ca101",
-          "titulo": "10→1",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 1 arriba).",
+          "titulo": "Cuenta atrás",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 10 arriba).",
           "pasos": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
+            "10",
             "9",
-            "10"
+            "8",
+            "7",
+            "6",
+            "5",
+            "4",
+            "3",
+            "2",
+            "1"
           ]
         }
       ],
@@ -19227,15 +19227,15 @@
       "tareas": [
         {
           "id": "ca1510",
-          "titulo": "15→10",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 10 arriba).",
+          "titulo": "Cuenta atrás",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 15 arriba).",
           "pasos": [
-            "10",
-            "11",
-            "12",
-            "13",
+            "15",
             "14",
-            "15"
+            "13",
+            "12",
+            "11",
+            "10"
           ]
         }
       ],
@@ -19255,15 +19255,15 @@
       "tareas": [
         {
           "id": "ca2015",
-          "titulo": "20→15",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 15 arriba).",
+          "titulo": "Cuenta atrás",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 20 arriba).",
           "pasos": [
-            "15",
-            "16",
-            "17",
-            "18",
+            "20",
             "19",
-            "20"
+            "18",
+            "17",
+            "16",
+            "15"
           ]
         }
       ],
@@ -19283,15 +19283,15 @@
       "tareas": [
         {
           "id": "ca94",
-          "titulo": "9→4",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 4 arriba).",
+          "titulo": "Cuenta atrás",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 9 arriba).",
           "pasos": [
-            "4",
-            "5",
-            "6",
-            "7",
+            "9",
             "8",
-            "9"
+            "7",
+            "6",
+            "5",
+            "4"
           ]
         }
       ],
@@ -19311,15 +19311,15 @@
       "tareas": [
         {
           "id": "ca127",
-          "titulo": "12→7",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 7 arriba).",
+          "titulo": "Cuenta atrás",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 12 arriba).",
           "pasos": [
-            "7",
-            "8",
-            "9",
-            "10",
+            "12",
             "11",
-            "12"
+            "10",
+            "9",
+            "8",
+            "7"
           ]
         }
       ],
@@ -19339,16 +19339,16 @@
       "tareas": [
         {
           "id": "ca82",
-          "titulo": "8→2",
-          "instruccion": "Ponlos en orden, de menor a mayor (el 2 arriba).",
+          "titulo": "Cuenta atrás",
+          "instruccion": "Ponlos en orden, de mayor a menor (el 8 arriba).",
           "pasos": [
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
+            "8",
             "7",
-            "8"
+            "6",
+            "5",
+            "4",
+            "3",
+            "2"
           ]
         }
       ],
@@ -27105,7 +27105,7 @@
       "figuras": [
         {
           "id": "letra_ñ",
-          "path": "M32,118 L32,40 L68,118 L68,40 M34,32 C40,24 46,24 50,28 C54,32 60,32 66,26"
+          "path": "M32,118 L32,40 L68,118 L68,40 M32,30 C38,22 46,22 50,28 C54,34 62,34 68,26"
         }
       ]
     },
@@ -94090,7 +94090,7 @@
           "correcta": "Estoy",
           "distractores": [
             "Esto",
-            "Estó"
+            "Estás"
           ]
         }
       ]
@@ -111133,7 +111133,8 @@
             "Sandía"
           ]
         }
-      ]
+      ],
+      "no_recortar": true
     },
     "estado": "validada"
   },
@@ -165079,7 +165080,8 @@
       ],
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165100,7 +165102,8 @@
       ],
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165123,7 +165126,8 @@
       ],
       "con_grifo": false,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165144,7 +165148,8 @@
       ],
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "atencion_memoria",
@@ -165408,7 +165413,8 @@
       ],
       "mayoria": null,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165464,7 +165470,8 @@
         "fuerte": "can"
       },
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165476,7 +165483,8 @@
       "enunciado": "Dos ranas verdes a un lado y dos marrones al otro, con una piedra vacía en medio. Las verdes solo avanzan a la derecha y las marrones a la izquierda; pueden dar un paso a una piedra vacía o saltar por encima de UNA rana. ¿Podéis intercambiarlas?",
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta.",
       "por_lado": 2
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165488,7 +165496,8 @@
       "enunciado": "Tres ranas verdes a un lado y tres marrones al otro, con una piedra vacía en medio. Las verdes solo avanzan a la derecha y las marrones a la izquierda; un paso a una piedra vacía o un salto por encima de UNA rana. Intercambiad los dos grupos.",
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta.",
       "por_lado": 3
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165500,7 +165509,8 @@
       "enunciado": "Pasad toda la torre al último palo. Se mueve un disco cada vez y nunca un disco grande encima de uno más pequeño.",
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta.",
       "discos": 3
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -165512,7 +165522,8 @@
       "enunciado": "Pasad toda la torre de 4 discos al último palo. Un disco cada vez y nunca uno grande sobre uno pequeño.",
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta.",
       "discos": 4
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "gnosias",
@@ -166522,7 +166533,8 @@
       ],
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -166543,7 +166555,8 @@
       ],
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -166564,7 +166577,8 @@
       ],
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo."
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "retos",
@@ -166589,7 +166603,8 @@
       "enunciado": "Cuatro ranas verdes y cuatro marrones con una piedra vacía en medio. Intercambiad los grupos.",
       "instruccion": "Resolvedlo en grupo.",
       "por_lado": 4
-    }
+    },
+    "estado": "validada"
   },
   {
     "bloque": "calculo",
@@ -167606,7 +167621,7 @@
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
     },
-    "estado": "en_pruebas"
+    "estado": "validada"
   },
   {
     "nombre": "Reto: garrafas de 7 y 12 litros (medir 6)",
@@ -167627,7 +167642,7 @@
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
     },
-    "estado": "en_pruebas"
+    "estado": "validada"
   },
   {
     "nombre": "Reto: garrafas de 4 y 7 litros (medir 2)",
@@ -167648,7 +167663,7 @@
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
     },
-    "estado": "en_pruebas"
+    "estado": "validada"
   },
   {
     "nombre": "Reto: garrafas de 3 y 10 litros (medir 8)",
@@ -167669,7 +167684,7 @@
       "con_grifo": true,
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta."
     },
-    "estado": "en_pruebas"
+    "estado": "validada"
   },
   {
     "nombre": "Reto: la torre de Hanoi (6 discos)",
@@ -167681,7 +167696,7 @@
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta.",
       "discos": 6
     },
-    "estado": "en_pruebas"
+    "estado": "validada"
   },
   {
     "nombre": "Reto: las ranas que saltan (5 y 5)",
@@ -167691,9 +167706,9 @@
       "titulo": "Reto: las ranas que saltan (5 y 5)",
       "enunciado": "5 ranas verdes a un lado y 5 marrones al otro, con una piedra vacía en medio. Las verdes solo avanzan a la derecha y las marrones a la izquierda; pueden dar un paso a una piedra vacía o saltar por encima de UNA rana. ¿Podéis intercambiarlas?",
       "instruccion": "Resolvedlo en grupo, con papel y lápiz si hace falta.",
-      "porLado": 5
+      "por_lado": 5
     },
-    "estado": "en_pruebas"
+    "estado": "validada"
   },
   {
     "nombre": "Memoria: en el cuarto de baño",
@@ -168463,7 +168478,7 @@
         }
       ]
     },
-    "estado": "en_pruebas"
+    "estado": "validada"
   },
   {
     "nombre": "Memoria: en el salón",
