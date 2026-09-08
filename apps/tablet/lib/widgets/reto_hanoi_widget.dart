@@ -165,7 +165,7 @@ class _RetoHanoiWidgetState extends State<RetoHanoiWidget> {
             children: [
               Text('Movimientos: $_movimientos',
                   style: const TextStyle(
-                      fontSize: 15, color: TrazoColors.bordeControl)),
+                      fontSize: 15, color: TrazoColors.sageDark)),
               OutlinedButton.icon(
                 onPressed: _reset,
                 icon: const Icon(Icons.refresh),

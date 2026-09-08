@@ -297,7 +297,7 @@ class _RetoGarrafasWidgetState extends State<RetoGarrafasWidget> {
             children: [
               Text('Movimientos: $_movimientos',
                   style: const TextStyle(
-                      fontSize: 16, color: TrazoColors.bordeControl)),
+                      fontSize: 16, color: TrazoColors.sageDark)),
               ElevatedButton.icon(
                 onPressed: _comprobar,
                 icon: const Icon(Icons.check),

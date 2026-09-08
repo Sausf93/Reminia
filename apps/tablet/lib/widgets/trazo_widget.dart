@@ -37,6 +37,7 @@ class _TrazoWidgetState extends State<TrazoWidget>
   // no se solapan (feedback de Saulo). Cada sub-trazo va en su propia lista.
   late final List<List<Offset>> _trazos;
   late final AnimationController _anim;
+  bool _animArrancada = false;
 
   // Trazos del usuario: UNA lista por cada vez que baja el dedo/lápiz (entre
   // `onPanStart` y `onPanEnd`). Antes era una sola lista plana y el pintor unía
@@ -73,7 +74,20 @@ class _TrazoWidgetState extends State<TrazoWidget>
     _anim = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: (segs * 1000).round()),
-    )..repeat();
+    );
+    // El bucle del punto-guía se arranca en didChangeDependencies, solo si el
+    // sistema NO pide "reducir movimiento" (accesibilidad). Con la preferencia
+    // activada, el contorno de la letra sigue visible pero sin animación.
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_animArrancada) return;
+    _animArrancada = true;
+    if (!MediaQuery.of(context).disableAnimations) {
+      _anim.repeat();
+    }
   }
 
   /// Muestrea cada sub-trazo por separado (una lista de puntos por contorno), en

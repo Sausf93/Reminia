@@ -253,7 +253,7 @@ class _RetoCruzarWidgetState extends State<RetoCruzarWidget> {
             children: [
               Text('Movimientos: $_movimientos',
                   style: const TextStyle(
-                      fontSize: 15, color: TrazoColors.bordeControl)),
+                      fontSize: 15, color: TrazoColors.sageDark)),
               Row(
                 children: [
                   if (_aviso == null && !_ganado)
@@ -333,7 +333,7 @@ class _RetoCruzarWidgetState extends State<RetoCruzarWidget> {
               style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: TrazoColors.bordeControl)),
+                  color: TrazoColors.sageDark)),
           const SizedBox(height: 6),
           Expanded(
             child: SingleChildScrollView(

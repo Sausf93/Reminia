@@ -157,7 +157,7 @@ class _RetoMastermindWidgetState extends State<RetoMastermindWidget> {
               'Adivinad el orden de $_len colores. Tras cada intento os digo cuántos acertáis.',
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 15, color: TrazoColors.bordeControl)),
+                  fontSize: 15, color: TrazoColors.sageDark)),
         ),
         // Historial de intentos + fila actual
         SizedBox(

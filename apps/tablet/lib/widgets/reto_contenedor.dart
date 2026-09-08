@@ -72,7 +72,7 @@ class _RetoContenedorState extends State<RetoContenedor> {
               'Este reto se juega mejor con el móvil en horizontal. '
               'Gíralo y tendréis sitio de sobra.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 17, color: TrazoColors.bordeControl),
+              style: TextStyle(fontSize: 17, color: TrazoColors.sageDark),
             ),
           ],
         ),
