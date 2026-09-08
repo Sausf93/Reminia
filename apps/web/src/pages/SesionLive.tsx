@@ -13,6 +13,7 @@ import { ApiError } from "../api/client";
 import type { Live, SesionListItem } from "../api/types";
 import { EstadoBadge } from "../components/EstadoBadge";
 import { PageHeader, Spinner, StateMessage } from "../components/ui";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 import { useAuth } from "../auth/AuthContext";
 import { useAsync } from "../hooks/useAsync";
 import { colors, fonts, radius } from "../theme";
@@ -103,6 +104,7 @@ function LiveMonitor({ sesionId, onSalir }: { sesionId: string; onSalir: () => v
   const [loading, setLoading] = useState(true);
   const [ultimaAct, setUltimaAct] = useState<Date | null>(null);
   const [cerrando, setCerrando] = useState(false);
+  const [confirmarCerrar, setConfirmarCerrar] = useState(false);
   // Override optimista del "con ayuda" por intento (hasta que el siguiente poll
   // lo confirme): así el toque se ve al instante sin esperar 4s.
   const [ayudaLocal, setAyudaLocal] = useState<Record<string, boolean>>({});
@@ -118,12 +120,12 @@ function LiveMonitor({ sesionId, onSalir }: { sesionId: string; onSalir: () => v
     }
   }
 
-  async function cerrarSala() {
+  async function hacerCerrarSala() {
     if (cerrando) return;
-    if (!window.confirm("¿Cerrar la sala? Se finalizará la sesión para todas las tablets. Los resultados quedan guardados.")) return;
     setCerrando(true);
     try {
       await cerrarSesion(sesionId);
+      setConfirmarCerrar(false);
       onSalir();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo cerrar la sala.");
@@ -196,7 +198,7 @@ function LiveMonitor({ sesionId, onSalir }: { sesionId: string; onSalir: () => v
                 <style>{`@keyframes trazo-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }`}</style>
               </span>
               <button
-                onClick={cerrarSala}
+                onClick={() => setConfirmarCerrar(true)}
                 disabled={cerrando}
                 style={{
                   padding: "8px 14px",
@@ -321,6 +323,17 @@ function LiveMonitor({ sesionId, onSalir }: { sesionId: string; onSalir: () => v
           Última actualización: {ultimaAct.toLocaleTimeString("es-ES")}
         </p>
       )}
+
+      <ConfirmDialog
+        open={confirmarCerrar}
+        title="Cerrar la sala"
+        mensaje="Se finalizará la sesión para todas las tablets del grupo. Los resultados quedan guardados y podrás revisarlos después."
+        confirmLabel="Cerrar la sala"
+        tone="peligro"
+        loading={cerrando}
+        onConfirm={hacerCerrarSala}
+        onCancel={() => setConfirmarCerrar(false)}
+      />
     </div>
   );
 }

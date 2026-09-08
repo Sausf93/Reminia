@@ -34,12 +34,15 @@ export function ConfirmDialog({
 }) {
   const [texto, setTexto] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) {
       setTexto("");
-      // Deja que el elemento se monte antes de enfocar.
-      const t = setTimeout(() => inputRef.current?.focus(), 40);
+      // Al abrir, lleva el foco al diálogo: al campo si hay que teclear (RGPD),
+      // o a la propia tarjeta si no (así Escape/Tab quedan dentro y el lector de
+      // pantalla lo anuncia). Deja que el elemento se monte antes de enfocar.
+      const t = setTimeout(() => (inputRef.current ?? cardRef.current)?.focus(), 40);
       return () => clearTimeout(t);
     }
   }, [open]);
@@ -78,9 +81,12 @@ export function ConfirmDialog({
       }}
     >
       <div
+        ref={cardRef}
+        tabIndex={-1}
         style={{
           width: "100%",
           maxWidth: 440,
+          outline: "none",
           background: colors.white,
           border: `1px solid ${colors.sand}`,
           borderRadius: radius.lg,
