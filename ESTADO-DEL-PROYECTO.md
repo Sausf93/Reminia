@@ -66,20 +66,39 @@ y fresca; puerta RGPD incondicional).
   para nadie. Catálogo: ~1.997 validadas, ~931 pendientes.
 - **Aplicar al catálogo**: `python herramientas/aplicar_veredictos_banco.py` (lee los
   veredictos del servidor: válida→`validada`, no válida→`descartada`; dudosas se listan)
-  y redesplegar el backend. Estado a 2026-09-08: **284 válidas** marcadas, **10 dudosas**.
-- **Dudosas por resolver**: 4 «Busca …» (ya corregidas a plural, desplegadas), 4 fotos
-  a cambiar (patata roja, espejo, pollo, bolígrafo) + «perro» que parece zorro, la
-  categoría de «Memoria: herramientas del taller» (dibujos vs fotos) y el trazo de la Ñ.
-- **Imágenes**: se cambiarán con fotos reales (Pexels/Pixabay o el MCP de imágenes).
+  y redesplegar el backend.
+- **Al 2026-09-08 (sesión 2)**: aplicados **281 válidas** → catálogo **2.018 validadas /
+  910 pendientes**. Fotos flojas sustituidas por reales (Pexels): patata, espejo, pollo,
+  bolígrafo y **perro** (labrador; se acabó el «zorro»). Bugs de contenido de la ronda QA
+  corregidos (cuenta atrás descendente, ranas 5×5, elefante, «¿cuál tiene menos?»,
+  «Estó»→«Estás», «horas del reloj»→«de la mañana», tilde de la Ñ). Retos de-enfatizados
+  (poco usados). Backup de veredictos en `_deploy/veredictos-backup.json`.
+- **Pendiente**: seguir validando las ~910; «Memoria: herramientas del taller» (en_pruebas,
+  faltan fotos de 4 herramientas); juego cooperativo de 2 tablets (diseño propuesto, sin
+  construir).
+
+## Legal (sesión 2026-09-08)
+- Borradores revisados por 2 agentes especialistas (RGPD y LSSI). Rebrandados (Trazo→
+  Reminia), infra corregida (Aiven→Neon), `apps/landing/privacidad.html` con proveedores
+  reales (Neon, Resend) + cláusula de cookies. `facilitadora`→`integradora`. Eliminado el
+  envío de contraseña en claro por correo (I8).
+- **BLOQUEANTE para publicar**: la BD estaba en Neon `eu-west-2` (Londres, **fuera del
+  EEE**) y la política decía «se realiza en el EEE». Decisión tomada: **migrar la BD a
+  Neon Frankfurt `eu-central-1`** (Saulo crea el proyecto y pasa la connection string;
+  el resto lo hace el asistente: Cloud Run + redeploy + reimportar veredictos + recrear
+  centro de pruebas). Hasta migrar + visto bueno de abogado, se conserva el banner
+  «borrador» + `noindex` en las páginas legales públicas.
 
 ## Lo que queda (acción de Saulo)
-1. 💳 **Stripe a cobro real** (cuando quieras): claves LIVE en Cloud Run + suscribir
+1. 🇪🇺 **Crear proyecto Neon en Frankfurt (`eu-central-1`)** y pasar la connection string
+   → el asistente migra (Cloud Run + redeploy + reimportar veredictos) y recrea el centro
+   de pruebas. Cierra el bloqueante legal.
+2. 💳 **Stripe a cobro real** (cuando quieras): claves LIVE en Cloud Run + suscribir
    el webhook a `checkout.session.completed`, `customer.subscription.updated/deleted`,
    **`invoice.payment_failed`** y **`invoice.payment_succeeded`** (estos dos activan
    el impago) + prueba con la tarjeta `4242 4242 4242 4242`. Lo hacemos juntos.
-2. 🔐 **Revocar el token de Cloudflare** `reminia-pages-deploy` (se usó para desplegar).
-3. (Opcional) Desactivar la service account de GCP `reminia-deploy` cuando no haya
-   más despliegues; borrar el centro de pruebas `pruebas@reminia.es`.
+3. 🔐 Token de Cloudflare y service account de GCP: **de momento se mantienen** (Saulo
+   quiere que el asistente pueda seguir desplegando). Revocar al terminar la fase de cambios.
 
 ## Cómo trabajar (comandos y skills)
 - Verificar antes de dar por bueno: `pytest` (backend) + `npx tsc --noEmit` (panel)
