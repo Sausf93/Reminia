@@ -82,17 +82,19 @@ y fresca; puerta RGPD incondicional).
   Reminia), infra corregida (Aiven→Neon), `apps/landing/privacidad.html` con proveedores
   reales (Neon, Resend) + cláusula de cookies. `facilitadora`→`integradora`. Eliminado el
   envío de contraseña en claro por correo (I8).
-- **BLOQUEANTE para publicar**: la BD estaba en Neon `eu-west-2` (Londres, **fuera del
-  EEE**) y la política decía «se realiza en el EEE». Decisión tomada: **migrar la BD a
-  Neon Frankfurt `eu-central-1`** (Saulo crea el proyecto y pasa la connection string;
-  el resto lo hace el asistente: Cloud Run + redeploy + reimportar veredictos + recrear
-  centro de pruebas). Hasta migrar + visto bueno de abogado, se conserva el banner
-  «borrador» + `noindex` en las páginas legales públicas.
+- **✅ MIGRACIÓN HECHA (2026-09-08)**: la BD se movió de Neon Londres (`eu-west-2`) a
+  **Neon Frankfurt (`eu-central-1`)** → los datos de salud quedan en el **EEE**. Backend
+  apuntando a Frankfurt (rev `00129`), esquema recreado + catálogo sincronizado, **294
+  veredictos reimportados** (0 errores) desde `_deploy/veredictos-backup.json`. Privacidad
+  corregida (datos en la UE) y **páginas legales publicadas** (quitado el banner «borrador»
+  y el `noindex`). Pendiente menor: **recrear el centro de pruebas** (BD nueva sin centros)
+  y, cuando Saulo pueda, visto bueno de abogado a los borradores internos `legal/*.md`.
+  El proyecto viejo «Reminia (London)» en Neon puede borrarse.
 
 ## Lo que queda (acción de Saulo)
-1. 🇪🇺 **Crear proyecto Neon en Frankfurt (`eu-central-1`)** y pasar la connection string
-   → el asistente migra (Cloud Run + redeploy + reimportar veredictos) y recrea el centro
-   de pruebas. Cierra el bloqueante legal.
+1. 🧪 **Recrear el centro de pruebas** (la BD de Frankfurt empieza sin centros): en
+   admin.reminia.es (super-admin) con el selector de cortesía, o pasarle el `PLATFORM_TOKEN`
+   al asistente para que lo cree. Sin esto, el login del panel `pruebas@reminia.es` no entra.
 2. 💳 **Stripe a cobro real** (cuando quieras): claves LIVE en Cloud Run + suscribir
    el webhook a `checkout.session.completed`, `customer.subscription.updated/deleted`,
    **`invoice.payment_failed`** y **`invoice.payment_succeeded`** (estos dos activan
