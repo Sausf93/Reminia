@@ -73,9 +73,15 @@ async def crear_usuario(
     db: AsyncSession = Depends(get_db),
     staff: UsuarioStaff = Depends(get_current_staff),
 ):
+    # Mismo criterio que editar_usuario: el alias no puede quedar vacío/en blanco
+    # (aparecería como una entrada en blanco en el «¿quién eres?» del kiosco).
+    alias = body.alias_interno.strip()
+    if not alias:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
+                            "El alias no puede quedar vacío")
     uf = UsuarioFinal(
         centro_id=staff.centro_id,
-        alias_interno=body.alias_interno,
+        alias_interno=alias,
         nivel_base_json=body.nivel_base_json,
     )
     db.add(uf)

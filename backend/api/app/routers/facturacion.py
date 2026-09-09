@@ -243,7 +243,11 @@ async def _registrar_impago(db, centro: Centro, attempt_count: int, url_pago: st
     # evento de factura despistado no debe suspender a quien no procede.
     if centro.estado_suscripcion != "activa":
         return
-    n = max(int(attempt_count or 0), (centro.avisos_impago or 0) + 1)
+    # Idempotente de verdad: si Stripe manda attempt_count (nº de intento real de la
+    # factura), se usa TAL CUAL, así reprocesar/reentregar el MISMO evento no vuelve a
+    # incrementar (un max() con avisos+1 sí incrementaba y podía suspender antes de
+    # tiempo). Solo si falta (0/None) se cae al contador propio +1.
+    n = int(attempt_count or 0) or (centro.avisos_impago or 0) + 1
     centro.avisos_impago = n
     suspendido = n >= AVISOS_CORTE
     if suspendido:

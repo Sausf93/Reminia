@@ -63,7 +63,9 @@ async def _cola_desde_config(
         if not eid:
             continue
         ej = await db.get(EjercicioCatalogo, eid)
-        if ej is None or not ej.activo:
+        # Compuerta de calidad: solo VALIDADAS miden a personas reales (igual que el
+        # camino de dominio). Una actividad en_pruebas no debe llegar a una sesión.
+        if ej is None or not ej.activo or ej.estado != "validada":
             continue
         ni = (it.get("nivel") if isinstance(it, dict) else None) or nivel
         cola.append(ItemColaData(
@@ -211,7 +213,8 @@ async def construir_cola(
     # --- Modo grupo: actividad compartida, cada uno a su nivel ---
     if sesion is not None and sesion.modo == "grupo" and sesion.ejercicio_compartido_id:
         ej = await db.get(EjercicioCatalogo, sesion.ejercicio_compartido_id)
-        if ej is None:
+        # Compuerta de calidad: una compartida en_pruebas no debe medir a todo el grupo.
+        if ej is None or not ej.activo or ej.estado != "validada":
             return []
         nivel = await _nivel_para_ejercicio(db, usuario_final_id, ej)
         return [
@@ -258,7 +261,8 @@ async def construir_cola(
             if not ln.ejercicio_id:
                 continue
             ej = await db.get(EjercicioCatalogo, ln.ejercicio_id)
-            if ej is None or not ej.activo:
+            # Compuerta de calidad: solo VALIDADAS miden a personas reales.
+            if ej is None or not ej.activo or ej.estado != "validada":
                 continue
             for _ in range(n):
                 cola.append(ItemColaData(

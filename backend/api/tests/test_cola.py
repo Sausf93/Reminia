@@ -134,3 +134,32 @@ async def test_modo_grupo_usa_ejercicio_compartido_a_su_nivel(db):
     assert cola[0].ejercicio_id == p1.id
     assert cola[0].origen == "grupo"
     assert cola[0].nivel == "bajo"
+
+
+@pytest.mark.asyncio
+async def test_ejercicio_fijo_en_pruebas_no_entra(db):
+    # Una línea de ejercicio FIJO que apunta a una actividad en_pruebas tampoco debe
+    # servirse en sesión real (misma compuerta que el camino de dominio).
+    _, staff, uf, p1, p2, l1 = await _setup_basico(db)
+    l1.estado = "en_pruebas"
+    await db.flush()
+    db.add(PlanPacienteLinea(usuario_final_id=uf.id, tipo="ejercicio",
+                             ejercicio_id=l1.id, nivel="medio", n_por_sesion=2, orden=0))
+    await db.flush()
+    cola = await construir_cola(db, uf.id)
+    assert cola == []
+
+
+@pytest.mark.asyncio
+async def test_modo_grupo_compartido_en_pruebas_no_mide(db):
+    # Una actividad compartida en_pruebas no debe medir a todo el grupo.
+    centro, staff, uf, p1, p2, l1 = await _setup_basico(db)
+    p1.estado = "en_pruebas"
+    db.add(PlanPacienteLinea(usuario_final_id=uf.id, tipo="dominio",
+                             bloque="praxias", nivel="bajo", n_por_sesion=5, orden=0))
+    ses = Sesion(centro_id=centro.id, tipo="grupo", modo="grupo",
+                 ejercicio_compartido_id=p1.id, staff_id=staff.id)
+    db.add(ses)
+    await db.flush()
+    cola = await construir_cola(db, uf.id, ses)
+    assert cola == []

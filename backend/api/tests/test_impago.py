@@ -66,6 +66,26 @@ async def test_impago_avisa_y_corta_al_tercero(Session):
 
 
 @pytest.mark.asyncio
+async def test_impago_reentrega_mismo_evento_es_idempotente(Session):
+    """Stripe puede reentregar el MISMO invoice.payment_failed. Reprocesar el mismo
+    attempt_count NO debe incrementar el contador ni suspender antes de tiempo."""
+    cid = await _centro_activo(Session, email="reentrega@ejemplo.es")
+    # Dos fallos reales (attempt_count 1 y 2): contador a 2, sigue activa.
+    for n in (1, 2):
+        async with Session() as db:
+            centro = await db.get(Centro, cid)
+            await _registrar_impago(db, centro, n, "https://pago.stripe/x")
+    # Stripe reentrega el 2º evento (mismo attempt_count=2): debe seguir en 2 y activa.
+    async with Session() as db:
+        centro = await db.get(Centro, cid)
+        await _registrar_impago(db, centro, 2, "https://pago.stripe/x")
+    async with Session() as db:
+        centro = await db.get(Centro, cid)
+        assert centro.avisos_impago == 2, "una reentrega no debe incrementar"
+        assert centro.estado_suscripcion == "activa", "una reentrega no debe suspender"
+
+
+@pytest.mark.asyncio
 async def test_impago_cuenta_aunque_falte_attempt_count(Session):
     """Si Stripe no manda attempt_count, el contador incrementa igualmente."""
     cid = await _centro_activo(Session, email="otro@ejemplo.es")

@@ -131,6 +131,20 @@ async def editar_objetivo(
                                 "el objetivo de desempeño debe estar entre 0 y 1")
         obj.objetivo_desempeno = body.objetivo_desempeno
     if body.activo is not None:
+        # Reactivar por edición respeta el mismo invariante que crear_objetivo:
+        # un solo objetivo ACTIVO por área (dos mostrarían el mismo 'va por').
+        if body.activo and not obj.activo:
+            otro = (await db.execute(
+                select(ObjetivoPaciente).where(
+                    ObjetivoPaciente.usuario_final_id == obj.usuario_final_id,
+                    ObjetivoPaciente.bloque == obj.bloque,
+                    ObjetivoPaciente.activo.is_(True),
+                    ObjetivoPaciente.id != obj.id,
+                )
+            )).scalars().first()
+            if otro is not None:
+                raise HTTPException(status.HTTP_409_CONFLICT,
+                                    "Ya hay un objetivo activo en esta área")
         obj.activo = body.activo
     await db.commit()
     await db.refresh(obj)
