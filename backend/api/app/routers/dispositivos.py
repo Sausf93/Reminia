@@ -53,7 +53,9 @@ async def equipo_del_centro(
                UsuarioStaff.activo.is_(True),
                # El admin NO sale en el selector de la tablet (entra con email +
                # contraseña): una tablet perdida no debe dar acceso de administración.
-               UsuarioStaff.rol != "admin_centro")
+               UsuarioStaff.rol != "admin_centro",
+               # 'familia' (solo consulta) tampoco facilita: no sale como maestra.
+               UsuarioStaff.rol != "familia")
         .order_by(UsuarioStaff.nombre)
     )).scalars().all()
     return [

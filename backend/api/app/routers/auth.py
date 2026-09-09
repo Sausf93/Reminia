@@ -145,6 +145,13 @@ async def login_tablet(
         raise HTTPException(
             status.HTTP_403_FORBIDDEN,
             "La administración entra con email y contraseña.")
+    # 'familia' (solo consulta, cuentas legado) tampoco facilita en la tablet: no
+    # debe abrir sesiones ni ver a todos los participantes por elegir su nombre en
+    # una tablet perdida. Allowlist implícita: solo integradora (y admin por panel).
+    if staff.rol == "familia":
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN,
+            "Esta cuenta no puede entrar en la tablet.")
     # Si tiene PIN (opcional), hay que acertarlo; si no, entra directo.
     if staff.pin_hash is not None:
         if body.pin is None or not verify_password(body.pin, staff.pin_hash):

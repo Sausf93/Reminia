@@ -63,8 +63,12 @@ async def puesta_en_marcha(
         select(func.count(func.distinct(Consentimiento.usuario_final_id))).where(
             Consentimiento.usuario_final_id.in_(ids_personas)))
     sin_consentimiento = max(0, n_personas - con_consent)
+    # "Primera sesión hecha" = una sesión REAL (abierta en algún momento), no un
+    # borrador solo programado (abierta=False). Cerrar no toca `abierta`, así que
+    # una sesión ya terminada sigue contando.
     n_sesiones = await _count(
-        select(func.count()).select_from(Sesion).where(Sesion.centro_id == cid))
+        select(func.count()).select_from(Sesion).where(
+            Sesion.centro_id == cid, Sesion.abierta.is_(True)))
 
     estado_sub = getattr(centro, "estado_suscripcion", "cortesia") if centro else "cortesia"
     sub_ok = estado_sub in ("activa", "cortesia", "prueba")

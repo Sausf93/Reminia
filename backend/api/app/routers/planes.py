@@ -99,6 +99,11 @@ async def reemplazar_plan(
             if ej is None:
                 raise HTTPException(status.HTTP_404_NOT_FOUND,
                                     f"ejercicio no encontrado: {ln.ejercicio_id}")
+            # Solo VALIDADAS: una línea a un ejercicio en_pruebas/inactivo se guardaría
+            # pero la compuerta de la cola nunca la serviría -> trampa silenciosa.
+            if not ej.activo or ej.estado != "validada":
+                raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    f"ejercicio no disponible (en pruebas o inactivo): {ln.ejercicio_id}")
 
     # Borrar las existentes y crear las nuevas.
     existentes = (

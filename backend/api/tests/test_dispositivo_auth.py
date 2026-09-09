@@ -87,6 +87,33 @@ async def test_kiosco_opera_con_token_de_dispositivo(client):
 
 
 @pytest.mark.asyncio
+async def test_familia_no_facilita_en_tablet(client, Session):
+    # 'familia' (solo consulta, cuentas legado) NO debe poder facilitar en la
+    # tablet: ni salir en el selector ni obtener JWT de staff eligiendo su nombre.
+    from sqlalchemy import select
+
+    login, headers = await _login(client)
+    async with Session() as db:
+        centro = (await db.execute(select(Centro))).scalars().first()
+        fam = UsuarioStaff(centro_id=centro.id, nombre="Familiar", rol="familia",
+                           email="familia@trazo.local",
+                           password_hash=hash_password("trazo1234"), activo=True)
+        db.add(fam)
+        await db.commit()
+        fam_id = fam.id
+
+    disp = await _crear_dispositivo(client, headers)
+    dev = {"X-Device-Token": disp["token"]}
+    # No aparece en el selector "¿quién eres?" de la tablet.
+    r = await client.get("/dispositivos/equipo", headers=dev)
+    assert r.status_code == 200, r.text
+    assert all(s["rol"] != "familia" and s["id"] != fam_id for s in r.json())
+    # Y aunque se fuerce su staff_id, la tablet no le da acceso -> 403.
+    r = await client.post("/auth/tablet", headers=dev, json={"staff_id": fam_id})
+    assert r.status_code == 403, r.text
+
+
+@pytest.mark.asyncio
 async def test_token_invalido_o_revocado_401(client):
     login, headers = await _login(client)
     centro_id = login["centro_id"]

@@ -189,6 +189,35 @@ async def test_superadmin_bloquea_y_reactiva_centro(client, monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_superadmin_suscripcion_respuesta_completa_y_coherente(client, monkeypatch):
+    monkeypatch.setattr(settings, "platform_token", "tok")
+    ph = {"X-Platform-Token": "tok"}
+    cid = (await client.get("/plataforma/centros", headers=ph)).json()[0]["id"]
+
+    # Dar prueba de 10 días -> estado 'prueba' con fecha_fin_prueba.
+    r = await client.patch(f"/plataforma/centros/{cid}/suscripcion", headers=ph,
+                           json={"dias_prueba": 10})
+    assert r.status_code == 200, r.text
+    b = r.json()
+    assert b["estado_suscripcion"] == "prueba"
+    assert b["fecha_fin_prueba"] is not None
+    # La respuesta del PATCH trae los contadores REALES (no 0/tope 30 por defecto).
+    assert b["n_staff"] >= 2
+
+    # Pasar a 'activa' -> se limpia la fecha_fin_prueba colgada.
+    r = await client.patch(f"/plataforma/centros/{cid}/suscripcion", headers=ph,
+                           json={"estado": "activa"})
+    assert r.status_code == 200, r.text
+    assert r.json()["estado_suscripcion"] == "activa"
+    assert r.json()["fecha_fin_prueba"] is None
+
+    # Estado inválido -> 422 (validado antes de mutar).
+    r = await client.patch(f"/plataforma/centros/{cid}/suscripcion", headers=ph,
+                           json={"estado": "inventado"})
+    assert r.status_code == 422
+
+
+@pytest.mark.asyncio
 async def test_bloquear_centro_requiere_token(client):
     r = await client.patch("/plataforma/centros/lo-que-sea", json={"activo": False})
     assert r.status_code == 404  # sin PLATFORM_TOKEN configurado, no existe
