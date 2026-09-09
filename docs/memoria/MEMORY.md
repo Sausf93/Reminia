@@ -1,0 +1,2 @@
+- [engram-project-memory](engram-project-memory.md) — Trazo usa el MCP engram (local) como memoria del proyecto; consultar mem_search al empezar
+- [deploy-cadence](deploy-cadence.md) — no desplegar a cada cambio: acumular y un solo deploy al día ~17:00 (coste de builds)
