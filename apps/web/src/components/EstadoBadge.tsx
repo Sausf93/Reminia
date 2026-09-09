@@ -12,7 +12,7 @@ const SIMBOLO: Record<string, string> = {
 
 const TONO: Record<string, "sage" | "coral" | "neutral"> = {
   logrado: "sage",
-  parcial: "coral",
+  parcial: "neutral",
   no_logrado: "coral",
   sin_valorar: "neutral",
 };

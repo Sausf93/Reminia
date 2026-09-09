@@ -1,7 +1,7 @@
 /**
  * Evolución individual de una persona:
  *  - selector de bloque
- *  - gráfica temporal de precisión (puntos fuera de patrón en coral)
+ *  - gráfica temporal de desempeño (autocorregido)
  *  - resumen (rendimiento medio, tasa de ayuda)
  *  - sus alertas
  */
@@ -138,8 +138,8 @@ export function UsuarioEvolucionPage() {
                   fontSize: 15,
                   padding: "11px 20px",
                   borderRadius: radius.sm,
-                  border: `1.5px solid ${colors.sage}`,
-                  background: colors.sage,
+                  border: `1.5px solid ${colors.sageDark}`,
+                  background: colors.sageDark,
                   color: colors.white,
                   textDecoration: "none",
                 }}

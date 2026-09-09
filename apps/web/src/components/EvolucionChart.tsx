@@ -24,8 +24,8 @@ export interface PuntoChart {
   idx: number;
   fecha: string;
   /** Desempeño autocorregido 0..1 (logrado=1, parcial=0.5, no_logrado=0). Es
-   * la MISMA señal que la cabecera y el motor de alertas: definida para las 8
-   * plantillas, no solo las que dan "precisión". */
+   * la MISMA señal que la cabecera y el motor de alertas: definida para las
+   * plantillas medibles, no solo las que dan "precisión". */
   desempeno: number;
   /** Precisión fina (solo trazo/memoria/búsqueda). Informativa, para el tooltip. */
   precision: number | null;

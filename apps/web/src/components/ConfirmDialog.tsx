@@ -115,7 +115,7 @@ export function ConfirmDialog({
                 width: "100%",
                 padding: "11px 13px",
                 borderRadius: radius.sm,
-                border: `1.5px solid ${coincide ? colors.sage : colors.sand}`,
+                border: `1.5px solid ${coincide ? colors.sageDark : colors.bordeControl}`,
                 background: colors.white,
                 color: colors.ink,
               }}

@@ -90,7 +90,7 @@ export function ObjetivosPaciente({ usuarioId }: { usuarioId: string }) {
           <label style={{ fontSize: 13, color: colors.textMuted, display: "flex", flexDirection: "column", gap: 4 }}>
             Área
             <select value={bloque} onChange={(e) => setBloque(e.target.value)}
-              style={{ padding: "8px 10px", borderRadius: radius.sm, border: `1.5px solid ${colors.sand}` }}>
+              style={{ padding: "8px 10px", borderRadius: radius.sm, border: `1.5px solid ${colors.bordeControl}` }}>
               {BLOQUES.map((b) => <option key={b} value={b}>{labelBloque(b)}</option>)}
             </select>
           </label>
@@ -98,7 +98,7 @@ export function ObjetivosPaciente({ usuarioId }: { usuarioId: string }) {
             Meta (texto libre, opcional)
             <input value={descripcion} onChange={(e) => setDescripcion(e.target.value)}
               placeholder="p. ej. mantener el cálculo, recuperar participación"
-              style={{ padding: "8px 10px", borderRadius: radius.sm, border: `1.5px solid ${colors.sand}` }} />
+              style={{ padding: "8px 10px", borderRadius: radius.sm, border: `1.5px solid ${colors.bordeControl}` }} />
           </label>
           <label style={{ fontSize: 13, color: colors.textMuted, display: "flex", flexDirection: "column", gap: 4 }}>
             Desempeño objetivo: {objetivo}%
@@ -170,7 +170,7 @@ function TarjetaObjetivo({
           <label style={{ fontSize: 13, color: colors.textMuted, display: "flex", flexDirection: "column", gap: 4, flex: "1 1 220px" }}>
             Meta (texto)
             <input value={desc} onChange={(e) => setDesc(e.target.value)}
-              style={{ padding: "8px 10px", borderRadius: radius.sm, border: `1.5px solid ${colors.sand}` }} />
+              style={{ padding: "8px 10px", borderRadius: radius.sm, border: `1.5px solid ${colors.bordeControl}` }} />
           </label>
           <label style={{ fontSize: 13, color: colors.textMuted, display: "flex", flexDirection: "column", gap: 4 }}>
             Desempeño objetivo: {meta}%

@@ -169,15 +169,20 @@ export function DashboardPage() {
         {alertas.data && alertas.data.length > 0 && (
           <div style={{ display: "grid", gap: 14 }}>
             {alertas.data.map((a) => (
-              <button
+              <div
                 key={a.id}
+                role="button"
+                tabIndex={0}
                 className="clickable"
                 onClick={() => navigate(`/usuarios/${a.usuario_final_id}`)}
-                style={{ background: "none", border: "none", padding: 0, margin: 0, font: "inherit", color: "inherit", textAlign: "left", cursor: "pointer", display: "block", borderRadius: 14 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); navigate(`/usuarios/${a.usuario_final_id}`); }
+                }}
+                style={{ cursor: "pointer", borderRadius: 14 }}
                 aria-label={`Ver evolución de ${aliasPorId.get(a.usuario_final_id) ?? "la persona"}`}
               >
                 <AlertCard alerta={a} aliasLabel={aliasPorId.get(a.usuario_final_id)} />
-              </button>
+              </div>
             ))}
           </div>
         )}
