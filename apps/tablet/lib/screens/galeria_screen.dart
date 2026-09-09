@@ -489,6 +489,16 @@ class _BancoPruebasScreenState extends State<BancoPruebasScreen> {
         });
         return; // sin nombre, sin sincronizar marcas, sin marcar
       }
+      // PENDIENTES: mostrar SOLO lo que aún no está validado (ni descartado). El
+      // estado viaja en el asset. Así el validador enseña únicamente lo que falta
+      // por valorar, no lo que ya está en producción (antes salían todas).
+      final porValorar = <String>{
+        for (final e in (data['actividades'] as List? ?? const []))
+          if ((e as Map<String, dynamic>)['estado'] != 'validada' &&
+              e['estado'] != 'descartada')
+            (e['nombre'] ?? '').toString(),
+      };
+      lista = lista.where((i) => porValorar.contains(i.nombre)).toList();
       final ver = await BancoVeredictos.instance.todos();
       if (!mounted) return;
       setState(() {
