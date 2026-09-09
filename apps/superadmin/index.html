@@ -57,9 +57,9 @@
     </div>
     <p class="muted" style="margin:8px 0 20px">Acceso reservado a la plataforma. Introduce el token para gestionar los centros.</p>
     <div class="card" style="max-width:460px">
-      <label>Dirección de la API</label>
+      <label for="apiBase">Dirección de la API</label>
       <input id="apiBase" placeholder="http://localhost:8000">
-      <label style="margin-top:14px">Token de plataforma</label>
+      <label for="token" style="margin-top:14px">Token de plataforma</label>
       <input id="token" type="password" placeholder="X-Platform-Token" autocomplete="off">
       <div style="margin-top:16px" class="row">
         <button class="btn" id="entrar">Entrar</button>
@@ -82,12 +82,12 @@
     <div class="card">
       <h2 style="font-size:18px;margin-bottom:14px">Dar de alta un centro nuevo</h2>
       <div class="grid">
-        <div><label>Nombre del centro</label><input id="cNombre" placeholder="Centro de Día X"></div>
-        <div><label>Email del administrador</label><input id="cEmail" placeholder="admin@centrox.es"></div>
-        <div><label>Contraseña (mín. 8)</label><input id="cPass" type="password" placeholder="••••••••"></div>
-        <div><label>Nombre del administrador</label><input id="cAdmin" placeholder="Nombre Apellidos"></div>
+        <div><label for="cNombre">Nombre del centro</label><input id="cNombre" placeholder="Centro de Día X"></div>
+        <div><label for="cEmail">Email del administrador</label><input id="cEmail" placeholder="admin@centrox.es"></div>
+        <div><label for="cPass">Contraseña (mín. 8)</label><input id="cPass" type="password" placeholder="••••••••"></div>
+        <div><label for="cAdmin">Nombre del administrador</label><input id="cAdmin" placeholder="Nombre Apellidos"></div>
         <div>
-          <label>Cortesía de prueba</label>
+          <label for="cDias">Cortesía de prueba</label>
           <select id="cDias">
             <option value="15">15 días gratis</option>
             <option value="30" selected>1 mes gratis (30 días)</option>
