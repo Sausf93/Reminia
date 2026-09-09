@@ -39,6 +39,16 @@ async def test_editar_y_dar_de_baja(client):
 
 
 @pytest.mark.asyncio
+async def test_crear_usuario_alias_vacio_422(client):
+    # Crear una persona con alias vacío/en blanco debe rechazarse (coherente con
+    # editar): un alias en blanco saldría como entrada vacía en el "¿quién eres?".
+    _, headers = await _login(client)
+    r = await client.post("/usuarios", headers=headers,
+                          json={"alias_interno": "   ", "nivel_base_json": {}})
+    assert r.status_code == 422, r.text
+
+
+@pytest.mark.asyncio
 async def test_editar_usuario_ajeno_403(client):
     _, headers = await _login(client)
     r = await client.patch("/usuarios/no-existe", headers=headers,

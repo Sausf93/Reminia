@@ -66,6 +66,28 @@ async def test_objetivo_crud_y_situacion(client):
 
 
 @pytest.mark.asyncio
+async def test_editar_objetivo_no_deja_dos_activos_en_area(client):
+    # Reactivar un objetivo por edición respeta el invariante de crear: un solo
+    # objetivo ACTIVO por área (dos mostrarían el mismo 'va por').
+    login, headers = await _login(client)
+    centro_id = login["centro_id"]
+    paco = (await _usuarios(client, headers, centro_id))["Paco"]
+    area = "razonamiento"
+    a = (await client.post(f"/usuarios/{paco['id']}/objetivos", headers=headers,
+                           json={"bloque": area, "objetivo_desempeno": 0.7})).json()
+    # Desactivar A: ahora el área queda sin objetivo activo.
+    r = await client.patch(f"/objetivos/{a['id']}", headers=headers, json={"activo": False})
+    assert r.status_code == 200, r.text
+    # Se puede crear B activo en la misma área.
+    b = await client.post(f"/usuarios/{paco['id']}/objetivos", headers=headers,
+                          json={"bloque": area, "objetivo_desempeno": 0.8})
+    assert b.status_code == 201, b.text
+    # Reactivar A por edición -> ya hay otro activo (B) -> 409.
+    r = await client.patch(f"/objetivos/{a['id']}", headers=headers, json={"activo": True})
+    assert r.status_code == 409, r.text
+
+
+@pytest.mark.asyncio
 async def test_objetivo_situacion_refleja_desempeno(client):
     """Tras registrar intentos logrados en un área, la situación actual sube."""
     login, headers = await _login(client)
