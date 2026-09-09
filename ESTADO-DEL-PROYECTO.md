@@ -73,9 +73,22 @@ y fresca; puerta RGPD incondicional).
   corregidos (cuenta atrás descendente, ranas 5×5, elefante, «¿cuál tiene menos?»,
   «Estó»→«Estás», «horas del reloj»→«de la mañana», tilde de la Ñ). Retos de-enfatizados
   (poco usados). Backup de veredictos en `_deploy/veredictos-backup.json`.
-- **Pendiente**: seguir validando las ~910; «Memoria: herramientas del taller» (en_pruebas,
-  faltan fotos de 4 herramientas); juego cooperativo de 2 tablets (diseño propuesto, sin
-  construir).
+- **Al 2026-09-09 (sesión 3, EN CURSO)**: José sigue validando en directo. Aplicadas las
+  válidas del banco → catálogo **2.022 validadas / 906 pendientes**. Dudosas de José
+  resueltas: **Comer→Almorzar** y **Comida→Almuerzo** (secuencias de comidas),
+  **«habitación»→«lugar de la casa»** («¿En qué habitación?» y «Cada cosa a su cuarto»),
+  búsquedas en plural, y un **bug de contaminación**: un `martillo`/`destornillador` se
+  había colado en 20 actividades temáticas (comida/ropa/muebles/frutas/cocina/mesa puesta)
+  — limpiadas; quitados el bolígrafo de «las herramientas» y el espejo de «los muebles».
+  Todo commiteado y **subido a GitHub** (`main` y `rebrand/reminia`).
+- **Norma de despliegue (nueva, de Saulo)**: NO desplegar a cada cambio; acumular y hacer
+  **un solo deploy al día (~17:00)** por el coste de builds. El deploy debe salir de la
+  sesión con el `gcloud` autenticado (SDK que funciona:
+  `scratchpad/gcloudsdk/google-cloud-sdk/lib/gcloud.py` con `CLOUDSDK_PYTHON`=Python312 y
+  `CLOUDSDK_CONFIG=scratchpad/gcloud-config`; la copia `gcloud-sdk` está corrupta).
+- **Pendiente**: seguir validando las ~906; «Memoria: herramientas del taller» (en_pruebas,
+  faltan fotos reales de sierra/tijeras/llave inglesa…); juego cooperativo de 2 tablets
+  (diseño propuesto, sin construir).
 
 ## Legal (sesión 2026-09-08)
 - Borradores revisados por 2 agentes especialistas (RGPD y LSSI). Rebrandados (Trazo→
