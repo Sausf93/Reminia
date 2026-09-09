@@ -11,8 +11,19 @@ import uuid
 import pytest
 
 from app.services.anomalias import detectar_missingness
+from app.services.correccion import hubo_interaccion
 
 INTEGRADORA = ("integradora@trazo.local", "trazo1234")
+
+
+def test_interaccion_dinero_por_total_compuesto():
+    # El widget de dinero puede mandar la respuesta como total_compuesto (euros)
+    # SIN monedas_usadas: eso ES interacción, no un no-intento (si no, inflaría la
+    # tasa de missingness y dispararía alertas de desconexión falsas).
+    assert hubo_interaccion("manejo_cantidad", {"total_compuesto": 2.45}) is True
+    assert hubo_interaccion("manejo_cantidad", {"monedas_usadas": [100, 50]}) is True
+    assert hubo_interaccion("manejo_cantidad", {"total_compuesto": 0}) is True  # 0 € es respuesta
+    assert hubo_interaccion("manejo_cantidad", {}) is False  # ni tocó
 
 
 def test_detector_unitario():

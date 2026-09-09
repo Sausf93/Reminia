@@ -79,6 +79,19 @@ def test_arrastrar_volcar_todo_no_puntua():
             assert corregir("arrastrar_posicion", {"colocaciones": dict(emp)}, o) == "logrado", e["nombre"]
 
 
+def test_arrastrar_parcial_correcto_no_es_fallo():
+    # Colocar bien SOLO las piezas de una zona y no tocar el resto es un intento
+    # incompleto pero PRECISO: no debe puntuar como el no_logrado FORZADO por la
+    # guarda anti-bulto (esa solo aplica al volcar TODAS las piezas en una zona).
+    # 4 piezas, izq:3 / der:1. Colocar bien las 3 de 'izq' y no tocar 'der':
+    o = {"emparejamientos": {"a": "izq", "b": "izq", "c": "izq", "d": "der"}}
+    parcial = {"a": "izq", "b": "izq", "c": "izq"}  # 3/4 = 0.75, una sola zona, incompleto
+    assert corregir("arrastrar_posicion", {"colocaciones": parcial}, o) == "parcial"
+    # Volcar las 4 piezas en una sola zona SÍ sigue siendo no_logrado (guarda intacta).
+    bulto = {"a": "izq", "b": "izq", "c": "izq", "d": "izq"}
+    assert corregir("arrastrar_posicion", {"colocaciones": bulto}, o) == "no_logrado"
+
+
 def test_secuencia_reverso_no_logra_y_azar_mayoria_no_puntua():
     for e in _por_tipo("secuencia_ordenar", 100):
         p = e["parametros_json"]

@@ -196,11 +196,15 @@ def _arrastrar_posicion(v, o):
                    if emparejamientos.get(pieza) == zona)
     # Guardia anti-"responder a bulto": volcar TODAS las piezas en una sola zona
     # (conducta del mayor confundido) acierta las de esa zona y sacaría 'parcial'
-    # sin discriminar. Si usó una sola zona habiendo ≥2 zonas correctas distintas,
-    # no ha clasificado -> no_logrado (mismo criterio que memoria/búsqueda).
+    # sin discriminar. Si volcó TODAS las piezas en una sola zona habiendo ≥2 zonas
+    # correctas distintas, no ha clasificado -> no_logrado (mismo criterio que
+    # memoria/búsqueda). Ojo: exigimos que estén (casi) todas colocadas; colocar
+    # bien solo las de una zona y dejar el resto sin tocar es 'parcial', no fallo
+    # (medir, no castigar un intento incompleto pero preciso).
     zonas_correctas = set(emparejamientos.values())
     zonas_usadas = set(colocaciones.values())
-    if len(zonas_correctas) >= 2 and len(zonas_usadas) == 1:
+    if (len(zonas_correctas) >= 2 and len(zonas_usadas) == 1
+            and len(colocaciones) >= total):
         return "no_logrado"
     return _grada(aciertos / total, hubo_intento=True)
 
@@ -323,7 +327,11 @@ def hubo_interaccion(plantilla: str, valores: dict | None) -> bool:
     if plantilla == "manejo_cantidad":
         if "hora_elegida" in v:
             return True  # reloj: no podemos saberlo -> asumimos que sí
-        return bool(v.get("monedas_usadas"))
+        # Dinero: el widget puede mandar la respuesta como total_compuesto (euros)
+        # SIN monedas_usadas. Mirar solo monedas_usadas marcaba un intento válido
+        # como "sin interacción" e inflaba falsamente la tasa de no-intento (alerta
+        # de desconexión falsa).
+        return bool(v.get("monedas_usadas")) or v.get("total_compuesto") is not None
     if plantilla == "parejas":
         return (int(_num(v.get("pares_encontrados"), 0) or 0) > 0
                 or int(_num(v.get("errores"), 0) or 0) > 0)
