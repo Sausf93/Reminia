@@ -1,5 +1,8 @@
 # Trazo
 
+> ¿Retomas el proyecto en otro usuario/máquina? Empieza por **`docs/RETOMAR.md`**
+> (prompt de puesta al día) y **`RESUMEN-CONVERSACION.md`**.
+
 Contexto del proyecto (arquitectura, comandos, principios clínicos, despliegue):
 
 @AGENTS.md
