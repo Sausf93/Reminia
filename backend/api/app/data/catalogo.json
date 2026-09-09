@@ -2352,7 +2352,7 @@
         },
         {
           "id": "lapiz",
-          "label": "lapiz"
+          "label": "lápiz"
         },
         {
           "id": "bol",
@@ -2442,7 +2442,7 @@
         },
         {
           "id": "limon",
-          "label": "limon"
+          "label": "limón"
         },
         {
           "id": "fresa",
@@ -3335,7 +3335,7 @@
         },
         {
           "id": "pajaro",
-          "label": "pajaro",
+          "label": "pájaro",
           "zona_correcta": "cielo"
         },
         {
@@ -7251,7 +7251,7 @@
       "cantidad_max": 6,
       "objetos": [
         "vaso",
-        "bol"
+        "taza"
       ]
     },
     "estado": "validada"
@@ -9211,15 +9211,15 @@
         },
         {
           "id": "sofa",
-          "label": "sofa"
+          "label": "sofá"
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "television",
-          "label": "television"
+          "label": "televisión"
         },
         {
           "id": "nevera",
@@ -9321,7 +9321,7 @@
         },
         {
           "id": "lapiz",
-          "label": "lapiz"
+          "label": "lápiz"
         }
       ]
     },
@@ -13236,7 +13236,7 @@
       "banco": [
         {
           "id": "jabon",
-          "label": "jabon"
+          "label": "jabón"
         },
         {
           "id": "cepillo",
@@ -20072,7 +20072,7 @@
       "banco": [
         {
           "id": "limon",
-          "label": "limon"
+          "label": "limón"
         },
         {
           "id": "pera",
@@ -20085,14 +20085,6 @@
         {
           "id": "naranja",
           "label": "naranja"
-        },
-        {
-          "id": "fresa",
-          "label": "fresa"
-        },
-        {
-          "id": "cereza",
-          "label": "cereza"
         }
       ]
     },
@@ -20222,19 +20214,15 @@
       "banco": [
         {
           "id": "avion",
-          "label": "avion"
+          "label": "avión"
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "nube",
           "label": "nube"
-        },
-        {
-          "id": "casa",
-          "label": "casa"
         },
         {
           "id": "mariposa",
@@ -20310,7 +20298,7 @@
         },
         {
           "id": "autobus",
-          "label": "autobus"
+          "label": "autobús"
         },
         {
           "id": "moto",
@@ -20318,7 +20306,7 @@
         },
         {
           "id": "camion",
-          "label": "camion"
+          "label": "camión"
         },
         {
           "id": "bicicleta",
@@ -26962,7 +26950,7 @@
       "figuras": [
         {
           "id": "letra_ñ",
-          "path": "M32,118 L32,40 L68,118 L68,40 M32,30 C38,22 46,22 50,28 C54,34 62,34 68,26"
+          "path": "M32,118 L32,42 L68,118 L68,42 M30,28 Q40,18 50,25 T70,22"
         }
       ]
     },
@@ -47176,10 +47164,10 @@
         {
           "id": "i4",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Bajo el tejado, guardamos alli los trastos viejos",
+          "enunciado": "Bajo el tejado, guardamos allí los trastos viejos",
           "correcta": "La buhardilla",
           "distractores": [
-            "El sotano",
+            "El sótano",
             "La cocina"
           ]
         },
@@ -47210,7 +47198,7 @@
         {
           "id": "i0",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Con el se conduce y se gira el coche",
+          "enunciado": "Con él se conduce y se gira el coche",
           "correcta": "El volante",
           "distractores": [
             "El faro",
@@ -47250,7 +47238,7 @@
         {
           "id": "i4",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Detras, alli se mete el equipaje",
+          "enunciado": "Detrás, allí se mete el equipaje",
           "correcta": "El maletero",
           "distractores": [
             "El volante",
@@ -47260,7 +47248,7 @@
         {
           "id": "i5",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Sirve para ver los coches de atras",
+          "enunciado": "Sirve para ver los coches de atrás",
           "correcta": "El espejo",
           "distractores": [
             "El freno",
@@ -47288,7 +47276,7 @@
           "correcta": "El manillar",
           "distractores": [
             "El pedal",
-            "El sillin"
+            "El sillín"
           ]
         },
         {
@@ -47305,7 +47293,7 @@
           "id": "i2",
           "instruccion": "Elige la respuesta",
           "enunciado": "Asiento donde va sentado el ciclista",
-          "correcta": "El sillin",
+          "correcta": "El sillín",
           "distractores": [
             "El pedal",
             "El timbre"
@@ -47317,7 +47305,7 @@
           "enunciado": "Suena 'rin rin' para avisar por la calle",
           "correcta": "El timbre",
           "distractores": [
-            "El sillin",
+            "El sillín",
             "La cadena"
           ]
         },
@@ -47328,7 +47316,7 @@
           "correcta": "La cadena",
           "distractores": [
             "El manillar",
-            "El sillin"
+            "El sillín"
           ]
         },
         {
@@ -47338,7 +47326,7 @@
           "correcta": "La rueda",
           "distractores": [
             "El timbre",
-            "El sillin"
+            "El sillín"
           ]
         }
       ]
@@ -47382,7 +47370,7 @@
           "correcta": "La vela",
           "distractores": [
             "El ancla",
-            "El timon"
+            "El timón"
           ]
         },
         {
@@ -47399,7 +47387,7 @@
           "id": "i4",
           "instruccion": "Elige la respuesta",
           "enunciado": "Con el se dirige el rumbo del barco",
-          "correcta": "El timon",
+          "correcta": "El timón",
           "distractores": [
             "La proa",
             "La popa"
@@ -47409,7 +47397,7 @@
           "id": "i5",
           "instruccion": "Elige la respuesta",
           "enunciado": "Palo alto donde se sujeta la vela",
-          "correcta": "El mastil",
+          "correcta": "El mástil",
           "distractores": [
             "El ancla",
             "La popa"
@@ -47432,31 +47420,31 @@
         {
           "id": "i0",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Suelo alto junto a las vias donde se espera el tren",
-          "correcta": "El anden",
+          "enunciado": "Suelo alto junto a las vías donde se espera el tren",
+          "correcta": "El andén",
           "distractores": [
             "El túnel",
-            "El vagon"
+            "El vagón"
           ]
         },
         {
           "id": "i1",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Los railes de hierro por donde va el tren",
-          "correcta": "La via",
+          "enunciado": "Los raíles de hierro por donde va el tren",
+          "correcta": "La vía",
           "distractores": [
-            "El anden",
-            "El vagon"
+            "El andén",
+            "El vagón"
           ]
         },
         {
           "id": "i2",
           "instruccion": "Elige la respuesta",
           "enunciado": "Cada coche donde viajan sentados los pasajeros",
-          "correcta": "El vagon",
+          "correcta": "El vagón",
           "distractores": [
-            "La via",
-            "El anden"
+            "La vía",
+            "El andén"
           ]
         },
         {
@@ -47465,18 +47453,18 @@
           "enunciado": "Va delante y tira de todo el tren",
           "correcta": "La locomotora",
           "distractores": [
-            "El vagon",
-            "El anden"
+            "El vagón",
+            "El andén"
           ]
         },
         {
           "id": "i4",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Agujero en la montana por donde pasa el tren",
+          "enunciado": "Agujero en la montaña por donde pasa el tren",
           "correcta": "El túnel",
           "distractores": [
-            "El anden",
-            "La via"
+            "El andén",
+            "La vía"
           ]
         },
         {
@@ -47486,7 +47474,7 @@
           "correcta": "El billete",
           "distractores": [
             "El túnel",
-            "El vagon"
+            "El vagón"
           ]
         }
       ]
@@ -47546,7 +47534,7 @@
         {
           "id": "i4",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Empujan el avion y hacen mucho ruido",
+          "enunciado": "Empujan el avión y hacen mucho ruido",
           "correcta": "Los motores",
           "distractores": [
             "Las ruedas",
@@ -47556,7 +47544,7 @@
         {
           "id": "i5",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Pequenas y redondas, para mirar afuera",
+          "enunciado": "Pequeñas y redondas, para mirar afuera",
           "correcta": "Las ventanillas",
           "distractores": [
             "Los motores",
@@ -47580,7 +47568,7 @@
         {
           "id": "i0",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Trabaja en la panaderia y hace el pan",
+          "enunciado": "Trabaja en la panadería y hace el pan",
           "correcta": "El panadero",
           "distractores": [
             "El médico",
@@ -47594,13 +47582,13 @@
           "correcta": "El médico",
           "distractores": [
             "El panadero",
-            "El albanil"
+            "El albañil"
           ]
         },
         {
           "id": "i2",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Corta y vende la carne en la carniceria",
+          "enunciado": "Corta y vende la carne en la carnicería",
           "correcta": "El carnicero",
           "distractores": [
             "El marinero",
@@ -47610,7 +47598,7 @@
         {
           "id": "i3",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Ensena a los ninos en la escuela",
+          "enunciado": "Enseña a los niños en la escuela",
           "correcta": "El maestro",
           "distractores": [
             "El cocinero",
@@ -47631,7 +47619,7 @@
           "id": "i5",
           "instruccion": "Elige la respuesta",
           "enunciado": "Levanta paredes y casas en la obra",
-          "correcta": "El albanil",
+          "correcta": "El albañil",
           "distractores": [
             "El panadero",
             "El maestro"
@@ -47675,7 +47663,7 @@
           "id": "i2",
           "instruccion": "Elige la respuesta",
           "enunciado": "Con la sirena y las luces azules, persigue a los ladrones",
-          "correcta": "El coche de policia",
+          "correcta": "El coche de policía",
           "distractores": [
             "El tractor",
             "La ambulancia"
@@ -47708,7 +47696,7 @@
           "correcta": "La furgoneta de correos",
           "distractores": [
             "La ambulancia",
-            "El coche de policia"
+            "El coche de policía"
           ]
         }
       ]
@@ -47812,7 +47800,7 @@
         {
           "id": "i1",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Rojo, embutido con pimenton, picante o dulce",
+          "enunciado": "Rojo, embutido con pimentón, picante o dulce",
           "correcta": "El chorizo",
           "distractores": [
             "El jamón",
@@ -47833,7 +47821,7 @@
           "id": "i3",
           "instruccion": "Elige la respuesta",
           "enunciado": "Embutido grande con pintas de grasa, en lonchas",
-          "correcta": "El salchichon",
+          "correcta": "El salchichón",
           "distractores": [
             "La morcilla",
             "El chorizo"
@@ -47852,7 +47840,7 @@
         {
           "id": "i5",
           "instruccion": "Elige la respuesta",
-          "enunciado": "Fiambre rosado con puntitos, gusta a los ninos",
+          "enunciado": "Fiambre rosado con puntitos, gusta a los niños",
           "correcta": "La mortadela",
           "distractores": [
             "El jamón",
@@ -92068,14 +92056,6 @@
         {
           "id": "pato",
           "label": "pato"
-        },
-        {
-          "id": "barco",
-          "label": "barco"
-        },
-        {
-          "id": "faro",
-          "label": "faro"
         }
       ]
     },
@@ -92701,7 +92681,7 @@
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "nevera",
@@ -92709,7 +92689,7 @@
         },
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         },
         {
           "id": "reloj",
@@ -92785,11 +92765,11 @@
         },
         {
           "id": "camion",
-          "label": "camion"
+          "label": "camión"
         },
         {
           "id": "autobus",
-          "label": "autobus"
+          "label": "autobús"
         },
         {
           "id": "tren",
@@ -92824,11 +92804,11 @@
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "raton",
-          "label": "raton"
+          "label": "ratón"
         },
         {
           "id": "pez",
@@ -92983,7 +92963,7 @@
         },
         {
           "id": "cafe",
-          "label": "cafe"
+          "label": "café"
         },
         {
           "id": "huevo",
@@ -93026,7 +93006,7 @@
         },
         {
           "id": "arbol",
-          "label": "arbol"
+          "label": "árbol"
         },
         {
           "id": "margarita",
@@ -109569,11 +109549,11 @@
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "raton",
-          "label": "raton"
+          "label": "ratón"
         },
         {
           "id": "pez",
@@ -110694,7 +110674,7 @@
         },
         {
           "id": "camion",
-          "label": "camion",
+          "label": "camión",
           "zona_correcta": "ruedas"
         },
         {
@@ -110704,7 +110684,7 @@
         },
         {
           "id": "avion",
-          "label": "avion",
+          "label": "avión",
           "zona_correcta": "no"
         },
         {
@@ -110753,7 +110733,7 @@
         },
         {
           "id": "arbol",
-          "label": "arbol",
+          "label": "árbol",
           "zona_correcta": "vivo"
         },
         {
@@ -118643,7 +118623,7 @@
         },
         {
           "id": "pajaro",
-          "label": "pajaro",
+          "label": "pájaro",
           "zona_correcta": "animal"
         },
         {
@@ -118658,7 +118638,7 @@
         },
         {
           "id": "arbol",
-          "label": "arbol",
+          "label": "árbol",
           "zona_correcta": "planta"
         },
         {
@@ -118697,7 +118677,7 @@
       "piezas": [
         {
           "id": "avion",
-          "label": "avion",
+          "label": "avión",
           "zona_correcta": "aire"
         },
         {
@@ -165051,7 +165031,7 @@
         },
         {
           "id": "jamon",
-          "label": "jamon"
+          "label": "jamón"
         },
         {
           "id": "pescado",
@@ -165083,11 +165063,11 @@
         },
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "llave",
@@ -165107,7 +165087,7 @@
       "banco": [
         {
           "id": "arbol",
-          "label": "arbol"
+          "label": "árbol"
         },
         {
           "id": "flor",
@@ -165528,7 +165508,7 @@
         },
         {
           "id": "arbol",
-          "label": "arbol"
+          "label": "árbol"
         },
         {
           "id": "rosa",
@@ -165560,7 +165540,7 @@
       "banco": [
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "gallina",
@@ -165630,11 +165610,11 @@
       "banco": [
         {
           "id": "lapiz",
-          "label": "lapiz"
+          "label": "lápiz"
         },
         {
           "id": "boligrafo",
-          "label": "boligrafo"
+          "label": "bolígrafo"
         },
         {
           "id": "libro",
@@ -166002,7 +165982,7 @@
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "nube",
@@ -166039,7 +166019,7 @@
         },
         {
           "id": "corazon",
-          "label": "corazon"
+          "label": "corazón"
         },
         {
           "id": "flor",
@@ -166115,11 +166095,11 @@
         },
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "libro",
@@ -166198,11 +166178,11 @@
         },
         {
           "id": "melocoton",
-          "label": "melocoton"
+          "label": "melocotón"
         },
         {
           "id": "limon",
-          "label": "limon"
+          "label": "limón"
         }
       ]
     }
@@ -166217,7 +166197,7 @@
       "banco": [
         {
           "id": "cafe",
-          "label": "cafe"
+          "label": "café"
         },
         {
           "id": "leche",
@@ -166253,15 +166233,15 @@
       "banco": [
         {
           "id": "sofa",
-          "label": "sofa"
+          "label": "sofá"
         },
         {
           "id": "television",
-          "label": "television"
+          "label": "televisión"
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "reloj",
@@ -166269,7 +166249,7 @@
         },
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         },
         {
           "id": "libro",
@@ -166861,7 +166841,7 @@
         },
         {
           "id": "arbol",
-          "label": "arbol"
+          "label": "árbol"
         },
         {
           "id": "maceta",
@@ -166903,7 +166883,7 @@
         },
         {
           "id": "autobus",
-          "label": "autobus"
+          "label": "autobús"
         },
         {
           "id": "tren",
@@ -167027,11 +167007,11 @@
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "raton",
-          "label": "raton"
+          "label": "ratón"
         },
         {
           "id": "caballo",
@@ -167067,11 +167047,11 @@
       "distractores": [
         {
           "id": "autobus",
-          "label": "autobus"
+          "label": "autobús"
         },
         {
           "id": "camion",
-          "label": "camion"
+          "label": "camión"
         },
         {
           "id": "moto",
@@ -167163,7 +167143,7 @@
         },
         {
           "id": "limon",
-          "label": "limon"
+          "label": "limón"
         },
         {
           "id": "tomate",
@@ -167191,7 +167171,7 @@
       "distractores": [
         {
           "id": "arbol",
-          "label": "arbol"
+          "label": "árbol"
         },
         {
           "id": "hoja",
@@ -167239,7 +167219,7 @@
         },
         {
           "id": "raton",
-          "label": "raton"
+          "label": "ratón"
         },
         {
           "id": "conejo",
@@ -167247,7 +167227,7 @@
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "pez",
@@ -167279,11 +167259,11 @@
         },
         {
           "id": "sofa",
-          "label": "sofa"
+          "label": "sofá"
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "ventana",
@@ -167611,11 +167591,11 @@
         },
         {
           "id": "raton",
-          "label": "raton"
+          "label": "ratón"
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "pez",
@@ -167683,11 +167663,11 @@
         },
         {
           "id": "autobus",
-          "label": "autobus"
+          "label": "autobús"
         },
         {
           "id": "camion",
-          "label": "camion"
+          "label": "camión"
         },
         {
           "id": "moto",
@@ -167790,7 +167770,7 @@
       "instruccion": "Toca todos los PÁJAROS",
       "objetivo": {
         "id": "pajaro",
-        "label": "pajaro"
+        "label": "pájaro"
       },
       "distractores": [
         {
@@ -167807,7 +167787,7 @@
         },
         {
           "id": "raton",
-          "label": "raton"
+          "label": "ratón"
         },
         {
           "id": "gallina",
@@ -167879,15 +167859,15 @@
       "distractores": [
         {
           "id": "lapiz",
-          "label": "lapiz"
+          "label": "lápiz"
         },
         {
           "id": "boligrafo",
-          "label": "boligrafo"
+          "label": "bolígrafo"
         },
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         },
         {
           "id": "reloj",
@@ -167919,15 +167899,15 @@
       "distractores": [
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         },
         {
           "id": "television",
-          "label": "television"
+          "label": "televisión"
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "espejo",
@@ -167963,11 +167943,11 @@
         },
         {
           "id": "sofa",
-          "label": "sofa"
+          "label": "sofá"
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "puerta",
@@ -168165,11 +168145,11 @@
         },
         {
           "id": "raton",
-          "label": "raton"
+          "label": "ratón"
         },
         {
           "id": "pajaro",
-          "label": "pajaro"
+          "label": "pájaro"
         },
         {
           "id": "pez",
@@ -168192,7 +168172,7 @@
         },
         {
           "id": "autobus",
-          "label": "autobus"
+          "label": "autobús"
         },
         {
           "id": "tren",
@@ -168331,7 +168311,7 @@
       "banco": [
         {
           "id": "sofa",
-          "label": "sofa"
+          "label": "sofá"
         },
         {
           "id": "silla",
@@ -168343,15 +168323,15 @@
         },
         {
           "id": "lampara",
-          "label": "lampara"
+          "label": "lámpara"
         },
         {
           "id": "television",
-          "label": "television"
+          "label": "televisión"
         },
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         }
       ]
     },
@@ -168411,7 +168391,7 @@
         },
         {
           "id": "lapiz",
-          "label": "lapiz"
+          "label": "lápiz"
         },
         {
           "id": "gafas",
@@ -168423,7 +168403,7 @@
         },
         {
           "id": "telefono",
-          "label": "telefono"
+          "label": "teléfono"
         },
         {
           "id": "llave",
