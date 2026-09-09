@@ -30,7 +30,6 @@ export interface PuntoChart {
   /** Precisión fina (solo trazo/memoria/búsqueda). Informativa, para el tooltip. */
   precision: number | null;
   estado: string;
-  anomalo: boolean;
 }
 
 // Peso del resultado autocorregido, idéntico al backend (anomalias._PESO_RESULTADO).
@@ -51,7 +50,8 @@ export function construirSerie(puntos: PuntoEvolucion[]): PuntoChart[] {
     desempeno: PESO_DESEMPENO[p.estado],
     precision: p.precision,
     estado: p.estado,
-    anomalo: false, // la señal real de "fuera de patrón" la da el backend (alertas)
+    // Nota: la señal de "fuera de patrón" la da el BACKEND (motor de alertas), no
+    // el cliente; por eso la gráfica no la recalcula.
   }));
 }
 
@@ -63,19 +63,8 @@ interface DotProps {
 
 function PuntoDot({ cx, cy, payload }: DotProps) {
   if (cx == null || cy == null || !payload) return null;
-  const anomalo = payload.anomalo;
   return (
-    <g>
-      {anomalo && <circle cx={cx} cy={cy} r={9} fill="none" stroke={colors.coral} strokeWidth={2} />}
-      <circle
-        cx={cx}
-        cy={cy}
-        r={anomalo ? 5 : 4}
-        fill={anomalo ? colors.coralDark : colors.sage}
-        stroke={colors.white}
-        strokeWidth={1.5}
-      />
-    </g>
+    <circle cx={cx} cy={cy} r={4} fill={colors.sage} stroke={colors.white} strokeWidth={1.5} />
   );
 }
 
@@ -91,7 +80,7 @@ function ChartTooltip({ active, payload }: TooltipProps) {
     <div
       style={{
         background: colors.white,
-        border: `1px solid ${p.anomalo ? colors.coral : colors.sand}`,
+        border: `1px solid ${colors.sand}`,
         borderRadius: 10,
         padding: "8px 12px",
         fontSize: 13,
@@ -106,9 +95,6 @@ function ChartTooltip({ active, payload }: TooltipProps) {
         <div style={{ color: colors.textMuted, marginTop: 2 }}>
           Precisión: {fmtPorcentaje(p.precision)}
         </div>
-      )}
-      {p.anomalo && (
-        <div style={{ color: colors.coralDark, marginTop: 2 }}>fuera de patrón</div>
       )}
     </div>
   );
