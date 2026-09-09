@@ -336,7 +336,7 @@ class _MemoriaParejasWidgetState extends State<MemoriaParejasWidget> {
             decoration: BoxDecoration(
               color: emparejada ? const Color(0xFFEDF3EE) : TrazoColors.card,
               border: Border.all(
-                  color: emparejada ? TrazoColors.sageDark : TrazoColors.sand,
+                  color: emparejada ? TrazoColors.sageDark : TrazoColors.bordeControl,
                   width: emparejada ? 3 : 1.5),
               borderRadius: BorderRadius.circular(16),
             ),

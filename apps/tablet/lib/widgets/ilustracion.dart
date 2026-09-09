@@ -38,6 +38,7 @@ class Ilustracion extends StatelessWidget {
           width: size,
           height: size,
           fit: BoxFit.contain,
+          semanticLabel: IlustracionResolver.etiqueta(id),
           // Si la foto registrada aún no está empaquetada, NO caer al círculo:
           // usar el dibujo SVG de la librería (degradado digno). El círculo con
           // inicial es el último recurso.

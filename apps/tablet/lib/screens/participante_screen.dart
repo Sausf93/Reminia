@@ -888,7 +888,10 @@ class _BotonSala extends StatelessWidget {
       elevation: 2,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: onTap,
+        onTap: () {
+          HapticFeedback.selectionClick(); // elegir grupo: háptico como cada selección
+          onTap();
+        },
         child: Padding(
           padding: const EdgeInsets.all(18),
           child: Column(
@@ -1018,7 +1021,10 @@ class _BotonNombre extends StatelessWidget {
       elevation: 2,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: onTap,
+        onTap: () {
+          HapticFeedback.selectionClick(); // elegir tu NOMBRE: la selección más crítica
+          onTap();
+        },
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16),

@@ -24,6 +24,8 @@ class _EscanearQrScreenState extends State<EscanearQrScreen> {
         : null;
     if (codigo == null || codigo.trim().isEmpty) return;
     _hecho = true;
+    // La cámara emite frames async; si el widget ya se desmontó, no usar su context.
+    if (!mounted) return;
     Navigator.of(context).pop(codigo.trim());
   }
 

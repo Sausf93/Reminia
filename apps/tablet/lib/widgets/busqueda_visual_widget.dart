@@ -120,7 +120,7 @@ class _BusquedaVisualWidgetState extends State<BusquedaVisualWidget> {
       decoration: BoxDecoration(
         color: TrazoColors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: TrazoColors.sage, width: 2),
+        border: Border.all(color: TrazoColors.bordeControl, width: 2),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

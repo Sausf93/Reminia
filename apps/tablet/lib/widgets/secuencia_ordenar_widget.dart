@@ -213,7 +213,7 @@ class _SecuenciaOrdenarWidgetState extends State<SecuenciaOrdenarWidget> {
                   ? TrazoColors.coralDark
                   : movido
                       ? TrazoColors.sageDark
-                      : TrazoColors.sand,
+                      : TrazoColors.bordeControl,
               width: (cogido || movido) ? 2.5 : 1.5),
           borderRadius: BorderRadius.circular(14),
         ),
@@ -300,11 +300,14 @@ class _FlechaOrden extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: activo ? TrazoColors.sageDark : TrazoColors.bordeControl,
+            // Deshabilitada: fondo claro (card) con icono apagado (bordeControl),
+            // para que se lea como "off" y no como un botón sólido pulsable (antes
+            // era teal sobre teal: icono casi invisible pero caja llena).
+            color: activo ? TrazoColors.sageDark : TrazoColors.card,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icono,
-              size: 40, color: activo ? Colors.white : TrazoColors.sageDark),
+              size: 40, color: activo ? Colors.white : TrazoColors.bordeControl),
         ),
       ),
     );

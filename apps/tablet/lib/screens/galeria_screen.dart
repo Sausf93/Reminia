@@ -381,7 +381,7 @@ class _VitrinaCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: TrazoColors.sand, width: 1.5),
+            border: Border.all(color: TrazoColors.bordeControl, width: 1.5),
           ),
           child: Row(
             children: [
