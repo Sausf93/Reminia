@@ -36,9 +36,14 @@ así funciona para cualquier usuario:
   }
 }
 ```
-- **engram** (memoria del proyecto): el binario ya está en `.tools/engram.exe`. Su
-  *memoria previa* es por-usuario; el contexto importante está en el RESUMEN y en
-  `docs/memoria/`. Al empezar, ejecuta `mem_context` para cargar lo que haya.
+- **engram** (memoria del proyecto): el binario ya está en `.tools/engram.exe`. La
+  **memoria del proyecto viaja en la carpeta `.engram/`** (chunks comprimidos, también
+  en git). Al abrir por primera vez con otro usuario, impórtala a tu engram local:
+  ```bash
+  .tools/engram.exe sync --import        # carga .engram/ en tu engram local
+  ```
+  Luego, en Claude, `mem_context` / `mem_search` ya devuelven todo el histórico. El
+  contexto en prosa está además en el RESUMEN y en `docs/memoria/`.
 - **graphlore/graphify** (grafo del código): `py -m pip install --user graphlore` si falta.
   El grafo ya construido está en `graphify-out/`.
 - **playwright**: se auto-descarga con `npx` (necesita Node).
