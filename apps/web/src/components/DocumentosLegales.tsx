@@ -42,10 +42,12 @@ export function DocumentosLegales({
   usuarioFinalId,
   tipos,
   version,
+  onCambio,
 }: {
   usuarioFinalId?: string; // si se omite, son documentos del CENTRO
   tipos: Tipo[];
   version?: string;
+  onCambio?: () => void; // avisa al padre cuando cambia la lista (subir/borrar)
 }) {
   const { isAdmin } = useAuth();
   const scope = usuarioFinalId ? { usuario_final_id: usuarioFinalId } : { solo_centro: true };
@@ -76,6 +78,7 @@ export function DocumentosLegales({
         contenido_b64,
       });
       docs.reload();
+      onCambio?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo subir el documento.");
     } finally {
@@ -98,6 +101,7 @@ export function DocumentosLegales({
     try {
       await borrarDocumento(id);
       docs.reload();
+      onCambio?.();
     } catch {
       setError("No se pudo borrar el documento.");
     }

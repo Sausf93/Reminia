@@ -22,7 +22,7 @@ export function EjerciciosPage() {
       <PageHeader
         eyebrow="Catálogo"
         title="Ejercicios"
-        subtitle="Los ejercicios disponibles en el centro, organizados por bloque cognitivo y plantilla."
+        subtitle="Los ejercicios disponibles en el centro, organizados por área cognitiva y plantilla."
       />
 
       {isAdmin && <AltaEjercicio onCreado={() => ejercicios.reload()} />}
@@ -50,7 +50,7 @@ export function EjerciciosPage() {
               <thead>
                 <tr style={{ textAlign: "left", color: colors.textFaint, fontFamily: fonts.mono, fontSize: 12 }}>
                   <Th>Nombre</Th>
-                  <Th>Bloque</Th>
+                  <Th>Área</Th>
                   <Th>Plantilla</Th>
                   <Th>Estado</Th>
                 </tr>
@@ -129,7 +129,7 @@ function AltaEjercicio({ onCreado }: { onCreado: () => void }) {
 
       <form onSubmit={onSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "0 20px" }}>
-          <Field label="Bloque cognitivo" htmlFor="f-bloque">
+          <Field label="Área cognitiva" htmlFor="f-bloque">
             <select id="f-bloque" value={bloque} onChange={(e) => setBloque(e.target.value)} style={inputStyle}>
               {BLOQUES.map((b) => (
                 <option key={b} value={b}>{labelBloque(b)}</option>

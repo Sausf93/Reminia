@@ -65,10 +65,11 @@ export function PacientesPage() {
       <Card style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "flex-end" }}>
           <div style={{ flex: "1 1 200px" }}>
-            <label style={{ fontSize: 13, color: colors.textMuted, display: "block", marginBottom: 4 }}>
+            <label htmlFor="nuevo-alias" style={{ fontSize: 13, color: colors.textMuted, display: "block", marginBottom: 4 }}>
               Alias interno (obligatorio, sin datos personales)
             </label>
             <input
+              id="nuevo-alias"
               style={inputStyle}
               value={nuevoAlias}
               aria-label="Alias interno de la persona"
@@ -78,10 +79,11 @@ export function PacientesPage() {
             />
           </div>
           <div style={{ flex: "1 1 200px" }}>
-            <label style={{ fontSize: 13, color: colors.textMuted, display: "block", marginBottom: 4 }}>
+            <label htmlFor="nuevo-nombre" style={{ fontSize: 13, color: colors.textMuted, display: "block", marginBottom: 4 }}>
               Nombre real (opcional, se guarda aparte)
             </label>
             <input
+              id="nuevo-nombre"
               style={inputStyle}
               value={nuevoNombre}
               aria-label="Nombre real de la persona (opcional)"

@@ -154,7 +154,7 @@ function EmparejarDispositivo({ centroId, onCreado }: { centroId: string; onCrea
     setCreado(null);
     setCopiado(false);
     if (!nombre.trim()) {
-      setError("El nombre del dispositivo es obligatorio.");
+      setError("El nombre de la tablet es obligatorio.");
       return;
     }
     setCreando(true);
@@ -164,7 +164,7 @@ function EmparejarDispositivo({ centroId, onCreado }: { centroId: string; onCrea
       setNombre("");
       onCreado();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo emparejar el dispositivo.");
+      setError(err instanceof ApiError ? err.message : "No se pudo emparejar la tablet.");
     } finally {
       setCreando(false);
     }
@@ -192,7 +192,7 @@ function EmparejarDispositivo({ centroId, onCreado }: { centroId: string; onCrea
 
       <form onSubmit={onSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "0 20px" }}>
-          <Field label="Nombre del dispositivo" htmlFor="d-nombre">
+          <Field label="Nombre de la tablet" htmlFor="d-nombre">
             <input
               id="d-nombre"
               value={nombre}

@@ -129,6 +129,7 @@ export function CumplimientoPage() {
         )}
         {docs.error && <StateMessage tone="error">{docs.error}</StateMessage>}
         <DocumentosLegales
+          onCambio={() => { docs.reload(); pm.reload(); }}
           tipos={[
             { value: "dpa", label: "Contrato de encargo (DPA)" },
             { value: "rat", label: "Registro de Actividades (RAT)" },

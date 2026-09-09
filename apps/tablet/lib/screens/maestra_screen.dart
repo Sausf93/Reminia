@@ -27,8 +27,8 @@ class _MaestraScreenState extends State<MaestraScreen> {
   }
 
   /// Si al abrir (o al REFRESCAR) ya hay una sala abierta del centro, se recupera
-  /// y se vuelve al monitor: así un refresco accidental no deja a las esclavas
-  /// solas ni obliga a abrir otra sala.
+  /// y se vuelve al monitor: así un refresco accidental no deja a las tablets del
+  /// grupo solas ni obliga a abrir otra sala.
   Future<void> _recuperarSala() async {
     try {
       // SU sala (no la de otra compañera): con varias salas por centro no vale

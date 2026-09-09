@@ -104,7 +104,7 @@ export function PuestaEnMarchaPage() {
               <a
                 href="https://trazo-web-af2.pages.dev/instalar.html"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 style={{ color: colors.sageDark }}
               >
                 Cómo instalar la app (QR)
