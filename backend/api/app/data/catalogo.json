@@ -2401,7 +2401,7 @@
         },
         {
           "id": "calcetin",
-          "label": "calcetin"
+          "label": "calcetín"
         },
         {
           "id": "guantes",
@@ -47041,7 +47041,7 @@
     "bloque": "gnosias",
     "plantilla_tipo": "seleccion_multiple",
     "nombre": "Partes de la casa por fuera",
-    "descripcion": "Reconoce las partes exteriores de una casa por su descripcion.",
+    "descripcion": "Reconoce las partes exteriores de una casa por su descripción.",
     "parametros_json": {
       "dificultad": "facil",
       "opciones_min": 3,
@@ -47263,7 +47263,7 @@
     "bloque": "gnosias",
     "plantilla_tipo": "seleccion_multiple",
     "nombre": "Partes de la bicicleta",
-    "descripcion": "Identifica las partes de una bicicleta por su descripcion.",
+    "descripcion": "Identifica las partes de una bicicleta por su descripción.",
     "parametros_json": {
       "dificultad": "media",
       "opciones_min": 3,
@@ -47337,7 +47337,7 @@
     "bloque": "gnosias",
     "plantilla_tipo": "seleccion_multiple",
     "nombre": "Partes del barco",
-    "descripcion": "Reconoce las partes de un barco por su descripcion.",
+    "descripcion": "Reconoce las partes de un barco por su descripción.",
     "parametros_json": {
       "dificultad": "dificil",
       "opciones_min": 3,
@@ -47411,7 +47411,7 @@
     "bloque": "gnosias",
     "plantilla_tipo": "seleccion_multiple",
     "nombre": "En la estación de tren",
-    "descripcion": "Identifica las partes del tren y de la estacion por su descripcion.",
+    "descripcion": "Identifica las partes del tren y de la estacion por su descripción.",
     "parametros_json": {
       "dificultad": "media",
       "opciones_min": 3,
@@ -47485,7 +47485,7 @@
     "bloque": "gnosias",
     "plantilla_tipo": "seleccion_multiple",
     "nombre": "Partes del avión",
-    "descripcion": "Reconoce las partes de un avion por su descripcion.",
+    "descripcion": "Reconoce las partes de un avión por su descripción.",
     "parametros_json": {
       "dificultad": "dificil",
       "opciones_min": 3,
@@ -47707,7 +47707,7 @@
     "bloque": "gnosias",
     "plantilla_tipo": "seleccion_multiple",
     "nombre": "Platos típicos de España",
-    "descripcion": "Reconoce el plato tipico espanol por su descripcion.",
+    "descripcion": "Reconoce el plato típico español por su descripción.",
     "parametros_json": {
       "dificultad": "media",
       "opciones_min": 3,
@@ -47781,7 +47781,7 @@
     "bloque": "gnosias",
     "plantilla_tipo": "seleccion_multiple",
     "nombre": "Embutidos y fiambres",
-    "descripcion": "Identifica el embutido tipico por su descripcion.",
+    "descripcion": "Identifica el embutido típico por su descripción.",
     "parametros_json": {
       "dificultad": "media",
       "opciones_min": 3,
