@@ -226,7 +226,11 @@ class _RetoGarrafasWidgetState extends State<RetoGarrafasWidget> {
           height: 300,
           child: LayoutBuilder(
             builder: (context, cons) {
-              final reservaBotones = r.conGrifo ? 56.0 : 8.0;
+              // La garrafa TAPADA SIEMPRE lleva su botón "Vaciar" (aunque el reto sea
+              // sin grifo), así que la columna más alta siempre incluye una fila de
+              // botón: reservar su espacio también sin grifo, o la tapada desbordaba
+              // la banda ~29px (variante "8,5,3 sin grifo").
+              const reservaBotones = 56.0;
               final altoMax =
                   (cons.maxHeight - 78 - reservaBotones).clamp(90.0, 250.0);
               return Center(
