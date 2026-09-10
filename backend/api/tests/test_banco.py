@@ -1,7 +1,11 @@
 """Banco de pruebas: guardar/listar veredictos con token compartido."""
 import pytest
 
-TOK = {"X-Lab-Token": "trazo-lab-2026"}
+from app.config import settings
+
+# El token es DINÁMICO (derivado del JWT_SECRET si no se fija uno); usamos el mismo
+# que valida el backend, no un literal.
+TOK = {"X-Lab-Token": settings.lab_token}
 
 
 @pytest.mark.asyncio

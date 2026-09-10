@@ -20,9 +20,10 @@ from app.schemas import BancoVeredictoIn, BancoVeredictoOut
 router = APIRouter(prefix="/banco", tags=["banco"])
 
 def _exigir_token(x_lab_token: str | None = Header(default=None)) -> None:
-    # Token compartido (secreto de baja seguridad: no hay datos de personas). Se
-    # lee del entorno (settings.banco_token) y se compara en tiempo constante.
-    esperado = settings.banco_token or ""
+    # Token compartido (no hay datos de personas). Dinámico: si no se fija uno por
+    # entorno, se DERIVA del JWT_SECRET (settings.lab_token) — nunca un valor público
+    # del repo. Comparación en tiempo constante.
+    esperado = settings.lab_token
     if not x_lab_token or not secrets.compare_digest(x_lab_token, esperado):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Token del banco no válido")
 

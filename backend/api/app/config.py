@@ -1,4 +1,6 @@
 """Configuración de la aplicación, leída del entorno (.env)."""
+import hashlib
+import hmac
 from functools import lru_cache
 
 from pydantic import model_validator
@@ -40,9 +42,11 @@ class Settings(BaseSettings):
     # Solo lo conoce el dueño de la plataforma (tú). Nunca se expone al panel.
     platform_token: str = ""
 
-    # Token del banco de pruebas de contenido (cabecera X-Lab-Token). Sin datos
-    # de personas; se puede sobrescribir por entorno.
-    banco_token: str = "trazo-lab-2026"
+    # Token del banco de pruebas de contenido (cabecera X-Lab-Token). VACÍO por
+    # defecto: ya NO hay un valor público en el repo. Si no se fija un BANCO_TOKEN
+    # propio por entorno, se DERIVA del JWT_SECRET (ver `lab_token`). Sin datos de
+    # personas.
+    banco_token: str = ""
 
     # --- Stripe (facturación por suscripción). Si stripe_secret_key está vacío,
     # el cobro queda DESACTIVADO (útil en dev/tests: no se llama a Stripe). ---
@@ -73,6 +77,17 @@ class Settings(BaseSettings):
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def lab_token(self) -> str:
+        """Token efectivo del banco (X-Lab-Token). Seguro y DINÁMICO: si no se fija
+        un BANCO_TOKEN explícito por entorno, se DERIVA del JWT_SECRET con HMAC. Así
+        nunca es un valor público del repo, es único por entorno (en prod el
+        JWT_SECRET ya es un secreto propio) y no hay que configurar nada aparte."""
+        if self.banco_token:
+            return self.banco_token
+        return hmac.new(self.jwt_secret.encode(), b"banco-veredictos",
+                        hashlib.sha256).hexdigest()
 
     @model_validator(mode="after")
     def _exigir_secreto_en_prod(self) -> "Settings":

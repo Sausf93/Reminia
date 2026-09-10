@@ -35,7 +35,28 @@ CATALOGO = RAIZ / "backend/api/app/data/catalogo.json"
 API_URL = os.environ.get(
     "API_URL", "https://trazo-api-11684717030.europe-southwest1.run.app"
 ).rstrip("/")
-TOKEN = os.environ.get("BANCO_TOKEN", "trazo-lab-2026")
+def _token_banco() -> str:
+    """Mismo token que valida el backend (app/config.py `lab_token`): si no se fija
+    BANCO_TOKEN, se DERIVA del JWT_SECRET del `.env` con HMAC. Así no hay un token
+    público en el repo ni hay que pasar nada a mano."""
+    override = os.environ.get("BANCO_TOKEN")
+    if override:
+        return override
+    import hashlib
+    import hmac
+    import re
+
+    secreto = "dev-secret-cambiar"
+    env = RAIZ / "backend/api/.env"
+    if env.exists():
+        m = re.search(r"^JWT_SECRET=(.*)$", env.read_text(encoding="utf-8"),
+                      re.MULTILINE)
+        if m:
+            secreto = m.group(1).strip()
+    return hmac.new(secreto.encode(), b"banco-veredictos", hashlib.sha256).hexdigest()
+
+
+TOKEN = _token_banco()
 
 _MAPA_ESTADO = {"valida": "validada", "descartar": "descartada"}
 
