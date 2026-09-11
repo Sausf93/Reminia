@@ -76,8 +76,14 @@ void main() {
       } else {
         debugPrint('### ${m.key}: TODAS caben, 0 desbordes');
       }
-      // No hacemos fallar el test: es un INFORME por modelo (lo lee Saulo).
-      expect(true, isTrue);
+      // A tamaños de TABLET (el uso real) NO se toleran desbordes: se hace FALLAR el
+      // test para que un cambio futuro no recorte actividades. El móvil (<600) queda
+      // informativo (la tablet no se usa en móvil; los retos ahí piden "gira el
+      // móvil" y el resto se ve mejor en horizontal).
+      if (m.value.width >= 600) {
+        expect(lista, isEmpty,
+            reason: 'Desbordes a tamaño tablet en ${m.key}: ${lista.join(", ")}');
+      }
     });
   }
 }
