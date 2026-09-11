@@ -59,6 +59,28 @@ salida de PII (documentos con DNI, export con nombre real) está restringida a
 `admin_centro`. No se pueden "saltar pasos" por URL (mediciones solo en sala abierta
 y fresca; puerta RGPD incondicional).
 
+## Ronda de calidad y seguridad (2026-09-10/11) — EN `main` LOCAL, sin desplegar
+Barrido multiagente por TODAS las capas; todo verificado (pytest **3094**, tsc +
+build del panel, E2E **46/0 y 28/0**, tablet `flutter analyze`/`test`/`build web`).
+Está **commiteado en `main` local pero NO desplegado**: llega a prod en el próximo
+deploy (Cloud Run + Cloudflare). Lo más relevante:
+- **Seguridad**: **token del banco dinámico** (derivado del `JWT_SECRET` con HMAC;
+  fuera el valor público del repo, sin configurar nada). Rol `familia` ya no
+  facilita en la tablet. **Dunning de Stripe idempotente** (una reentrega no
+  suspende de más). Compuerta "solo validadas miden" cerrada en grupo/en-vivo/plan.
+- **Panel**: contraste AA (sageDark/bordeControl), **`parcial`≠`no_logrado`** en
+  color, HTML válido en alertas, código muerto de anomalías fuera.
+- **Tablet** (Flutter instalado en `~/flutter`): accesibilidad del mayor
+  (bordeControl en objetivos táctiles, háptico al elegir grupo/nombre, semanticLabel
+  en fotos, guarda `mounted` en el escáner), desborde de `reto_garrafas` arreglado,
+  y el test de desbordes ahora **falla** si una actividad se recorta a tamaño tablet.
+- **Contenido**: tildes, bancos de memoria limpios, recalibración de dificultad,
+  `paso_c=5` en céntimos. Catálogo auditado íntegro.
+- **Robustez**: `sincronizar_catalogo` idempotente ante nombres duplicados; +tests
+  nuevos en cada arreglo.
+- **Pendiente**: cambiar fotos flojas/faltantes (patata, pollo, herramientas del
+  taller) por mejores (Pixabay/Pexels — faltan los tokens).
+
 ## Validación de contenido (en curso)
 - El equipo (Saulo, José) revisa las actividades **jugándolas** en
   `app.reminia.es/pendientes-valoracion` (marca Válida/Dudosa/No válida; se guarda en
