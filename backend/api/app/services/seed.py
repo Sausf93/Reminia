@@ -76,14 +76,19 @@ async def sincronizar_catalogo(db: AsyncSession) -> int:
       try:
         ej = por_nombre.get(cfg["nombre"])
         if ej is None:
-            db.add(EjercicioCatalogo(
+            nuevo = EjercicioCatalogo(
                 nombre=cfg["nombre"],
                 bloque=cfg["bloque"],
                 plantilla_tipo=cfg["plantilla_tipo"],
                 descripcion=cfg.get("descripcion"),
                 parametros_json=cfg.get("parametros_json", {}),
                 estado=cfg.get("estado", "en_pruebas"),
-            ))
+            )
+            db.add(nuevo)
+            # Registrar la fila nueva: si el JSON trae dos actividades con el MISMO
+            # nombre, la segunda debe ACTUALIZAR la primera, no insertar otra fila
+            # (no hay UNIQUE en `nombre`; si no, se duplicaría en cada arranque).
+            por_nombre[cfg["nombre"]] = nuevo
             nuevas += 1
         else:
             # El JSON es la FUENTE DE LA VERDAD: actualiza los parámetros de las
@@ -151,7 +156,6 @@ async def sembrar(db: AsyncSession) -> None:
         UsuarioStaff(centro_id=centro.id, nombre="Laura", rol="integradora",
                      email="integradora@trazo.local", password_hash=hash_password(PASSWORD_DEMO)),
     ])
-    staff_integradora = None
     await db.flush()
     staff_integradora = (
         await db.execute(select(UsuarioStaff).where(UsuarioStaff.rol == "integradora"))
@@ -207,13 +211,6 @@ async def sembrar(db: AsyncSession) -> None:
     # Marisa: praxias estable/al alza -> sin alerta.
     # Se usa el trazo "Sigue la línea" (grafomotricidad) como ejercicio de praxias.
     ej_praxias = por_nombre["Sigue la línea"]
-
-    def _crear_sesion_e_intento(uf, ej, dias_atras, precision, estado="solo"):
-        fecha = ahora - timedelta(days=dias_atras)
-        ses = Sesion(centro_id=centro.id, fecha=fecha, tipo="individual",
-                     staff_id=staff_integradora.id, cerrada=True)
-        db.add(ses)
-        return ses, fecha
 
     # Series de precisión (de más antiguo a más reciente).
     serie_paquito = [0.86, 0.88, 0.90, 0.89, 0.91, 0.90, 0.62, 0.55]  # cae al final

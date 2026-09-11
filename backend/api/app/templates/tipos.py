@@ -538,7 +538,10 @@ class PlantillaManejoCantidad(PlantillaBase):
                 denoms.append(int(round(float(b) * 100)))
             if not denoms:
                 denoms = list(MONEDAS_C)  # por defecto, monedas de euro completas
-        return sorted({d for d in denoms if d > 0})
+        # Si la config trae solo valores no positivos (p. ej. [0]), no dejar la lista
+        # vacía: min(denoms) reventaría (422 "no se puede preparar") y la actividad
+        # quedaría injugable. Caer a las monedas de euro.
+        return sorted({d for d in denoms if d > 0}) or sorted(MONEDAS_C)
 
     def _rango_importe_c(self, cfg: dict, nivel) -> tuple[int, int]:
         """Rango del importe en céntimos, aceptando claves en céntimos o en euros."""
