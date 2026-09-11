@@ -208,7 +208,9 @@ class _RetoTaquinWidgetState extends State<RetoTaquinWidget> {
           onTap: () => _deslizar(pos),
           child: Container(
             decoration: BoxDecoration(
-              color: movible ? TrazoColors.sageDark : TrazoColors.sage,
+              // Fondo siempre sageDark: el número va en BLANCO y sobre sage daba
+              // ~3.1:1 (falla AA). La distinción movible/fija se ve por el borde.
+              color: TrazoColors.sageDark,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                   color: movible ? TrazoColors.coralDark : TrazoColors.sageDark,

@@ -127,6 +127,7 @@ class _RetoCruzarWidgetState extends State<RetoCruzarWidget> {
   void _tocar(String id) {
     if (_aviso != null) return;
     if (_enBarca.contains(id)) {
+      HapticFeedback.selectionClick(); // bajar de la barca también es una selección
       setState(() => _enBarca.remove(id));
       return;
     }

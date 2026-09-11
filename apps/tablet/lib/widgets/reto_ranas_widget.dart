@@ -140,7 +140,7 @@ class _RetoRanasWidgetState extends State<RetoRanasWidget> {
                   child: LayoutBuilder(builder: (context, cons) {
               final n = _p.length;
               final tam =
-                  ((cons.maxWidth - 24) / n).clamp(44.0, 92.0).toDouble();
+                  ((cons.maxWidth - 24) / n).clamp(48.0, 92.0).toDouble();
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(

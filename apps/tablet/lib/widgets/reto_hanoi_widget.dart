@@ -74,6 +74,7 @@ class _RetoHanoiWidgetState extends State<RetoHanoiWidget> {
   void _tocar(int palo) {
     if (_sel == null) {
       if (_palos[palo].isEmpty) return;
+      HapticFeedback.selectionClick(); // coger el disco de arriba: es una selección
       setState(() => _sel = palo);
       return;
     }
@@ -204,7 +205,7 @@ class _RetoHanoiWidgetState extends State<RetoHanoiWidget> {
           border: Border.all(
               color: seleccionado
                   ? TrazoColors.coralDark
-                  : TrazoColors.sand,
+                  : TrazoColors.bordeControl,
               width: seleccionado ? 3 : 1.5),
         ),
         child: Stack(

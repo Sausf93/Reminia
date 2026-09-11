@@ -89,6 +89,7 @@ class _RetoMastermindWidgetState extends State<RetoMastermindWidget> {
 
   void _quitar(int pos) {
     if (_ganado) return;
+    HapticFeedback.selectionClick(); // quitar una ficha también es una selección
     setState(() => _actual[pos] = null);
   }
 
@@ -189,7 +190,7 @@ class _RetoMastermindWidgetState extends State<RetoMastermindWidget> {
                 for (var c = 0; c < _nc; c++)
                   GestureDetector(
                     onTap: () => _ponerColor(c),
-                    child: _circulo(c, 46, true),
+                    child: _circulo(c, 48, true),
                   ),
               ],
             ),
@@ -253,8 +254,8 @@ class _RetoMastermindWidgetState extends State<RetoMastermindWidget> {
     return GestureDetector(
       onTap: c == null ? null : () => _quitar(pos),
       child: Container(
-        width: 46,
-        height: 46,
+        width: 48,
+        height: 48,
         margin: const EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
           color: c == null ? TrazoColors.white : _paleta[c],
