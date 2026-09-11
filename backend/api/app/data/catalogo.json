@@ -833,7 +833,8 @@
         200
       ],
       "importe_min_c": 45,
-      "importe_max_c": 990
+      "importe_max_c": 990,
+      "paso_c": 5
     },
     "estado": "validada"
   },
@@ -880,7 +881,8 @@
         200
       ],
       "importe_min_c": 15,
-      "importe_max_c": 480
+      "importe_max_c": 480,
+      "paso_c": 5
     },
     "estado": "validada"
   },
@@ -2466,7 +2468,7 @@
     "nombre": "Sumas sencillas",
     "descripcion": "Una suma corta y elegir el resultado correcto entre varias opciones. Cálculo mental básico.",
     "parametros_json": {
-      "dificultad": "dificil",
+      "dificultad": "media",
       "opciones_min": 3,
       "opciones_max": 3,
       "items": [
@@ -2580,7 +2582,7 @@
     "nombre": "Restas sencillas",
     "descripcion": "Una resta corta y elegir el resultado correcto entre varias opciones. Cálculo mental básico.",
     "parametros_json": {
-      "dificultad": "dificil",
+      "dificultad": "facil",
       "opciones_min": 3,
       "opciones_max": 3,
       "items": [
@@ -4789,7 +4791,7 @@
     "nombre": "El refranero del tiempo",
     "descripcion": "Completar los refranes del campo y del tiempo.",
     "parametros_json": {
-      "dificultad": "dificil",
+      "dificultad": "facil",
       "opciones_min": 3,
       "opciones_max": 4,
       "items": [
